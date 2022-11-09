@@ -1,0 +1,176 @@
+{
+    /*
+    *   ###是否开启CALL###
+    *   [参数](如下)
+    *   true  [解析] 启用插件CALL
+    *   false [解析] 关闭插件CALL
+    */
+    "enable":true,
+
+    /*
+    *   ###使用权限管理###
+    *   [参数](如下)
+    *   "all"       [解析] 所有玩家都可以使用CALL
+    *   "op"        [解析] 仅管理员可以使用CALL
+    *   "customize" [解析] 自定义可使用CALL的玩家
+    *   [其他]
+    *   当选择"customize"时请到userlist.json文件中指定可使用CALL的玩家
+    *   或
+    *   通过快捷命令添加可使用CALL的玩家，命令如下：
+    *       在后台输入：CALL 玩家名字
+    *       输入后将自动将玩家列入可使用CALL的名单
+    *       在后台输入：CALL ban 玩家名字
+    *       输入后将自动从名单中移除该玩家
+    */
+    "permission": "op",
+    
+        /*
+    *    ###调试模式###
+    *   [说明]
+    *   用于形状包开发调试，开启后可热重载形状包, 并输出形状包产生的异常
+    *   [参数](如下)
+    *   true  [解析] 启用插件CALL
+    *   false [解析] 关闭插件CALL
+    */
+    "debugMod":false,
+    
+    /*
+    *    ###第一次加载时是否显示字符图标###
+    *    [参数](如下)
+    *    true  [解析] 显示
+    *    false [解析] 不显示
+    */
+   "displayLogo": true,
+   
+    /*
+    *   ###一个玩家最多可以保存的结构数量###
+    *   [参数](如下)
+    *   数字
+    *   [范围] 
+    *   0--200
+    *   [建议]
+    *   50以内
+    */
+    "maxSaveStructure": 30,
+
+    /*
+    *   ###最大撤销步数###
+    *   [参数](如下)
+    *   数字
+    *   [范围]
+    *   0--100
+    *   [建议]
+    *   10以内
+    */    
+    "maxUndoStep": 5,
+
+    /**
+    *   ###视野选取方块的最大距离###
+    *   [参数](如下)
+    *   数字
+    *   [范围]
+    *   1--300
+    *   [建议]
+    *   150
+    */
+    "viewMaxDistance": 150,
+
+    /**
+    *   ###最大区块加载次数###
+    *   [参数](如下)
+    *   数字
+    *   [范围]
+    *   1--20
+    *   [建议]
+    *   5
+    */
+    "maxLoadCheckNum": 5,
+
+    /*
+    *    ###默认设置###
+    */
+    "default": {
+        "enable": true,
+        "barReplace": 1,
+        "barReplaced": 2,
+        "saveArea": false,
+        "saveUndo": true,
+        "saveCopy": false,
+        "areaTextShow": true,
+        "displayArea": true,
+        "displayPos": null,
+        "loadChuckTip": true,
+        "items": {
+            "minecraft:clock": {
+                "": {
+                    "cmds": [
+                        "ca"
+                    ],
+                    "describe": "打开菜单工具"
+                }
+            },
+            "minecraft:wooden_axe": {
+                "": {
+                    "cmds": [
+                        "ca ar se ${pos.x} ${pos.y} ${pos.z}"
+                    ],
+                    "describe": "选区工具"
+                }
+            },
+            "minecraft:stick": {
+                "": {
+                    "cmds": [
+                        "ca ar en ${pos.x} ${pos.y} ${pos.x}"
+                    ],
+                    "describe": "B点选区工具"
+                }
+            },
+            "minecraft:arrow": {
+                "": {
+                    "cmds": [
+                        "ca ar st ${pos.x} ${pos.y} ${pos.x}"
+                    ],
+                    "describe": "A点选区工具"
+                }
+            },
+            "minecraft:blaze_rod": {
+                "": {
+                    "cmds": [
+                        "ca ar co"
+                    ],
+                    "describe": "复制快捷键工具"
+                }
+            },
+            "minecraft:bone": {
+                "": {
+                    "cmds": [
+                        "ca ar pa ${pos.x} ${pos.y} ${pos.x}"
+                    ],
+                    "describe": "粘贴到点击的位置工具"
+                }
+            },
+            "minecraft:wooden_pickaxe": {
+                "": {
+                    "cmds": [
+                        "give @s ${type} 1 ${tileData}"
+                    ],
+                    "describe": "获取点击的方块工具 (需要有give指令权限)"
+                }
+            }
+        },
+        "area": {
+            "start": {
+                "x": null,
+                "y": null,
+                "z": null,
+                "dimid": null
+            },
+            "end": {
+                "x": null,
+                "y": null,
+                "z": null,
+                "dimid": null
+            }
+        }
+    }
+}

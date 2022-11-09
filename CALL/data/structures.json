@@ -1,0 +1,12 @@
+{
+    "public": {},
+    "private": {
+        "default": {
+            "pid": 0,
+            "copy": {},
+            "undoList": [],
+            "redoList": [],
+            "saveList": {}
+        }
+    }
+}
