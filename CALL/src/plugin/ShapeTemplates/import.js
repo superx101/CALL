@@ -24,21 +24,24 @@ const SHP = {
         this._registerPackage(PKG, name, shapeNames, introduction);
     },
     Message: {
-        warn: function (player, str, mod = 0) {
-            player.sendText(Format.Gold + `[${PKG}][警告] ` + str, mod);
+        warn: function (player, str, mode = 0) {
+            player.sendText(Format.Gold + `[${PKG}][警告] ` + str, mode);
         },
-        error: function (player, str, mod = 0) {
-            player.sendText(Format.Red + `[${PKG}][错误] ` + str, mod);
+        error: function (player, str, mode = 0) {
+            player.sendText(Format.Red + `[${PKG}][错误] ` + str, mode);
         },
-        info: function (player, str, mod = 0) {
-            player.sendText(Format.White + `[${PKG}] ` + str, mod);
+        info: function (player, str, mode = 0) {
+            player.sendText(Format.White + `[${PKG}] ` + str, mode);
         },
-        success: function (player, str, mod = 0) {
-            player.sendText(Format.Gold + `[${PKG}] ` + str, mod);
+        success: function (player, str, mode = 0) {
+            player.sendText(Format.Gold + `[${PKG}] ` + str, mode);
         }
     },
-    setBlock: function (x = 0, y = 0, z = 0, block_palette = '{"name":"minecraft:concrete","states":{"color":"white"},"version":17959425}', block_position_data = null) {
+    setBlock: function (x, y, z, block_palette = '{"name":"minecraft:concrete","states":{"color":"white"},"version":17959425}', block_position_data = null) {
         return { x, y, z, block_palette, block_position_data };
+    },    
+    getPackageName: function () {
+        return PKG;
     },
     getVector3: function (x, y, z) {
         return new this.THREE.Vector3(x, y, z);
@@ -48,9 +51,6 @@ const SHP = {
     },
     getMAT4: function () {
         return new this.THREE.Matrix4();
-    },
-    getPackageName: function () {
-        return PKG;
     },
     getRoteMAT4: function (x, y, z, order) {
         return this.getMAT4().makeRotationFromEuler(new this.THREE.Euler(x * Math.PI / 180, y * Math.PI / 180, z * Math.PI / 180, order));

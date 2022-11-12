@@ -207,6 +207,9 @@ function Main_command_consoleCallback(output, res) {
         case "add":
             PermissionOperation.add(res.Name, output);
             break;
+        case "list":
+            PermissionOperation.list(output);
+            break;
         case "reload":
         case "r":
             ReloadOperation.start(output);
@@ -250,7 +253,7 @@ function Main_command() {
 
     //area
     cmd.setEnum("area", ["area", "ar"]);
-    cmd.setEnum("se", ["se"]);
+    cmd.setEnum("se", ["set","se"]);
     cmd.setEnum("start|end", ["start", "st", "end", "en", "a", "b"]);
     cmd.setEnum("clear", ["clear", "cl"]);
     cmd.setEnum("show", ["show", "sh"]);

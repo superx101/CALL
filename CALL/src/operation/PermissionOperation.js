@@ -24,6 +24,10 @@ class PermissionOperation {
         }
     }
 
+    static list(output) {
+        output.success("CALL使用权限: ", Config.get(Config.PERMISSIONS, "list"));
+    }
+
     static add(name, output) {
         PermissionOperation.check(name);
         if (!PermissionOperation.find(name)) {

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Description">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css">
+  <!-- <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.css"> -->
+</head>
+
+<body>
+  <div id="app"></div>
+  <script>
+    window.$docsify = {
+      loadSidebar: true,
+      coverpage: true,
+      loadNavbar: true,
+      onlyCover: true,
+      subMaxLevel: 2,
+      maxLevel: 3,
+      // sidebarDisplayLevel: 2,
+      name: '',
+      repo: 'https://github.com/superx101/CALL',
+      count: {
+        countable: true,
+        fontsize: '0.9em',
+        color: 'rgb(90,90,90)',
+        language: 'chinese'
+      },
+      copyCode: {
+        buttonText: '复制',
+        errorText: 'Error',
+        successText: '已复制'
+      },
+      // markdown: {
+      //   renderer: {
+      //     code: function (code, lang) {
+      //       if (lang === "mermaid") {
+      //         return (
+      //           '<div class="mermaid">' + mermaid.render('mermaid-svg-' + num++, code) + "</div>"
+      //         );
+      //       }
+      //       return this.origin.code.apply(this, arguments);
+      //     }
+      //   }
+      // }
+    }
+
+    // var num = 0;
+    // mermaid.initialize({ startOnLoad: false });
+
+  </script>
+  <!-- Docsify v4 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+  <script src="//unpkg.com/docsify-count/dist/countable.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify-pagination/dist/docsify-pagination.min.js"></script>
+  <!-- <script src="//cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script> -->
+</body>
+
+</html>

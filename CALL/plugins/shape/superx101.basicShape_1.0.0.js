@@ -1,5 +1,4 @@
 SHP.registerPackage("基础形状", ["自由立方体", "自由平面", "两点生成直线"], "CALL自带的一个简单形状包");
-const Test = require("./CALL/src/tool/Test");
 
 //检查数字参数
 function checkNumber(p, negative = true) {
@@ -38,7 +37,6 @@ function simpleCubeVoxelization(cube, m4, SNBT) {
     cube.center();
     cube.computeBoundingBox();
     let pre_box = cube.boundingBox.clone();
-    log(pre_box)
 
     //逆矩阵
     let m4_i = m4.clone().invert();

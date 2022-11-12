@@ -4,7 +4,7 @@ class SettingsOperation {
     static forbidModifyKeys;
 
     static onCreate() {
-        SettingsOperation.forbidModifyKeys = new Set(["enable"]);
+        SettingsOperation.forbidModifyKeys = new Set(["enable", "displayPos", "area"]);
     }
 
     static start(player, output, playerData, res) {

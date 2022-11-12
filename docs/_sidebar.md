@@ -1,0 +1,22 @@
+[CALL文档]() 
+* 用户手册
+  * [插件介绍](user/introduction.md) 
+  * [安装说明](user/install.md)
+  * [文档格式约定](user/format.md)
+  * [配置](user/config.md)
+  * 功能介绍
+    * [后台命令](user/function/console.md)
+    * [菜单](user/function/menu.md)
+    * [选区](user/function/area.md)
+    * [选区操作](user/function/areaOperation.md)
+    * [其他操作](user/function/other.md)
+    * [形状](user/function/shape.md)
+    * [快捷键](user/function/hotkey.md)
+    * [设置](user/function/setting.md)
+* 开发者手册
+  * [开发须知](dev/plugin.md)
+  * [形状包API](dev/shape.md)
+* 其他
+  * [Bug反馈及建议](other/debug.md)
+  * [更新日志](other/update.md)
+  * [更多形状包](other/plugins.md)
