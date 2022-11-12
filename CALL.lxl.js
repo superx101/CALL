@@ -34,8 +34,10 @@ const NBTManager = require("./CALL/src/basicfun/NBTManager");
 const StructureManager = require("./CALL/src/basicfun/StructureManager");
 const FillManager = require("./CALL/src/basicfun/FillManager");
 const ShapeManager = require("./CALL/src/basicfun/ShapeManager");
+const PlayerManager = require("./CALL/src/basicfun/PlayerManager");
 
 const EnableOperation = require("./CALL/src/operation/EnableOperation");
+const ChunkOperation = require("./CALL/src/operation/ChunkOperation");
 const ReloadOperation = require("./CALL/src/operation/ReloadOperation");
 const PermissionOperation = require("./CALL/src/operation/PermissionOperation");
 const AreaOperation = require("./CALL/src/operation/AreaOperation");
@@ -104,6 +106,10 @@ function Main_command_playerCallback(ori, output, res) {
         case "area":
         case "ar":
             AreaOperation.start(player, output, playerData, res);
+            break;
+        case "refresh":
+        case "rf":
+            ChunkOperation.start(player, output, playerData);
             break;
         case "fill":
         case "fi":
@@ -202,10 +208,10 @@ function Main_command_playerCallback(ori, output, res) {
 function Main_command_consoleCallback(output, res) {
     switch (res.action) {
         case "ban":
-            PermissionOperation.ban(res.Name, output);
+            PermissionOperation.ban(res.playerName, output);
             break;
         case "add":
-            PermissionOperation.add(res.Name, output);
+            PermissionOperation.add(res.playerName, output);
             break;
         case "list":
             PermissionOperation.list(output);
@@ -251,9 +257,14 @@ function Main_command() {
     cmd.mandatory("action", ParamType.Enum, "on|off", "on-off_man", 1);
     cmd.overload("on-off_man");
 
+    //refresh
+    cmd.setEnum("refresh", ["refresh", "rf"]);
+    cmd.mandatory("action", ParamType.Enum, "refresh", "refresh_man", 1);
+    cmd.overload("refresh_man");
+
     //area
     cmd.setEnum("area", ["area", "ar"]);
-    cmd.setEnum("se", ["set","se"]);
+    cmd.setEnum("se", ["set", "se"]);
     cmd.setEnum("start|end", ["start", "st", "end", "en", "a", "b"]);
     cmd.setEnum("clear", ["clear", "cl"]);
     cmd.setEnum("show", ["show", "sh"]);
@@ -470,16 +481,7 @@ function Main_listener() {
                 setTimeout(() => {
                     playerData.click = false;
                 }, 200);
-                // log(item.getNbt().toString(4));
-                // item.setDisplayName("a\nc");
-                // mc.spawnItem(item,player.pos)
-                // log(block.getNbt().toString(-1))
-                if (item.type == "minecraft:diamond_axe") {
-                    let comp = NBT.parseSNBT(File.readFrom("./plugins/CALL/data/nbt/0.nbt"));
-                    let p = mc.newIntPos(player.pos.x, player.pos.y - 1, player.pos.z, player.pos.dimid);
-                    mc.setStructure(comp, p);
-                    player.refreshChunks()
-                }
+  
                 //业务
                 ToolOperation.onClick(player, playerData, item, block, pos);
             }
@@ -519,6 +521,8 @@ function Main_ini() {
         }
         //默认设置
         Config.set(Config.PLAYERS_SETTINGS, "default", Config.get(Config.GLOBAL, "default"));
+
+        Activity.onServerCreate();
 
         Main_listener(); //监听器初始化
         Main_command();//指令初始化

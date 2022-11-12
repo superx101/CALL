@@ -3,7 +3,7 @@
 class SettingsOperation {
     static forbidModifyKeys;
 
-    static onCreate() {
+    static onServerCreate() {
         SettingsOperation.forbidModifyKeys = new Set(["enable", "displayPos", "area"]);
     }
 

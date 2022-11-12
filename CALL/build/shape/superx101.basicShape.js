@@ -3,7 +3,6 @@ const SHP = {
     _registerPackage: ll.import("call_shape_api", "registerPackage"),
     _getData: ll.import("call_shape_api", "getData"),
     THREE: require("./CALL/lib/three.js/src/Three"),
-    getAbsolutePath: ll.import("call_shape_api", "getAbsolutePath"),
     getData: function (player) {
         let res = this._getData(player.xuid);
         if (res == null) return null;
@@ -25,21 +24,24 @@ const SHP = {
         this._registerPackage("superx101.basicShape", name, shapeNames, introduction);
     },
     Message: {
-        warn: function (player, str, mod = 0) {
-            player.sendText(Format.Gold + `[${"superx101.basicShape"}][警告] ` + str, mod);
+        warn: function (player, str, mode = 0) {
+            player.sendText(Format.Gold + `[${"superx101.basicShape"}][警告] ` + str, mode);
         },
-        error: function (player, str, mod = 0) {
-            player.sendText(Format.Red + `[${"superx101.basicShape"}][错误] ` + str, mod);
+        error: function (player, str, mode = 0) {
+            player.sendText(Format.Red + `[${"superx101.basicShape"}][错误] ` + str, mode);
         },
-        info: function (player, str, mod = 0) {
-            player.sendText(Format.White + `[${"superx101.basicShape"}] ` + str, mod);
+        info: function (player, str, mode = 0) {
+            player.sendText(Format.White + `[${"superx101.basicShape"}] ` + str, mode);
         },
-        success: function (player, str, mod = 0) {
-            player.sendText(Format.Gold + `[${"superx101.basicShape"}] ` + str, mod);
+        success: function (player, str, mode = 0) {
+            player.sendText(Format.Gold + `[${"superx101.basicShape"}] ` + str, mode);
         }
     },
-    setBlock: function (x = 0, y = 0, z = 0, block_palette = '{"name":"minecraft:concrete","states":{"color":"white"},"version":17959425}', block_position_data = null) {
+    setBlock: function (x, y, z, block_palette = '{"name":"minecraft:concrete","states":{"color":"white"},"version":17959425}', block_position_data = null) {
         return { x, y, z, block_palette, block_position_data };
+    },    
+    getPackageName: function () {
+        return "superx101.basicShape";
     },
     getVector3: function (x, y, z) {
         return new this.THREE.Vector3(x, y, z);
@@ -49,9 +51,6 @@ const SHP = {
     },
     getMAT4: function () {
         return new this.THREE.Matrix4();
-    },
-    getPackageName: function () {
-        return "superx101.basicShape";
     },
     getRoteMAT4: function (x, y, z, order) {
         return this.getMAT4().makeRotationFromEuler(new this.THREE.Euler(x * Math.PI / 180, y * Math.PI / 180, z * Math.PI / 180, order));
@@ -84,7 +83,6 @@ const SHP = {
 }
 Object.keys(SHP).forEach(key => { Object.freeze(SHP[key]); });
 SHP.registerPackage("基础形状", ["自由立方体", "自由平面", "两点生成直线"], "CALL自带的一个简单形状包");
-const Test = require("./CALL/src/tool/Test");
 
 //检查数字参数
 function checkNumber(p, negative = true) {
@@ -123,7 +121,6 @@ function simpleCubeVoxelization(cube, m4, SNBT) {
     cube.center();
     cube.computeBoundingBox();
     let pre_box = cube.boundingBox.clone();
-    log(pre_box)
 
     //逆矩阵
     let m4_i = m4.clone().invert();

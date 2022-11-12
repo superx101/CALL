@@ -1,3 +1,5 @@
+const CHUNK_R = 64 * 5;
+
 class Constant {
     static SPACE = {
         MAX_HIGHT: 320,
@@ -13,6 +15,10 @@ class Constant {
     }
     static FILL = {
         MAX_HIGHT: 8
+    }
+    static CHUNK = {
+        R: CHUNK_R,
+        R_SQR: CHUNK_R * CHUNK_R
     }
 }
 

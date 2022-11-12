@@ -33,6 +33,7 @@ class Menu extends Form {
             .addButton("保存", "")
             .addButton("保存的结构", "")
             .addButton("生成形状", "")
+            .addButton("刷新区块")
             .addButton("设置", "")
             .addButton("基础教程", "")
         if (opts.length > 0) {
@@ -76,9 +77,12 @@ class Menu extends Form {
                 new ShapeForm(this).sendForm(opts);
                 break;
             case 9:
-                new SettingForm(this).sendForm(opts);
+                this.player.runcmd("ca rf");
                 break;
             case 10:
+                new SettingForm(this).sendForm(opts);
+                break;
+            case 11:
                 new TutorailForm(this).sendForm(opts);
                 break;
             default:
