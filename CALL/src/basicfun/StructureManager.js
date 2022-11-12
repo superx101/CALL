@@ -1,7 +1,7 @@
-// const Config = require("../global/Config")
+const Config = require("../global/Config")
 // const Players = require("../global/Players")
-// const Pos3D = require("../tool/Pos3D")
-// const NBTManager = require("./NBTManager")
+const Pos3D = require("../tool/Pos3D")
+const NBTManager = require("./NBTManager")
 
 class StructureManager {
     static STRUCT_OPN_MOD = {

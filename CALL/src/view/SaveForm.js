@@ -1,6 +1,6 @@
 const Form = require("./Form");
 
-class PasteForm extends Form {
+class SaveForm extends Form {
     constructor(form) {
         super(form.player, form.playerData, form.settings);
         return this;
@@ -21,9 +21,9 @@ class PasteForm extends Form {
 
         this.player.sendForm(form, (pl, data) => {
             if (data == null) return;
-            pl.runcmd(`ca sa ${data[0]}`);
+            pl.runcmd(`ca sa "${data[0]}"`);
         });
     }
 }
 
-module.exports = PasteForm;
+module.exports = SaveForm;

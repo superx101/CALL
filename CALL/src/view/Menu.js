@@ -5,7 +5,7 @@ const StructureOperation = require("../operation/StructureOperation")
 const Form = require("./Form")
 const AreaForm = require("./AreaForm")
 const OperationForm = require("./OperationForm")
-const PasteForm = require("./PasteForm")
+const SaveForm = require("./SaveForm")
 const StructureForm = require("./StructureForm")
 const ShapeForm = require("./ShapeForm")
 const SettingForm = require("./SettingForm")
@@ -68,7 +68,7 @@ class Menu extends Form {
                 this.player.runcmd("ca pa");
                 break;
             case 6:
-                new PasteForm(this).sendForm(opts);
+                new SaveForm(this).sendForm(opts);
                 break;
             case 7:
                 new StructureForm(this).sendForm(opts);
