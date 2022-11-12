@@ -1,11 +1,11 @@
-// const Constant = require("../global/Constant")
-// const Config = require("../global/Config")
-// const Pos3D = require("../tool/Pos3D")
-// const Area3D = require("../tool/Area3D")
-// const Structure = require("../tool/Structure")
-// const StrFactory = require("../tool/StrFactory")
-// const StructureManager = require("../basicfun/StructureManager")
-// const AreaOperation = require("./AreaOperation")
+const Constant = require("../global/Constant")
+const Config = require("../global/Config")
+const Pos3D = require("../tool/Pos3D")
+const Area3D = require("../tool/Area3D")
+const Structure = require("../tool/Structure")
+const StrFactory = require("../tool/StrFactory")
+const StructureManager = require("../basicfun/StructureManager")
+const AreaOperation = require("./AreaOperation")
 
 class StructureOperation {
     static findId(input, xuid) {
@@ -20,15 +20,16 @@ class StructureOperation {
             StructureManager.publicForEach((id, key) => {
                 if (id === input) {
                     structid = id;
-                    return { xuid: key, structid: structid };
+                    xuid = key;
                 }
             });
         }
-        else {
-            return { xuid: xuid, structid: structid };
-        }
+        
         if (structid == null) {
             throw new Error("无法找到结构, 请输入正确的结构id");
+        }
+        else {
+            return { xuid, structid };
         }
     }
 
@@ -211,7 +212,7 @@ class StructureOperation {
         let lastComplex = data.copy;
         let dellast = false;
         //删除上个存储记录
-        if(Object.keys(lastComplex).length > 0) {
+        if (Object.keys(lastComplex).length > 0) {
             dellast = true;
         }
         let area = new Area3D(playerData.settings.area);
@@ -259,7 +260,7 @@ class StructureOperation {
     }
 
     static getSaveList(mod, player) {
-        if(mod == 0) {
+        if (mod == 0) {
             return StructureManager.getPrivateArr(player);
         }
         else {
