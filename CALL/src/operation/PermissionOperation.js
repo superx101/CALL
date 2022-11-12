@@ -27,7 +27,7 @@ class PermissionOperation {
     }
 
     static list(output) {
-        output.success("CALL使用权限: ", Config.get(Config.PERMISSIONS, "list"));
+        output.success("有权使用CALL名单: ", Config.get(Config.PERMISSIONS, "list"));
     }
 
     static add(name, output) {
