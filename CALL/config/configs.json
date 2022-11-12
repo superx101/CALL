@@ -120,7 +120,7 @@
             "minecraft:stick": {
                 "": {
                     "cmds": [
-                        "ca ar en ${pos.x} ${pos.y} ${pos.x}"
+                        "ca ar b ${pos.x} ${pos.y} ${pos.z}"
                     ],
                     "describe": "B点选区工具"
                 }
@@ -128,7 +128,7 @@
             "minecraft:arrow": {
                 "": {
                     "cmds": [
-                        "ca ar st ${pos.x} ${pos.y} ${pos.x}"
+                        "ca ar a ${pos.x} ${pos.y} ${pos.z}"
                     ],
                     "describe": "A点选区工具"
                 }

@@ -3,6 +3,8 @@
 // const Pos3D = require("../tool/Pos3D")
 // const StrFactory = require("../tool/StrFactory")
 
+const Activity = require("../main/Activity");
+
 class Players {
     static dataMap = new Map();
 
@@ -11,7 +13,15 @@ class Players {
             case "all":
                 return true;
             case "op":
-                return player.isOP();
+                let isOp = player.isOP();
+                let playerData = Players.getData(player.xuid);
+                if(isOp && playerData == null) {
+                    Activity.onCreate(player);
+                }
+                else if(!isOp && playerData != null) {
+                    Activity.onDestroy(player);
+                }
+                return isOp;
             case "customize":
                 return PermissionOperation.find(player.realName);
             default:
