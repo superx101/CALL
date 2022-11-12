@@ -47,7 +47,7 @@ class StructureForm extends Form {
         let mirrorArr = ["无", "x", "z", "xz"];
         let mirrorArr_select = ["none", "x", "z", "xz"];
         let form = mc.newCustomForm()
-            .setTitle(`加载结构 ${stData.name} (${mc.getPlayer(stData.author).realName})`)
+            .setTitle(`加载结构 ${stData.name} (${data.xuid2name(stData.author)})`)
             .addLabel("输入坐标 (默认为当前坐标值)")
             .addInput("x y z", "整数(空格分割)", `${plPos.formatStr()}`)
             .addStepSlider("旋转角度(顺时针)", degreeArr, 0)
@@ -74,8 +74,8 @@ class StructureForm extends Form {
             .addButton("返回上一级")
 
         let list = StructureOperation.getSaveList(1, this.player);
-        list.forEach((data, i, arr) => {
-            form.addButton(`名称: ${data.name} 作者: ${mc.getPlayer(data.author).realName}\nid: ${data.id}`);
+        list.forEach((d, i, arr) => {
+            form.addButton(`名称: ${d.name} 作者: ${data.xuid2name(d.author)}\nid: ${d.id}`);
         });
 
         this.player.sendForm(form, (pl, i) => {
