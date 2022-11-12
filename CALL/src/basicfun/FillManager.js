@@ -1,7 +1,8 @@
 // const Structure = require("../tool/Structure")
 // const Area3D = require("../tool/Area3D")
 // const Pos3D = require("../tool/Pos3D")
-// const StructureManager = require("./StructureManager")
+const Config = require("../global/Config")
+const StructureManager = require("./StructureManager")
 
 class FillManager {
     /*** private */
@@ -15,7 +16,8 @@ class FillManager {
             dimid = area.start.dimid;
             yBottom = area.start.y;
             player.teleport((area.start.x + area.end.x) / 2, yBottom, (area.start.z + area.end.z) / 2, dimid);
-            for (let i = 0; i < ySize - 1; i++) {
+            setTimeout(()=>{
+                for (let i = 0; i < ySize - 1; i++) {
                 yTop = yBottom + Constant.FILL.MAX_HIGHT - 1;
                 cmdCallback(yBottom, yTop, area);
                 yBottom += Constant.FILL.MAX_HIGHT;
@@ -23,16 +25,19 @@ class FillManager {
             yBottom = area.start.y + (ySize - 1) * Constant.FILL.MAX_HIGHT;
             yTop = area.end.y;
             cmdCallback(yBottom, yTop, area);
+            }, 500);
+            
         }, (x, z) => {
             overCallback();
-        }, () => { });
+        }, () => {
+
+        }, 300 + Config.get(Config.GLOBAL, "maxLoadCheckNum") * 100);
     }
 
     static soildFill(player, playerData, targetArea, blockName1, tileData1, blockName2, tileData2, mod, overCallback) {
         let st = new Structure(new Area3D(targetArea));
         StructureManager.undoSave(player, playerData, [st], () => {
             FillManager.ergod(player, playerData, st.getAreas(), (yBottom, yTop, area) => {
-                // log(`fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} ${blockName} ${tileData}`)
                 Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} ${blockName1} ${tileData1} ${mod} ${blockName2} ${tileData2}`, false);
             }, () => {
                 overCallback();
@@ -61,7 +66,6 @@ class FillManager {
         StructureManager.undoSave(player, playerData, sts, () => {
             sts.forEach((st, i) => {
                 FillManager.ergod(player, playerData, st.getAreas(), (yBottom, yTop, area) => {
-                    // log(`fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} ${blockName} ${tileData}`)
                     Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} ${blockName1} ${tileData1}`, false);
                     if (i == 6) {
                         Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} air 0`, false);

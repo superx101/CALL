@@ -1,6 +1,6 @@
 // const Area3D = require("../tool/Area3D")
 // const StrFactory = require("../tool/StrFactory")
-// const FillManager = require("../basicfun/FillManager")
+const FillManager = require("../basicfun/FillManager")
 // const StructureManager = require("../basicfun/StructureManager")
 // const AreaOperation = require("./AreaOperation")
 

@@ -66,7 +66,7 @@ class StructureManager {
         }
     }
 
-    static traversal(player, playerData, areas, x, z, successCallback, overCallback, failCallback) {
+    static traversal(player, playerData, areas, x, z, successCallback, overCallback, failCallback, wait = 0) {
         function suc() {
             //成功
             successCallback(x, z);
@@ -76,14 +76,16 @@ class StructureManager {
                 x = 0;
                 z++;
             }
-            if (z < areas[0].length) {
-                StructureManager.traversal(player, playerData, areas, x, z, successCallback, overCallback, failCallback);
-            }
-            else {
-                //结束
-                playerData.forbidCmd = false;
-                overCallback(x, z);
-            }
+            setTimeout(() => {
+                if (z < areas[0].length) {
+                    StructureManager.traversal(player, playerData, areas, x, z, successCallback, overCallback, failCallback, wait);
+                }
+                else {
+                    //结束
+                    playerData.forbidCmd = false;
+                    overCallback(x, z);
+                }
+            }, wait);
         }
         let pos = areas[x][z].start;
         if (x == 0 && z == 0) {
@@ -112,7 +114,7 @@ class StructureManager {
                     else {
                         //失败
                         failCallback(x, z);
-                        tp();
+                        StructureManager.tp(player, playerData);
                         playerData.forbidCmd = false;
                         if (playerData.settings.loadChuckTip) {
                             player.sendText(StrFactory.cmdErr(`${areas[x][z]} 尝试加载区块${ns}次均失败, 已取消操作`));
@@ -211,11 +213,11 @@ class StructureManager {
                 NBTManager.del(saveid);
             }
         }
-        if(st.isPublic) {
+        if (st.isPublic) {
             let pu = Config.get(Config.STRUCTURES, `public`);
             let data = pu[player.xuid];
             delete data[data.indexOf(sid)];
-            if(data.length == 0) {
+            if (data.length == 0) {
                 delete pu[player.xuid];
             }
             Config.set(Config.STRUCTURES, `public`, pu);
@@ -226,7 +228,7 @@ class StructureManager {
         let arr = [];
         let saveList = Config.get(Config.STRUCTURES, `private.${player.xuid}.saveList`);
         Object.keys(saveList).forEach((structid) => {
-            arr.push({ id: structid, name: saveList[structid].name, author: player.xuid,  isPublic: saveList[structid].isPublic});
+            arr.push({ id: structid, name: saveList[structid].name, author: player.xuid, isPublic: saveList[structid].isPublic });
         });
         return arr;
     }
@@ -235,7 +237,7 @@ class StructureManager {
         let arr = [];
         StructureManager.publicForEach((id, key) => {
             let st = Config.get(Config.STRUCTURES, `private.${key}.saveList.${id}`);
-            arr.push({ id: id, name: st.name, author: key, isPublic: st.isPublic});
+            arr.push({ id: id, name: st.name, author: key, isPublic: st.isPublic });
         });
         return arr;
     }
