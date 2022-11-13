@@ -6,25 +6,33 @@ class OperationForm extends Form {
         return this;
     }
 
-    opt(opts, itemA, itemB) {
+    static MODE = {
+        NULL: 0,
+        HOLLOW: 1,
+        OUTLINE: 2,
+        CLEAR: 3,
+        REPLACE: 4
+    }
+
+    opt(opts) {
         switch (opts.shift()) {
             case 0:
                 new Menu(this.player, this.playerData).sendForm();
                 break;
             case 1:
-                this.player.runcmd(`ca fi ${itemA.type} ${itemA.aux} nu`);
+                this.fillForm(OperationForm.MODE.NULL);
                 break;
             case 2:
-                this.player.runcmd(`ca fi ${itemA.type} ${itemA.aux} ho`);
+                this.fillForm(OperationForm.MODE.HOLLOW);
                 break;
             case 3:
-                this.player.runcmd(`ca fi ${itemA.type} ${itemA.aux} ou`);
+                this.fillForm(OperationForm.MODE.OUTLINE);
                 break;
             case 4:
                 this.player.runcmd("ca cl");
                 break;
             case 5:
-                this.player.runcmd(`ca re ${itemA.type} ${itemA.aux} ${itemB.type} ${itemB.aux}`);
+                this.fillForm(OperationForm.MODE.REPLACE);
                 break;
             case 6:
                 this.moveForm();
@@ -52,6 +60,31 @@ class OperationForm extends Form {
             return;
         }
 
+        let form = mc.newSimpleForm()
+            .setTitle("选区操作")
+            .addButton(`返回上一级`, "")
+            .addButton(`实心填充`, "")
+            .addButton(`空心填充`, "")
+            .addButton(`方体边界填充`, "")
+            .addButton("清除", "")
+            .addButton(`替换`, "")
+            .addButton("选区平移", "")
+            .addButton("选区堆叠", "")
+            .addButton("选区镜像", "")
+            .addButton("选区旋转", "")
+
+        if (opts.length > 0) {
+            this.opt(opts);
+        }
+        else {
+            this.player.sendForm(form, (pl, id) => {
+                opts.push(id);
+                this.opt(opts);
+            });
+        }
+    }
+
+    fillForm(mode) {
         let con = this.player.getInventory();
         let ia = this.settings.barReplace;
         let ib = this.settings.barReplaced;
@@ -65,29 +98,32 @@ class OperationForm extends Form {
         if (itemB.isNull() || !itemB.isBlock) {
             itemB = { type: "minecraft:air", aux: 0 };
         }
-        let form = mc.newSimpleForm()
-            .setTitle("选区操作")
-            .setContent(`填充替换时自动选择物品栏第[${showA}][${showB}]格中方块\n[${showA}]:(种类: ${itemA.type} 特殊值: ${itemA.aux})\n[${showB}]:(种类: ${itemB.type} 特殊值: ${itemB.aux})`)
-            .addButton(`返回上一级`, "")
-            .addButton(`实心填充[${showA}]`, "")
-            .addButton(`空心填充[${showA}]`, "")
-            .addButton(`方体边界填充[${showA}]`, "")
-            .addButton("清除", "")
-            .addButton(`替换[${showA}]->[${showB}]`, "")
-            .addButton("选区平移", "")
-            .addButton("选区堆叠", "")
-            .addButton("选区镜像", "")
-            .addButton("选区旋转", "")
+        let form = mc.newCustomForm()
+            .setTitle("方块材质")
+            .addInput(`方块材质与特殊值\n  默认从物品栏第[${showA}]号选择方块`, "空格分割", `${itemA.type} ${itemA.aux}`)
+        if (mode == OperationForm.MODE.REPLACE) {
+            form.addInput(`被替换方块材质与特殊值\n  默认从物品栏第[${showB}]号选择方块`, "空格分割", `${itemB.type} ${itemB.aux}`)
+        }
 
-        if (opts.length > 0) {
-            this.opt(opts, itemA, itemB);
-        }
-        else {
-            this.player.sendForm(form, (pl, id) => {
-                opts.push(id);
-                this.opt(opts, itemA, itemB);
-            });
-        }
+        this.player.sendForm(form, (pl, data) => {
+            if(data == null) return ;
+            let blockA = data[0].split(" ");
+            switch (mode) {
+                case OperationForm.MODE.NULL:
+                    this.player.runcmd(`ca fi ${blockA[0]} ${blockA[1]} nu`);
+                    break;
+                case OperationForm.MODE.HOLLOW:
+                    this.player.runcmd(`ca fi ${blockA[0]} ${blockA[1]} ho`);
+                    break;
+                case OperationForm.MODE.OUTLINE:
+                    this.player.runcmd(`ca fi ${blockA[0]} ${blockA[1]} ou`);
+                    break;
+                case OperationForm.MODE.REPLACE:
+                    let blockB = data[1].split(" ");
+                    this.player.runcmd(`ca re ${blockA[0]} ${blockA[1]} ${blockB[0]} ${blockB[1]}`);
+                    break;
+            }
+        });
     }
 
     moveForm() {
