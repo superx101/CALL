@@ -8,7 +8,7 @@
 &emsp;&emsp;[LiteLoader minebbs链接](https://www.minebbs.com/liteloader/)
 
 ## 本插件安装
-&emsp;&emsp;安装LiteLoader后，前往 [github下载页面](https://github.com/superx101/CALL/releases) **或** [minebbs下载页面]() 下载最新版本的插件。  
+&emsp;&emsp;安装LiteLoader后，前往 [github下载页面](https://github.com/superx101/CALL/releases) **或** [minebbs下载页面](https://www.minebbs.com/resources/call.4910/) 下载最新版本的插件。  
 &emsp;&emsp;下载完成后，将文件解压后放入 *`服务器文件夹/plugins`* 目录内，此时您的文件夹内容如下：    
 ```
 └─┬─bedrock-server-1.19.40.02 (您的服务器文件夹，这里以bedrock-server-1.19.40.02为例)
