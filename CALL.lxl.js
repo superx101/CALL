@@ -1,7 +1,7 @@
 "use strict"
 
 const VERSION = [0, 1, 0];
-const LL_MINVERSION = [2, 7, 2];
+const LL_MINVERSION = [2, 8, 1];
 
 ll.registerPlugin(
     /* name */ "CALL",
@@ -214,6 +214,7 @@ function Main_command_consoleCallback(output, res) {
             PermissionOperation.add(res.playerName, output);
             break;
         case "list":
+        case "li":
             PermissionOperation.list(output);
             break;
         case "reload":
@@ -481,7 +482,7 @@ function Main_listener() {
                 setTimeout(() => {
                     playerData.click = false;
                 }, 200);
-  
+
                 //业务
                 ToolOperation.onClick(player, playerData, item, block, pos);
             }
