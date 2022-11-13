@@ -1,12 +1,15 @@
 // const Constant = require("../global/Constant")
 // const Pos3D = require("../tool/Pos3D")
 // const Area3D = require("../tool/Area3D")
-// const Structure = require("../tool/Structure");
+const Structure = require("../tool/Structure");
 // const StrFactory = require("../tool/StrFactory")
 // const StructureManager = require("../basicfun/StructureManager")
 // const AreaOperation = require("./AreaOperation")
 // const Transform3 = require("../math/simplematrix/Transform3")
 // const Vector3D = require("../math/simplematrix/Vector3D")
+
+const Area3D = require("../tool/Area3D");
+const StructureOperation = require("./StructureOperation");
 
 
 class BasicTranslOperation {
@@ -47,6 +50,7 @@ class BasicTranslOperation {
         }
         let st1 = new Structure(playerData.settings.area);
         let st2 = StructureManager.getTargetStruct(st1, pos);
+        StructureOperation.checkTargetStruct(st1.area, pos);//检查移动后的区域是否超过限制
         BasicTranslOperation.sl(player, playerData, st1, st2, "none", "0_degrees", () => {
             player.sendText(StrFactory.cmdSuccess(`已将选区平移至 ${pos}`));
         });

@@ -33,7 +33,6 @@ class StructureOperation {
         }
     }
 
-    /*** private */
     static checkTargetStruct(area, pos) {
         area = new Area3D(area);
         let lens = area.getLens();
@@ -41,7 +40,7 @@ class StructureOperation {
             throw new Error("目标点y坐标不能小于" + Constant.SPACE.MIN_HIGHT);
         }
         else if (pos.y + lens[1] > Constant.SPACE.MAX_HIGHT) {
-            throw new Error(`结构高度(${lens[1]})+目标点y坐标 超过最大可放置范围 ${Constant.SPACE.MAX_HIGHT}`)
+            throw new Error(`结构高度(${lens[1]}) + 目标点y坐标(${pos.y}) = ${pos.y + lens[1]} 超过世界限制 ${Constant.SPACE.MAX_HIGHT}`)
         }
     }
 
