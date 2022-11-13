@@ -1,6 +1,9 @@
 # Construct Assistant 
 # for 
 # LiteLoaderBDS
+
+![CALL](https://raw.githubusercontent.com/superx101/CALL/main/docs/image/CALL_light_ico.ico)
+
 - 建造助手 CALL
 
 - 一个基于LiteLoaderBDS的建造辅助工具
