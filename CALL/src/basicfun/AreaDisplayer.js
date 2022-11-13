@@ -1,4 +1,6 @@
 // const Constant = require("../global/Constant")
+const StructureManager = require("../basicfun/StructureManager")
+const PlayerData = require("../tool/PlayerData");
 
 class AreaDisplayer {
     static posMap = new Map();
@@ -29,24 +31,25 @@ class AreaDisplayer {
             blockEntity.setNbt(entityNbt);
         }
         catch (e) {
-            AreaDisplayer.undo();
             throw new Error("区域显示: 设置结构方块失败, " + e.message);
         }
     };
 
     /*** private */
-    static undo(pos) {
+    static undo(pos, player, playerData) {
         try {
+            // StructureManager.savePos(player, playerData);
+            // player.teleport(pos.x, pos.y, pos.z, pos.dimid);
+
             let data = AreaDisplayer.posMap.get(pos);
             mc.getBlock(pos.x, pos.y, pos.z, pos.dimid).setNbt(data.blockNbt);
-            if (data.blockEntityNbt) {
+            if (data.blockEntityNbt != null) {
                 mc.getBlock(pos.x, pos.y, pos.z, pos.dimid).getBlockEntity().setNbt(data.blockEntityNbt);
             }
+
+            // StructureManager.tp(player, playerData);
         }
-        catch (e) {
-            return false;
-        }
-        return false;
+        catch (e) { }
     };
 
     /**
@@ -118,9 +121,10 @@ class AreaDisplayer {
         }
     }
 
-    static remove(pos) {
-        AreaDisplayer.undo(pos);
-        AreaDisplayer.posMap.delete(pos);
+    static remove(playerData) {
+        let player = mc.getPlayer(playerData.xuid);
+        AreaDisplayer.undo(playerData.displayPos, player, playerData);
+        AreaDisplayer.posMap.delete(playerData.displayPos);
     }
 }
 

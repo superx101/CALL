@@ -1,7 +1,7 @@
 // const StrFactory = require("../tool/StrFactory")
 // const Constant = require("../global/Constant")
 // const Area3D = require("../tool/Area3D")
-// const AreaDisplayer = require("../basicfun/AreaDisplayer")
+const AreaDisplayer = require("../basicfun/AreaDisplayer")
 
 class AreaOperation {
     static start(player, output, playerData, res) {
@@ -212,7 +212,7 @@ class AreaOperation {
     static hideArea(playerData) {
         if (AreaOperation.hasSetArea(playerData)) {
             if (playerData.displayPos != null) {
-                AreaDisplayer.remove(playerData.displayPos);
+                AreaDisplayer.remove(playerData);
                 playerData.displayPos = null;
             }
         }
