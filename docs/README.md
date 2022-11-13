@@ -2,7 +2,7 @@
 
 # 插件介绍
 ## 简介
-&emsp;&emsp;Construct Assistant for LiteLoaderBDS, 简称CALL、建造助手，是针对**基岩版服务器（BDS）**的辅助建造工具，且提供API支持其他插件开发者拓展CALL的功能。
+&emsp;&emsp;Construct Assistant for LiteLoaderBDS, 简称CALL、建造助手，是针对基岩版服务器（BDS）的辅助建造工具，且提供API支持其他插件开发者拓展CALL的功能。
 
 **为什么选择CALL？**  
 - ___指令操作___  
