@@ -34,7 +34,7 @@
 &emsp;Bug反馈与建议：[691552572](https://jq.qq.com/?_wv=1027&k=9soqRZuV)
 
 - ___文档教程___   
-&emsp;CALL为您提供了[文档]()，记录了较为详细的插件安装、使用方法以及第三方插件开发教程
+&emsp;CALL为您提供了[文档](https://superx101.github.io/CALL/)，记录了较为详细的插件安装、使用方法以及第三方插件开发教程
 
 ## 功能
 - **[选区填充](user/function/areaOperation?id=%e5%a1%ab%e5%85%85-fill)**
