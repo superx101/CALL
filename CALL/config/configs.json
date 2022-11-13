@@ -91,8 +91,8 @@
     */
     "default": {
         "enable": true,
-        "barReplace": 1,
-        "barReplaced": 2,
+        "barReplace": 0,
+        "barReplaced": 1,
         "saveArea": false,
         "saveUndo": true,
         "saveCopy": false,
