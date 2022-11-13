@@ -17,6 +17,7 @@
   * [开发须知](dev/plugin.md)
   * [形状包API](dev/shape.md)
 * 其他
+  * [常见问题](other/question.md)
   * [Bug反馈及建议](other/debug.md)
   * [更新日志](other/update.md)
   * [更多形状包](other/plugins.md)

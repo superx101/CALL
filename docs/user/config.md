@@ -62,4 +62,4 @@
 - `CALL/config/userlist.json`文件中存有玩家名字的白名单，处于白名单内的玩家可以使用CALL。  
 注：当配置项[`permission`](#permission-使用权限)为`"customize"`时，才开启白名单。
 
-?> 不建议您直接修改`userlist.json`文件，CALL提供了后台命令帮助您快速[添加和移除]()白名单内玩家
+?> 不建议您直接修改`userlist.json`文件，CALL提供了后台命令帮助您快速[添加和移除](user/function/console)白名单内玩家
