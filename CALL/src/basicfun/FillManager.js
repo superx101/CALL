@@ -26,7 +26,7 @@ class FillManager {
             yTop = area.end.y;
             cmdCallback(yBottom, yTop, area);
             }, 500);
-            
+            return true;
         }, (x, z) => {
             overCallback();
         }, () => {

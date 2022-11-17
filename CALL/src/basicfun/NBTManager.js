@@ -13,12 +13,13 @@ class NBTManager {
         });
     }
 
-    static load(saveid, pos, mirror = "None", rataion = 0) {
+    static load(player, saveid, pos, mirror = "None", rataion = 0) {
         let file = new File(NBTManager.PATH + `${saveid}.mcstructure`, 0, true);
         let bnbt = file.readAllSync();
         let nbt = NBT.parseBinaryNBT(bnbt);
         let intPos = mc.newIntPos(pos.x, pos.y, pos.z, pos.dimid);
         let mir = 0;
+        file.close();
         switch (mirror) {
             case "x":
                 mir = 1;
@@ -30,8 +31,8 @@ class NBTManager {
                 mir = 3;
                 break;
         }
-        mc.setStructure(nbt, intPos, mir, parseInt(parseFloat(rataion) / 90));
-        file.close();
+        player.teleport(intPos);
+        return mc.setStructure(nbt, intPos, mir, parseInt(parseFloat(rataion) / 90));
     }
 
     static del(saveid) {

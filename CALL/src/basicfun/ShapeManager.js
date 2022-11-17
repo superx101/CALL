@@ -212,6 +212,7 @@ class ShapeManager {
                         if (res.nbts != null) {
                             mc.setStructure(res.nbts[x][z], mc.newIntPos(res.areas[x][z].start.x, res.areas[x][z].start.y, res.areas[x][z].start.z, res.areas[x][z].start.dimid));
                         }
+                        return true;
                     }, () => {
                         player.refreshChunks();
                         player.sendText(StrFactory.cmdSuccess("成功形成形状"));
