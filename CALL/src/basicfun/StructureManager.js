@@ -1,6 +1,7 @@
 const Config = require("../global/Config")
 // const Players = require("../global/Players")
-const Pos3D = require("../tool/Pos3D")
+const Pos3D = require("../tool/Pos3D");
+const Test = require("../tool/Test");
 const NBTManager = require("./NBTManager")
 
 class StructureManager {
@@ -69,23 +70,24 @@ class StructureManager {
     static traversal(player, playerData, areas, x, z, successCallback, overCallback, failCallback, wait = 0) {
         function suc() {
             //成功
-            successCallback(x, z);
-            //继续执行下一区域
-            x++;
-            if (x >= areas.length) {
-                x = 0;
-                z++;
+            if (successCallback(x, z) == true) {
+                //继续执行下一区域
+                x++;
+                if (x >= areas.length) {
+                    x = 0;
+                    z++;
+                }
+                setTimeout(() => {
+                    if (z < areas[0].length) {
+                        StructureManager.traversal(player, playerData, areas, x, z, successCallback, overCallback, failCallback, wait);
+                    }
+                    else {
+                        //结束
+                        playerData.forbidCmd = false;
+                        overCallback(x, z);
+                    }
+                }, wait);
             }
-            setTimeout(() => {
-                if (z < areas[0].length) {
-                    StructureManager.traversal(player, playerData, areas, x, z, successCallback, overCallback, failCallback, wait);
-                }
-                else {
-                    //结束
-                    playerData.forbidCmd = false;
-                    overCallback(x, z);
-                }
-            }, wait);
         }
         let pos = areas[x][z].start;
         if (x == 0 && z == 0) {
@@ -147,6 +149,7 @@ class StructureManager {
             // Players.cmd(player, `/structure save "${saveid}" ${start.formatStr()} ${end.formatStr()} disk`);
             NBTManager.save(saveid, areas[x][z]);
             // log(`/structure save "${saveid}" ${start.formatStr()} ${end.formatStr()} disk`);
+            return true;
         }, (x, z) => {
             //结束
             overCallback(structid, data);
@@ -199,7 +202,7 @@ class StructureManager {
             saveid = structid + "_" + x + "_" + z;
             // Players.cmd(player, `/structure load "${saveid}" ${areas[x][z].start.formatStr()} ${degrees} ${mirror} ${String(includeEntities)} ${String(includeBlocks)} ${integrity} ${seed}`);
             start = areas[x][z].start;
-            NBTManager.load(saveid, new Pos3D(start.x + tx, start.y, start.z + tz, start.dimid), mirror, degrees);
+            return NBTManager.load(player, saveid, new Pos3D(start.x + tx, start.y, start.z + tz, start.dimid), mirror, degrees);
         }, (x, z) => {
             overCallback();
         }, (x, z) => { });
@@ -298,10 +301,12 @@ class StructureManager {
 
     static clearCopy(player) {
         let complex = Config.get(Config.STRUCTURES, `private.${player.xuid}.copy`);
-        Object.keys(complex).forEach((sid) => {
-            StructureManager.delete(player, sid, complex[sid]);
-        });
-        Config.set(Config.STRUCTURES, `private.${player.xuid}.copy`, {});
+        if (complex != null) {
+            Object.keys(complex).forEach((sid) => {
+                StructureManager.delete(player, sid, complex[sid]);
+            });
+            Config.set(Config.STRUCTURES, `private.${player.xuid}.copy`, {});
+        }
     }
 
     static clearUndoList(player) {
