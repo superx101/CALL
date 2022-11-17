@@ -301,10 +301,12 @@ class StructureManager {
 
     static clearCopy(player) {
         let complex = Config.get(Config.STRUCTURES, `private.${player.xuid}.copy`);
-        Object.keys(complex).forEach((sid) => {
-            StructureManager.delete(player, sid, complex[sid]);
-        });
-        Config.set(Config.STRUCTURES, `private.${player.xuid}.copy`, {});
+        if (complex != null) {
+            Object.keys(complex).forEach((sid) => {
+                StructureManager.delete(player, sid, complex[sid]);
+            });
+            Config.set(Config.STRUCTURES, `private.${player.xuid}.copy`, {});
+        }
     }
 
     static clearUndoList(player) {
