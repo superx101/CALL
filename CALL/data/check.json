@@ -30,7 +30,7 @@
         "maxLoadCheckNum": {
             "type": "number",
             "min": 1,
-            "max": 5
+            "max": 20
         },
         "default.enable": {
             "type": "boolean"
