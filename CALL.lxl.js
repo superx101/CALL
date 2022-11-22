@@ -1,6 +1,6 @@
 "use strict"
 
-const VERSION = [0, 1, 0];
+const VERSION = [0, 1, 1];
 const LL_MINVERSION = [2, 8, 1];
 
 ll.registerPlugin(
