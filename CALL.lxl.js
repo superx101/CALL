@@ -19,7 +19,7 @@ const Enums = require("./CALL/src/global/Enums");
 const Vector3D = require("./CALL/src/math/simplematrix/Vector3D");
 const Matrix3D = require("./CALL/src/math/simplematrix/Matrix3D");
 const Transform3 = require("./CALL/src/math/simplematrix/Transform3");
-const THREE = require("./CALL/lib/three.js/src/Three");
+// const THREE = require("./CALL/lib/three.js/src/Three");
 
 const StrFactory = require("./CALL/src/tool/StrFactory");
 const Pos3D = require("./CALL/src/tool/Pos3D");
