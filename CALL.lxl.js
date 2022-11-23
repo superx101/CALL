@@ -10,6 +10,8 @@ ll.registerPlugin(
     /* otherInformation */ {}
 );
 
+Main_checkVersion();
+
 //####################### Class #######################
 const Constant = require("./CALL/src/global/Constant");
 const Config = require("./CALL/src/global/Config");
@@ -553,7 +555,6 @@ function Main_debug() {
 
 function Main(debug) {
     if (Config.get(Config.GLOBAL, "enable")) {
-        Main_checkVersion();
         if (Main_ini()) {
             Main_clock();
 
