@@ -1,4 +1,3 @@
-const THREE = require("../../lib/three.js/src/Three")
 const ShapeLoader = require("../plugin/ShapeLoader")
 const StructureManager = require("./StructureManager")
 const StrFactory = require("../tool/StrFactory")

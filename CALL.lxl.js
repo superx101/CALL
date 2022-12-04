@@ -1,6 +1,6 @@
 "use strict"
 
-const VERSION = [0, 1, 0];
+const VERSION = [0, 1, 2];
 const LL_MINVERSION = [2, 8, 1];
 
 ll.registerPlugin(
@@ -9,6 +9,8 @@ ll.registerPlugin(
     /* version */VERSION,
     /* otherInformation */ {}
 );
+
+Main_checkVersion();
 
 //####################### Class #######################
 const Constant = require("./CALL/src/global/Constant");
@@ -19,7 +21,7 @@ const Enums = require("./CALL/src/global/Enums");
 const Vector3D = require("./CALL/src/math/simplematrix/Vector3D");
 const Matrix3D = require("./CALL/src/math/simplematrix/Matrix3D");
 const Transform3 = require("./CALL/src/math/simplematrix/Transform3");
-const THREE = require("./CALL/lib/three.js/src/Three");
+// const THREE = require("./CALL/lib/three.js/src/Three");
 
 const StrFactory = require("./CALL/src/tool/StrFactory");
 const Pos3D = require("./CALL/src/tool/Pos3D");
@@ -553,7 +555,6 @@ function Main_debug() {
 
 function Main(debug) {
     if (Config.get(Config.GLOBAL, "enable")) {
-        Main_checkVersion();
         if (Main_ini()) {
             Main_clock();
 
