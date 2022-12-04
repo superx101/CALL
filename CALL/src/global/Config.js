@@ -1,9 +1,16 @@
+const Version = require("../tool/Version");
+
 const ROOT = './plugins/CALL';
 const DATAPATH = ROOT + '/data';
 const GLOBAL = ROOT + '/config';
 const PLUGINS = ROOT + '/plugins'
+const SERVER_VERSION = new Version(mc.getBDSVersion().substring(1));
+log(mc.getBDSVersion().substring(1))
+log(SERVER_VERSION)
+log(SERVER_VERSION.compare({arr: [1, 19, 80]}) < 0 ? true : false)
 
 class Config {
+    static ISOLDCOMMAND = SERVER_VERSION.compare({arr: [1, 19, 50]}) < 0 ? true : false; 
     static ROOT = ROOT;
     static DATAPATH = DATAPATH;
     static GLOBAL = new JsonConfigFile(GLOBAL + "/configs.json");
@@ -12,6 +19,7 @@ class Config {
     static PLAYERS_SETTINGS = new JsonConfigFile(DATAPATH + "/settings.json");
     static STRUCTURES = new JsonConfigFile(DATAPATH + "/structures.json");
     static CHECK = new JsonConfigFile(DATAPATH + "/check.json");
+    static SERVER_VERSION = SERVER_VERSION;
     static PERMISSIONS_TYPE_ENUM = {
         ALL: "all",
         OP: "op",

@@ -4,6 +4,7 @@
 // const StrFactory = require("../tool/StrFactory")
 
 const Activity = require("../main/Activity");
+const Config = require("../global/Config");
 
 class Players {
     static dataMap = new Map();
@@ -38,9 +39,13 @@ class Players {
     }
 
     static cmd(player, cmd, isTell = false) {
-        cmd = `/execute "${player.realName}" ${new Pos3D(player.pos).floor().formatStr()} ` + cmd;
+        if(Config.get(Config.GLOBAL, "oldCommandType") && Config.ISOLDCOMMAND) {
+            cmd = `/execute "${player.realName}" ${new Pos3D(player.pos).floor().formatStr()} ` + cmd;
+        }
+        else {
+            cmd = `/execute as "${player.realName}" positioned ${new Pos3D(player.pos).floor().formatStr()} run ` + cmd;
+        }
         let res = mc.runcmdEx(cmd);
-        log(cmd)
         if (!res.success && isTell) {
             player.sendText(StrFactory.cmdErr(res.output));
         }
