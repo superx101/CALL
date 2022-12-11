@@ -67,7 +67,7 @@ class ToolOperation {
     }
 
     static cmdsTranslator(cmds, block, posFloat) {
-        let posInt = new Pos3D(block.pos).floor();
+        let pos = new Pos3D(block.pos).floor();
         let posf = new Pos3D(posFloat);
         let arr = [];
         cmds.forEach((cmd, i) => {
@@ -80,17 +80,15 @@ class ToolOperation {
              * ${pos.z}:  block.pos
              * ${type}: block.type
              * ${tileData}: block.tileData
-             */
-            arr.push(
-                cmd.replaceAll("\$\{pos\.x\}", posInt.x)
-                    .replaceAll("\$\{pos\.y\}", posInt.y)
-                    .replaceAll("\$\{pos\.z\}", posInt.z)
-                    .replaceAll("\$\{posf\.x\}", posf.x)
-                    .replaceAll("\$\{posf\.y\}", posf.y)
-                    .replaceAll("\$\{posf\.z\}", posf.z)
-                    .replaceAll("\$\{type\}", block.type)
-                    .replaceAll("\$\{tileData\}", block.tileData)
-            );
+            */
+            let strs = cmd.match(/\$\{.+\}/g);
+            if (strs != null) {
+                for (let i = 0; i < strs.length; i++) {
+                    cmd = cmd.replace(new RegExp(/\$\{.+\}/), eval('`' + strs[i] + '`'));
+                }
+            }
+
+            arr.push(cmd);
         });
         return arr;
     }

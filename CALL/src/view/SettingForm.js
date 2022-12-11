@@ -52,7 +52,6 @@ class SettingForm extends Form {
             .addInput("  指令组", "输入指令 (;号分割多条指令)", cmdstr)
 
         this.player.sendForm(form, (pl, data) => {
-            log(data)
             if (data == null) return;
             if (mod == 0) {
                 this.addHotkey(data[2], data[3], data[4], data[5]);
