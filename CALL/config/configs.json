@@ -157,7 +157,7 @@
             "minecraft:bone": {
                 "": {
                     "cmds": [
-                        "ca pa ${pos.x} ${pos.y} ${pos.x}"
+                        "ca pa ${pos.x} ${pos.y} ${pos.z}"
                     ],
                     "describe": "粘贴到点击的位置工具"
                 }

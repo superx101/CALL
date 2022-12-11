@@ -46,7 +46,7 @@
             "minecraft:blaze_rod": {
                 "": {
                     "cmds": [
-                        "ca ar co"
+                        "ca co"
                     ],
                     "describe": "复制快捷键工具"
                 }
@@ -54,7 +54,7 @@
             "minecraft:bone": {
                 "": {
                     "cmds": [
-                        "ca ar pa ${pos.x} ${pos.y} ${pos.x}"
+                        "ca pa ${pos.x} ${pos.y} ${pos.z}"
                     ],
                     "describe": "粘贴到点击的位置工具"
                 }
