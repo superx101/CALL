@@ -1,6 +1,6 @@
 "use strict"
 
-const VERSION = [0, 1, 3];
+const VERSION = [0, 2, 0];
 const LL_MINVERSION = [2, 8, 1];
 
 ll.registerPlugin(
@@ -523,7 +523,7 @@ function Main_checkVersion() {
         colorLog("red", `当前ll版本为${ll.major}.${ll.minor}.${ll.revision}, 小于CALL-${VERSION[0]}.${VERSION[1]}.${VERSION[2]}发布时的ll版本${LL_MINVERSION[0]}.${LL_MINVERSION[1]}.${LL_MINVERSION[2]}, 若出现部分功能失效请更新ll(LiteLoader)`)
     }
     if(Config.ISOLDVERSION) {
-        colorLog("red", `当前BDS版本为:${mc.getBDSVersion().substring(1)}, CALL-0.1.3后主要适配1.19.50即以上版本, 已不兼容旧版, 若使用中出现问题请安装CALL-0.1.2`);
+        colorLog("red", `当前BDS版本为:${mc.getBDSVersion().substring(1)}, CALL-0.2.0后主要适配1.19.50即以上版本, 已不兼容旧版, 若使用中出现问题请安装CALL-0.1.2`);
     }
 }
 
