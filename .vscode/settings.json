@@ -1,0 +1,24 @@
+{
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "**/*.code-search": true
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "lib":true,
+        "bStats": true,
+        "LiteLoader": true,
+        "LLMoney":true,
+        "nodejs":true,
+        "PermissionAPI":true,
+        "LLMoney.dll":true,
+        "preload.conf":true,
+        "AddonsHelper": true
+    }
+}
