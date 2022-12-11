@@ -2,28 +2,7 @@ ll.registerPlugin("call-" + PKG.replaceAll(".", "-"), "CALL's shape package", VE
 const SHP = {
     _registerPackage: ll.import(APISAPCE, "registerPackage"),
     _getData: ll.import(APISAPCE, "getData"),
-    THREE: {
-        BufferGeometry: require("./CALL/lib/three.js/src/core/BufferGeometry.js").BufferGeometry,
-        BoxGeometry: require("./CALL/lib/three.js/src/geometries/BoxGeometry").BoxGeometry,
-        Interpolant: require('./CALL/lib/three.js/src/math/Interpolant.js').Interpolant,
-        Triangle: require('./CALL/lib/three.js/src/math/Triangle.js').Triangle,
-        MathUtils: require('./CALL/lib/three.js/src/math/MathUtils.js'),
-        Spherical: require('./CALL/lib/three.js/src/math/Spherical.js').Spherical,
-        Cylindrical: require('./CALL/lib/three.js/src/math/Cylindrical.js').Cylindrical,
-        Plane: require('./CALL/lib/three.js/src/math/Plane.js').Plane,
-        Frustum: require('./CALL/lib/three.js/src/math/Frustum.js').Frustum,
-        Sphere: require('./CALL/lib/three.js/src/math/Sphere.js').Sphere,
-        Ray: require('./CALL/lib/three.js/src/math/Ray.js').Ray,
-        Matrix4: require('./CALL/lib/three.js/src/math/Matrix4.js').Matrix4,
-        Matrix3: require('./CALL/lib/three.js/src/math/Matrix3.js').Matrix3,
-        Box3: require('./CALL/lib/three.js/src/math/Box3.js').Box3,
-        Box2: require('./CALL/lib/three.js/src/math/Box2.js').Box2,
-        Line3: require('./CALL/lib/three.js/src/math/Line3.js').Line3,
-        Euler: require('./CALL/lib/three.js/src/math/Euler.js').Euler,
-        Vector4: require('./CALL/lib/three.js/src/math/Vector4.js').Vector4,
-        Vector3: require('./CALL/lib/three.js/src/math/Vector3.js').Vector3,
-        Vector2: require('./CALL/lib/three.js/src/math/Vector2.js').Vector2,
-    },
+    THREE: require("./CALL/lib/three.js/src/Three.js"),
     getData: function (player) {
         let res = this._getData(player.xuid);
         if (res == null) return null;
