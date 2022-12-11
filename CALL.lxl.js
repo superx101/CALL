@@ -76,9 +76,16 @@ function Main_displayLogo(show) {
 }
 
 function Main_command_ItemToBlockCheck(block) {
-    if(block != null && !block.isBlock)  {
-        throw new  Error(`当前名称不能被识别为方块, 请重试`);
+    if(block != null)  {
+        if(block.id == 0) return {type: "air"};
+        if(!block.isBlock) {
+            throw new Error(`当前名称不能被识别为方块, 请重试`);
+        }
+        else {
+            return {type: block.type}
+        }
     }
+    return null;
 }
 
 function Main_command_playerCallback(ori, output, res) {
@@ -103,9 +110,9 @@ function Main_command_playerCallback(ori, output, res) {
     if (!playerData.settings.enable) {
         throw new Error("当前CALL处于关闭状态无法执行指令 (输入/call on开启)");
     }
-    Main_command_ItemToBlockCheck(res.block);
-    Main_command_ItemToBlockCheck(res.block2);
-    Main_command_ItemToBlockCheck(res.Block);
+    res.block = Main_command_ItemToBlockCheck(res.block);
+    res.block2 = Main_command_ItemToBlockCheck(res.block2);
+    res.Block = Main_command_ItemToBlockCheck(res.Block);
     
     switch (res.action) {
         case undefined:

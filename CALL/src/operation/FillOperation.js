@@ -8,7 +8,7 @@ class FillOperation {
     static fill(player, output, playerData, res) {
         //检查参数
         AreaOperation.hasArea(playerData);
-        let blockName = res.block.name;
+        let blockName = res.block.type;
         let tileData = res.TileData;
         if (tileData == null) {
             tileData = 0;
@@ -59,7 +59,7 @@ class FillOperation {
         }
         AreaOperation.hasArea(playerData);
         StructureManager.savePos(player, playerData);
-        FillManager.soildFill(player, playerData, playerData.settings.area, res.block.name, res.tileData, res.block2.name, tileData2, "replace", () => {
+        FillManager.soildFill(player, playerData, playerData.settings.area, res.block.type, res.tileData, res.block2.name, tileData2, "replace", () => {
             StructureManager.tp(player, playerData);
             player.sendText(StrFactory.cmdSuccess(`已填充区域: ${new Area3D(playerData.settings.area)}`));
         });
