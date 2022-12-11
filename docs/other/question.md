@@ -45,3 +45,9 @@
 后台输入指令 `/call add "玩家名"` 添加一个玩家  
 后台输入指令 `/call ban "玩家名"` 移除一个玩家
 
+### 怎么更新CALL
+1. 下载需要更新的CALL版本
+2. 拷贝旧版CALL/data和CALL/config文件夹
+3. 将CALL文件夹和CALL.lxl.js替换
+4. 替换CALL/data和CALL/config
+

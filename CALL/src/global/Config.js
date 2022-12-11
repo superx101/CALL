@@ -5,12 +5,9 @@ const DATAPATH = ROOT + '/data';
 const GLOBAL = ROOT + '/config';
 const PLUGINS = ROOT + '/plugins'
 const SERVER_VERSION = new Version(mc.getBDSVersion().substring(1));
-log(mc.getBDSVersion().substring(1))
-log(SERVER_VERSION)
-log(SERVER_VERSION.compare({arr: [1, 19, 80]}) < 0 ? true : false)
 
 class Config {
-    static ISOLDCOMMAND = SERVER_VERSION.compare({arr: [1, 19, 50]}) < 0 ? true : false; 
+    static ISOLDVERSION = SERVER_VERSION.compare({arr: [1, 19, 50]}) < 0 ? true : false; 
     static ROOT = ROOT;
     static DATAPATH = DATAPATH;
     static GLOBAL = new JsonConfigFile(GLOBAL + "/configs.json");

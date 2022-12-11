@@ -1,6 +1,6 @@
 "use strict"
 
-const VERSION = [0, 1, 2];
+const VERSION = [0, 1, 3];
 const LL_MINVERSION = [2, 8, 1];
 
 ll.registerPlugin(
@@ -9,8 +9,6 @@ ll.registerPlugin(
     /* version */VERSION,
     /* otherInformation */ {}
 );
-
-Main_checkVersion();
 
 //####################### Class #######################
 const Constant = require("./CALL/src/global/Constant");
@@ -77,6 +75,12 @@ function Main_displayLogo(show) {
     }
 }
 
+function Main_command_ItemToBlockCheck(block) {
+    if(block != null && !block.isBlock)  {
+        throw new  Error(`当前名称不能被识别为方块, 请重试`);
+    }
+}
+
 function Main_command_playerCallback(ori, output, res) {
     if (!Players.hasPermission(ori.player)) {
         throw new Error("无CALL使用权限,无法执行指令");
@@ -99,6 +103,10 @@ function Main_command_playerCallback(ori, output, res) {
     if (!playerData.settings.enable) {
         throw new Error("当前CALL处于关闭状态无法执行指令 (输入/call on开启)");
     }
+    Main_command_ItemToBlockCheck(res.block);
+    Main_command_ItemToBlockCheck(res.block2);
+    Main_command_ItemToBlockCheck(res.Block);
+    
     switch (res.action) {
         case undefined:
         case "me":
@@ -240,11 +248,11 @@ function Main_command() {
     cmd.mandatory("id", ParamType.String, "id", "id_man");
     cmd.mandatory("tileData", ParamType.Int, "", "tileData_man");
     cmd.mandatory("index", ParamType.Int, "", "index_man");
-    cmd.mandatory("block", ParamType.Block, "", "block_man");
+    cmd.mandatory("block", ParamType.Item, "", "block_man");//Item用于LL2.9.0版本过渡
     cmd.mandatory("key", ParamType.String, "", "key_man");
     cmd.mandatory("item", ParamType.Item, "", "item_man");
     cmd.optional("TileData", ParamType.Int, "", "tileData_opt");
-    cmd.optional("Block", ParamType.Block, "", "block_opt");
+    cmd.optional("Block", ParamType.Item, "", "block_opt");//Item用于LL2.9.0版本过渡
     cmd.optional("PosInt", ParamType.BlockPos, "", "posInt_opt");
     cmd.optional("AxisPos", ParamType.BlockPos, "", "axisPos_opt");
     cmd.optional("Name", ParamType.String, "", "name_opt");
@@ -300,7 +308,7 @@ function Main_command() {
     //replace
     cmd.setEnum("replace", ["replace", "re"]);
     cmd.mandatory("action", ParamType.Enum, "replace", "replace_man", 1);
-    cmd.mandatory("block2", ParamType.Block, "", "block2_man");
+    cmd.mandatory("block2", ParamType.Item, "", "block2_man");//Item用于LL2.9.0版本过渡
     cmd.optional("tileData2", ParamType.Int, "", "tileData2_opt");
     cmd.overload("replace_man", "block_man", "tileData_man", "block2_man", "tileData2_opt")
 
@@ -514,10 +522,14 @@ function Main_checkVersion() {
     if (!ll.requireVersion(LL_MINVERSION[0], LL_MINVERSION[1], LL_MINVERSION[2])) {
         colorLog("red", `当前ll版本为${ll.major}.${ll.minor}.${ll.revision}, 小于CALL-${VERSION[0]}.${VERSION[1]}.${VERSION[2]}发布时的ll版本${LL_MINVERSION[0]}.${LL_MINVERSION[1]}.${LL_MINVERSION[2]}, 若出现部分功能失效请更新ll(LiteLoader)`)
     }
+    if(Config.ISOLDVERSION) {
+        colorLog("red", `当前BDS版本为:${mc.getBDSVersion().substring(1)}, CALL-0.1.3后主要适配1.19.50即以上版本, 已不兼容旧版, 若使用中出现问题请安装CALL-0.1.2`);
+    }
 }
 
 function Main_ini() {
     try {
+        Main_checkVersion();
         Config.check();
         if (!Config.get(Config.GLOBAL, "enable")) {
             return false;

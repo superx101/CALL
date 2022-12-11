@@ -39,7 +39,7 @@ class Players {
     }
 
     static cmd(player, cmd, isTell = false) {
-        if(Config.get(Config.GLOBAL, "oldCommandType") && Config.ISOLDCOMMAND) {
+        if(Config.get(Config.GLOBAL, "oldCommandType") && Config.ISOLDVERSION) {
             cmd = `/execute "${player.realName}" ${new Pos3D(player.pos).floor().formatStr()} ` + cmd;
         }
         else {
