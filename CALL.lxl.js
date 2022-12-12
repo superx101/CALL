@@ -75,19 +75,6 @@ function Main_displayLogo(show) {
     }
 }
 
-function Main_command_ItemToBlockCheck(block) {
-    if(block != null)  {
-        if(block.id == 0) return {type: "air"};
-        if(!block.isBlock) {
-            throw new Error(`当前名称不能被识别为方块, 请重试`);
-        }
-        else {
-            return {type: block.type}
-        }
-    }
-    return null;
-}
-
 function Main_command_playerCallback(ori, output, res) {
     if (!Players.hasPermission(ori.player)) {
         throw new Error("无CALL使用权限,无法执行指令");
@@ -110,9 +97,6 @@ function Main_command_playerCallback(ori, output, res) {
     if (!playerData.settings.enable) {
         throw new Error("当前CALL处于关闭状态无法执行指令 (输入/call on开启)");
     }
-    res.block = Main_command_ItemToBlockCheck(res.block);
-    res.block2 = Main_command_ItemToBlockCheck(res.block2);
-    res.Block = Main_command_ItemToBlockCheck(res.Block);
     
     switch (res.action) {
         case undefined:
@@ -259,7 +243,6 @@ function Main_command() {
     cmd.mandatory("key", ParamType.String, "", "key_man");
     cmd.mandatory("item", ParamType.Item, "", "item_man");
     cmd.optional("TileData", ParamType.Int, "", "tileData_opt");
-    cmd.optional("Block", ParamType.Item, "", "block_opt");//Item用于LL2.9.0版本过渡
     cmd.optional("PosInt", ParamType.BlockPos, "", "posInt_opt");
     cmd.optional("AxisPos", ParamType.BlockPos, "", "axisPos_opt");
     cmd.optional("Name", ParamType.String, "", "name_opt");

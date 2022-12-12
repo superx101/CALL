@@ -8,7 +8,7 @@ class FillOperation {
     static fill(player, output, playerData, res) {
         //检查参数
         AreaOperation.hasArea(playerData);
-        let blockName = res.block.type;
+        let blockType = FillOperation.getTypeFromBlock(res.block);
         let tileData = res.TileData;
         if (tileData == null) {
             tileData = 0;
@@ -18,7 +18,7 @@ class FillOperation {
             case "null":
             case "nu":
                 StructureManager.savePos(player, playerData);
-                FillManager.soildFill(player, playerData, playerData.settings.area, blockName, tileData, "", "", "", () => {
+                FillManager.soildFill(player, playerData, playerData.settings.area, blockType, tileData, "", "", "", () => {
                     StructureManager.tp(player, playerData);
                     player.sendText(StrFactory.cmdSuccess(`已填充区域: ${new Area3D(playerData.settings.area)}`));
                 });
@@ -27,7 +27,7 @@ class FillOperation {
             case "ho":
                 //空心-清空
                 StructureManager.savePos(player, playerData);
-                FillManager.fillOutside(player, playerData, playerData.settings.area, blockName, tileData, true, () => {
+                FillManager.fillOutside(player, playerData, playerData.settings.area, blockType, tileData, true, () => {
                     StructureManager.tp(player, playerData);
                     player.sendText(StrFactory.cmdSuccess(`已区域: ${new Area3D(playerData.settings.area)} 为空心(清空内部)`));
                 });
@@ -35,7 +35,7 @@ class FillOperation {
             case "outline":
             case "ou":
                 StructureManager.savePos(player, playerData);
-                FillManager.fillOutside(player, playerData, playerData.settings.area, blockName, tileData, false, () => {
+                FillManager.fillOutside(player, playerData, playerData.settings.area, blockType, tileData, false, () => {
                     StructureManager.tp(player, playerData);
                     player.sendText(StrFactory.cmdSuccess(`已区域: ${new Area3D(playerData.settings.area)} 为空心(保留内部)`));
                 });
@@ -54,15 +54,27 @@ class FillOperation {
 
     static replace(player, output, playerData, res) {
         let tileData2 = res.tileData2;
+        let blockType1 = FillOperation.getTypeFromBlock(res.block);
+        let blockType2 = FillOperation.getTypeFromBlock(res.block2);
         if (tileData2 == null) {
             tileData2 = 0;
         }
         AreaOperation.hasArea(playerData);
         StructureManager.savePos(player, playerData);
-        FillManager.soildFill(player, playerData, playerData.settings.area, res.block.type, res.tileData, res.block2.name, tileData2, "replace", () => {
+        FillManager.soildFill(player, playerData, playerData.settings.area, blockType1, res.tileData, blockType2, tileData2, "replace", () => {
             StructureManager.tp(player, playerData);
             player.sendText(StrFactory.cmdSuccess(`已填充区域: ${new Area3D(playerData.settings.area)}`));
         });
+    }
+
+    static getTypeFromBlock(block) {
+        if (block.id == 0) return "air";
+        if (!block.isBlock) {
+            throw new Error(`当前名称不能被识别为方块, 请重试`);
+        }
+        else {
+            return block.type
+        }
     }
 }
 
