@@ -1,4 +1,4 @@
-![CALL](./docs/image/introduction.png)
+![CALL](./docs/image/introduction_1.0.0.png)
 
 # 插件介绍
 ## 简介
