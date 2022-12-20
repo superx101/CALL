@@ -1,5 +1,5 @@
 //LiteLoaderScript Dev Helper
-/// <reference path="e:\Mincraft_File\bedrock\lib/dts/HelperLib-master/src/index.d.ts"/> 
+/// <reference path="E:\Mincraft_File\bedrock\lib\HelperLib\src/index.d.ts"/> 
 
 import Activity from "./src/activity/Activity";
 import Config from "./src/common/Config";
@@ -522,8 +522,10 @@ function loadPlugins() {
 
 function myDebug() {
     let path = Config.ROOT + "/test";
+    //@ts-ignore
     File.getFilesList(path).forEach(file => {
         if (file.endsWith("js")) {
+            //@ts-ignore
             let code = File.readFrom(`${path}/${file}`);
             if (code != null) {
                 ll.eval(code);
