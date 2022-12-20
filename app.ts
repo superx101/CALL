@@ -244,7 +244,7 @@ function command() {
     cmd.setEnum("show", ["show", "sh"]);
     cmd.setEnum("view", ["view", "vi"]);
     cmd.mandatory("action", ParamType.Enum, "area", "area_man", 1);
-    cmd.mandatory("enum_1", ParamType.Enum, "start|end", "start-end_man", 1);
+    cmd.mandatory("enum_1", ParamType.Enum, "start|end|a|b", "start-end_man", 1);
     cmd.mandatory("enum_1", ParamType.Enum, "se", "se_man", 1);
     cmd.mandatory("enum_1", ParamType.Enum, "clear", "clear_par", 1);
     cmd.mandatory("enum_1", ParamType.Enum, "show", "show_man", 1);
@@ -483,10 +483,10 @@ function clock() {
 
 function checkVersion() {
     if (!ll.requireVersion(LL_MINVERSION[0], LL_MINVERSION[1], LL_MINVERSION[2])) {
-        colorLog("red", `当前ll版本为${ll.major}.${ll.minor}.${ll.revision}, 小于CALL发布时的ll版本${LL_MINVERSION[0]}.${LL_MINVERSION[1]}.${LL_MINVERSION[2]}, 若出现部分功能失效请更新ll(LiteLoader)`)
+        logger.warn(`当前ll版本为${ll.major}.${ll.minor}.${ll.revision}, 小于CALL发布时的ll版本${LL_MINVERSION[0]}.${LL_MINVERSION[1]}.${LL_MINVERSION[2]}, 若出现部分功能失效请更新ll(LiteLoader)`)
     }
     if (Config.ISOLDVERSION) {
-        colorLog("red", `当前BDS版本为:${mc.getBDSVersion().substring(1)}, CALL-0.2.0后主要适配1.19.50即以上版本, 已不兼容旧版, 若使用中出现问题请安装CALL-0.1.2`);
+        logger.warn(`当前BDS版本为:${Config.SERVER_VERSION.toString()}, CALL-0.2.0后主要适配1.19.50即以上版本, 已不做旧版兼容, 若使用中出现问题请安装CALL-0.1.2`);
     }
 }
 

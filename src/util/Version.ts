@@ -28,8 +28,8 @@ export default class Version {
         if(this.minor != v.minor) {
             return this.minor > v.minor ? Compare.GREATER : Compare.LESSER;
         }
-        if(this.minor != v.minor) {
-            return this.minor > v.minor ? Compare.GREATER : Compare.LESSER;
+        if(this.revision != v.revision) {
+            return this.revision > v.revision ? Compare.GREATER : Compare.LESSER;
         }
         return Compare.EQUAL;
     }
