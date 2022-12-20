@@ -15,7 +15,6 @@
         "bStats": true,
         "LiteLoader": true,
         "LLMoney":true,
-        "nodejs":true,
         "PermissionAPI":true,
         "LLMoney.dll":true,
         "preload.conf":true,

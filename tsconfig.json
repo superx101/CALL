@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "outDir": "nodejs/CALL",
+    "rootDir": "./",
+    "target": "ES6",
+    "lib": ["ES2021"],
+    "resolveJsonModule": true,
+    "noImplicitAny": true,
+    "module": "CommonJS",
+    "removeComments": true
+  },
+  "include": [
+    "src/**/*",
+    "bin/**/*",
+    "app.ts"
+  ],
+  "exclude": [
+    "nodejs/CALL"
+  ]
+}
