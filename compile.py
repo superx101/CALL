@@ -16,11 +16,4 @@ with open('nodejs/CALL/package.json', "w") as f:
     json.dump(data, f)
 
 os.system("tsc")
-
-for root, dirs, files in os.walk("nodejs/CALL"):
-    for file in files:
-        if file.endswith(".js"):
-            full_path = os.path.join(root, file)
-            print(full_path)
-            os.system("uglifyjs " + full_path + " -c -m -o " + full_path)
 print('complete')
