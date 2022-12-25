@@ -10,9 +10,9 @@ export default class ReloadOperation {
         })
     }
 
-    public static start(output: CommandOutput) {
+    public static start(msg: string) {
         mc.getOnlinePlayers().forEach(pl => {
-            pl.sendText(StrFactory.cmdTip("管理员已重载插件"));
+            pl.sendText(StrFactory.cmdTip(msg));
         });
         mc.runcmd(`ll load "${Config.BIN}/CALL_Reloader.js"`);
     }

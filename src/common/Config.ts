@@ -1,47 +1,78 @@
 import { Compare } from "../type/Common";
 import Version from "../util/Version";
-const ROOT = './plugins/nodejs/CALL';
+const ROOT = './plugins/nodejs/call';
 const DATAROOT = './plugins/CALL'
-const BIN = ROOT + "/bin"
 const CONFIG = ROOT + "/config"
 const DATA = DATAROOT + '/data'
-const GLOBAL = DATAROOT + '/config';
-const PLUGINS = DATAROOT + '/plugins'
-const BUILD = DATAROOT + '/build'
+const GLOBALPATH = DATAROOT + '/config';
+const URL = CONFIG + "/url.json";
+const GLOBAL = GLOBALPATH + "/configs.json";
+const PERMISSIONS = GLOBALPATH + "/userlist.json";
+const PLAYERS_SETTINGS = DATA + "/settings.json";
+const STRUCTURES = DATA + "/structures.json";
+const CHECK = CONFIG + "/check.json";
 const SERVER_VERSION = Version.fromString(mc.getBDSVersion().substring(1));
+
+function getVersion(): Version {
+    let config = new JsonConfigFile(Config.ROOT + "/package.json");
+    let v: string = config.get("version");
+    config.close();
+    return Version.fromString(v.substring(-1));
+}
+
+function getDataVersion(): Version {
+    const path = DATAROOT + '/version';
+    if(File.exists(path)) {
+        return Version.fromString(File.readFrom(path));
+    }
+    else {
+        return null;
+    }
+}
 
 export default class Config {
     public static ISOLDVERSION = SERVER_VERSION.compare(Version.fromArr([1, 19, 50])) == Compare.LESSER ? true : false; 
     public static ROOT = ROOT;
-    public static BUILD = BUILD;
-    public static BIN = BIN;
     public static CONFIG = CONFIG;
     public static DATAPATH = DATAROOT;
-    public static GLOBAL = new JsonConfigFile(GLOBAL + "/configs.json");
-    public static PLUGINS = PLUGINS;
-    public static PERMISSIONS = new JsonConfigFile(GLOBAL + "/userlist.json");
-    public static PLAYERS_SETTINGS = new JsonConfigFile(DATA + "/settings.json");
-    public static STRUCTURES = new JsonConfigFile(DATA + "/structures.json");
-    public static CHECK = new JsonConfigFile(CONFIG + "/check.json");
+    public static BIN = ROOT + "/bin";
+    public static BUILD = DATAROOT + '/build';
+    public static PLUGINS = DATAROOT + '/plugins';
+    public static TEMP = DATAROOT + '/temp';
+    public static UPDATE = CONFIG +  '/update.json';
+    public static URL = new JsonConfigFile(URL);
+    public static GLOBAL = new JsonConfigFile(GLOBAL);
+    public static PERMISSIONS = new JsonConfigFile(PERMISSIONS);
+    public static PLAYERS_SETTINGS = new JsonConfigFile(PLAYERS_SETTINGS);
+    public static STRUCTURES = new JsonConfigFile(STRUCTURES);
+    public static CHECK = new JsonConfigFile(CHECK);
+    public static LL_MINVERSION = Version.fromArr([2, 8, 1]);
     public static SERVER_VERSION = SERVER_VERSION;
+    public static PLUGIN_VERSION = getVersion();
+    public static DATA_VERSION = getDataVersion();
     public static PERMISSIONS_TYPE_ENUM = {
         ALL: "all",
         OP: "op",
         CUSTOMIZE: "customize"
     }
 
-    public static get(config: JsonConfigFile, str: string): any {
+    public static get(config: JsonConfigFile, str: string, def?: any): any {
         let strArr = str.split(".");
         let p = config.get(strArr[0]);
+        let res;
         try {
             for (let i = 1; i < strArr.length; i++) {
                 p = p[strArr[i]];
             }
         }
         catch (e) {
-            return null;
+            res = null;
         }
-        return p;
+        res = p;
+        if(def != undefined && res == null) {
+            res = def;
+        }
+        return res;
     }
 
     public static set(config: JsonConfigFile, str: string, data: any) {
@@ -93,6 +124,7 @@ export default class Config {
             Object.keys(check).forEach(k => {
                 let c = check[k];
                 let data = Config.get(Config.GLOBAL, k);
+                if(data == null) throw new Error(`配置文件中未找到 ${k}`)
                 if (c.type != "enum" && typeof (data) != c.type) throw new Error(`${k} 应为 ${c.type} 类型`);
                 switch (c.type) {
                     case "number":
@@ -114,6 +146,22 @@ export default class Config {
             throw new Error(`CALL/config/configs文件配置失败: ` + e.message);
         }
     }
-}
 
-Object.freeze(Config);
+    public static closeAll() {
+        Config.URL.close();
+        Config.GLOBAL.close();
+        Config.PERMISSIONS.close();
+        Config.PLAYERS_SETTINGS.close();
+        Config.STRUCTURES.close();
+        Config.CHECK.close();
+    }
+
+    public static openAll() {
+        Config.URL = new JsonConfigFile(URL);
+        Config.GLOBAL = new JsonConfigFile(GLOBAL);
+        Config.PERMISSIONS = new JsonConfigFile(PERMISSIONS);
+        Config.PLAYERS_SETTINGS = new JsonConfigFile(PLAYERS_SETTINGS);
+        Config.STRUCTURES = new JsonConfigFile(STRUCTURES);
+        Config.CHECK = new JsonConfigFile(CHECK);
+    }
+}

@@ -7,3 +7,5 @@
 /nodejs
 /node_modules
 /bStats
+/package-lock.json
+/output/**

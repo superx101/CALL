@@ -22,17 +22,8 @@ import ToolOperation from "./src/operation/ToolOperation";
 import ShapeLoader from "./src/plugin/ShapeLoader";
 import { Pos } from "./src/type/Pos";
 import StrFactory from "./src/util/StrFactory";
-import Version from "./src/util/Version";
-
-const VERSION = getVersion();
-const LL_MINVERSION = [2, 8, 1];
-
-function getVersion(): Version {
-    let config = new JsonConfigFile(Config.ROOT + "/package.json");
-    let v: string = config.get("version");
-    config.close();
-    return Version.fromString(v.substring(-1));
-}
+import UpdateManager from "./src/manager/UpdateManager";
+import UpdateOperation from "./src/operation/UpdateOperation";
 
 function displayLogo(show: boolean) {
     if (show) {
@@ -42,7 +33,7 @@ function displayLogo(show: boolean) {
         logger.info("   | |      / /\\ \\ | |    | |     ");
         logger.info("   | |____ / ____ \\| |____| |____ ");
         logger.info("    \\_____/_/    \\_\\______|______|");
-        logger.info(`       ======= ${VERSION.toString()} =======`);
+        logger.info(`       ======= ${Config.PLUGIN_VERSION.toString()} =======`);
         logger.info("");
     }
 }
@@ -193,11 +184,15 @@ function command_consoleCallback(output: CommandOutput, res: any) {
             break;
         case "reload":
         case "r":
-            ReloadOperation.start(output);
+            ReloadOperation.start("管理员已重载插件");
             break;
         case "shape":
         case "sh":
             ShapeOperation.consoleStart(output);
+            break;
+        case "update":
+        case "u":
+            UpdateOperation.start(output);
             break;
         default:
             throw new Error("当前指令格式错误或为非控制台指令");
@@ -406,6 +401,11 @@ function command() {
     cmd.mandatory("action", ParamType.Enum, "reload", "reload_man");
     cmd.overload(["reload_man"]);
 
+    //update
+    cmd.setEnum("update", ["update", "u"]);
+    cmd.mandatory("action", ParamType.Enum, "update", "update_man");
+    cmd.overload(["update_man"]);
+
     // cmd.setEnum("brush", ["brush", "br"]);
     // cmd.setEnum("texture", ["texture", "te"]);
     // cmd.mandatory("action", ParamType.Enum, "brush");
@@ -479,11 +479,17 @@ function clock() {
             }
         }
     }, 300);
+
+    if (Config.get(Config.GLOBAL, "autoUpdate", true)) {
+        setInterval(() => {
+            UpdateManager.updatePlugin(true);
+        }, 10 * 1000);
+    }
 }
 
 function checkVersion() {
-    if (!ll.requireVersion(LL_MINVERSION[0], LL_MINVERSION[1], LL_MINVERSION[2])) {
-        logger.warn(`当前ll版本为${ll.major}.${ll.minor}.${ll.revision}, 小于CALL发布时的ll版本${LL_MINVERSION[0]}.${LL_MINVERSION[1]}.${LL_MINVERSION[2]}, 若出现部分功能失效请更新ll(LiteLoader)`)
+    if (!ll.requireVersion(Config.LL_MINVERSION.major, Config.LL_MINVERSION.minor, Config.LL_MINVERSION.revision)) {
+        logger.warn(`当前ll版本为${ll.major}.${ll.minor}.${ll.revision}, 小于CALL发布时的ll版本${Config.LL_MINVERSION.toString()}, 若出现部分功能失效请更新ll(LiteLoader)`)
     }
     if (Config.ISOLDVERSION) {
         logger.warn(`当前BDS版本为:${Config.SERVER_VERSION.toString()}, CALL-0.2.0后主要适配1.19.50即以上版本, 已不做旧版兼容, 若使用中出现问题请安装CALL-0.1.2`);
@@ -493,6 +499,8 @@ function checkVersion() {
 function init() {
     try {
         checkVersion();
+        //updateData
+        UpdateManager.updateData();
 
         //unload
         ReloadOperation.unload();

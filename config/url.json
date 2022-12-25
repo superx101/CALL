@@ -1,0 +1,11 @@
+{
+    "update": {
+        "github": {
+            "check": "https://api.github.com/repos/superx101/CALL/releases/latest"
+        },
+        "minebbs": {
+            "check": "https://api.minebbs.com/api/openapi/v1/resources/4910",
+            "download": "https://www.minebbs.com/resources/call.4910/download"
+        }
+    }
+}

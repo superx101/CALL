@@ -69,8 +69,10 @@ export default class ToolOperation {
     }
 
     public static cmdsTranslator(cmds: string[], block: Block, posFloat: FloatPos) {
-        let pos = Pos3D.fromPos(block.pos).floor();
-        let posf = Pos3D.fromPos(posFloat);
+        const pos = Pos3D.fromPos(block.pos).floor();
+        const posf = Pos3D.fromPos(posFloat);
+        const type = block.type;
+        const tileData = block.tileData;
         let arr: string[] = [];
         cmds.forEach((cmd, i) => {
             /**
