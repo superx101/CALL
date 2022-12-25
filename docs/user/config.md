@@ -23,6 +23,16 @@
 > "op"&emsp;&emsp;仅OP可以使用CALL  
 > "customize"&emsp;&emsp;自定义可使用CALL的玩家，详见[权限列表](#权限列表)
 
+#### `autoUpdate` 开启自动更新
+开启后检测到新版则会自动更新插件和数据
+> true&emsp;&emsp;开启  
+> false&emsp;&emsp;关闭
+
+#### `updateFrom` 自动更新地址
+用于自动更新时联网下载最新版本，若无法访问请改备用
+> "github"&emsp;&emsp;从github更新  
+> "minebbs"&emsp;&emsp;从minebbs更新
+
 #### `debugMod` 是否启用调试模式
 形状包开发者可开启调试模式查看报错情况，默认情况下CALL不输出插件报错内容
 > true&emsp;&emsp;开启  

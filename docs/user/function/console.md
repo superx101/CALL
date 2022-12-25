@@ -9,6 +9,11 @@
 #### 指令
 > /call \<reload | r :enum\>
 
+## 检查更新 `update`
+查询插件最近版本，若存在则自动更新
+#### 指令
+> /call \<update | u :enum\>
+
 ## 添加一个玩家进白名单 `add`
 #### 指令
 
@@ -29,4 +34,4 @@
 本指令和[查询结构](user/function/other?id=%e6%9f%a5%e8%af%a2%e7%bb%93%e6%9e%84-list)命令语法相同，但是在后台执行
 #### 指令
 
-> /call \<list :enum\>
+> /call \<shape :enum> \<list :enum\>

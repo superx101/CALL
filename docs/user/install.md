@@ -14,7 +14,7 @@
 └─┬─bedrock-server-1.19.40.02 (您的服务器文件夹，这里以bedrock-server-1.19.40.02为例)
   └─┬─plugins
     ├───CALL
-    └───CALL.lxl.js
+    └───CALL.llplugin
 ```
 &emsp;&emsp;完成后即为**安装成功**
 
