@@ -3,6 +3,16 @@ import PlayerData from "../model/PlayerData";
 import Pos3D from "../model/Pos3D";
 import StrFactory from "../util/StrFactory";
 
+type ToolVariable = {
+    readonly pos: Pos3D;
+    readonly posf: Pos3D;
+    readonly block: Block;
+    readonly itemA: Item;
+    readonly itemB: Item;
+    readonly itemArr: Array<Item>;
+    readonly me: Player;
+}
+
 export default class ToolOperation {
     public static start(player: Player, output: CommandOutput, playerData: PlayerData, res: { enum_1: any; item: Item; cmd: string; describe: string; Name: string; }) {
         switch (res.enum_1) {
@@ -68,27 +78,24 @@ export default class ToolOperation {
         player.sendText(StrFactory.cmdSuccess("已恢复所有快捷键为默认设置"));
     }
 
-    public static cmdsTranslator(cmds: string[], block: Block, posFloat: FloatPos) {
-        const pos = Pos3D.fromPos(block.pos).floor();
-        const posf = Pos3D.fromPos(posFloat);
-        const type = block.type;
-        const tileData = block.tileData;
-        let arr: string[] = [];
+    public static cmdsTranslator(player: Player, itemArr: Item[], iA: number, iB: number, cmds: string[], block: Block, posFloat: FloatPos) {
+        const data: ToolVariable = {
+            pos: Pos3D.fromPos(block.pos).floor(),
+            posf: Pos3D.fromPos(posFloat),
+            block,
+            itemA: itemArr[iA],
+            itemB: itemArr[iB],
+            itemArr: itemArr,
+            me: player
+        }
+
+        const arr: string[] = [];
         cmds.forEach((cmd, i) => {
-            /**
-             * ${posf.x}: posFloat
-             * ${posf.y}: posFloat
-             * ${posf.z}: posFloat
-             * ${pos.x}:  block.pos
-             * ${pos.y}:  block.pos
-             * ${pos.z}:  block.pos
-             * ${type}: block.type
-             * ${tileData}: block.tileData
-            */
-            let strs = cmd.match(/\$\{.+\}/g);
+            const strs = cmd.match(/\$\{.+?\}/g);
+            const varRegex = /[a-zA-Z_][0-9a-zA-Z_]*(\.[a-zA-Z_][0-9a-zA-Z_]*)*(\(\))?/g;
             if (strs != null) {
                 for (let i = 0; i < strs.length; i++) {
-                    cmd = cmd.replace(new RegExp(/\$\{.+\}/), eval('`' + strs[i] + '`'));
+                    cmd = cmd.replace(new RegExp(/\$\{.+?\}/), eval('`' + strs[i].replace(varRegex, 'data.$&') + '`'));//`1 + block.pos.x * 2`
                 }
             }
 
@@ -108,7 +115,8 @@ export default class ToolOperation {
         }
         catch (e) { }
         if (items[item.type] != null && items[item.type][name] != null) {
-            ToolOperation.cmdsTranslator(items[item.type][name].cmds, block, posFloat).forEach((cmd) => {
+            const itemArr = player.getInventory().getAllItems();
+            ToolOperation.cmdsTranslator(player, itemArr, playerData.settings.barReplace, playerData.settings.barReplaced, items[item.type][name].cmds, block, posFloat).forEach((cmd) => {
                 player.runcmd(cmd);
             });
         }

@@ -457,9 +457,24 @@ function listener() {
                 }, 200);
 
                 //业务
-                ToolOperation.onClick(player, playerData, item, block, pos);
+                try {
+                    ToolOperation.onClick(player, playerData, item, block, pos);
+                } catch (e) {
+                    if(Config.get(Config.GLOBAL, "debugMod")) {
+                        throw e;
+                    }
+                    player.sendText(StrFactory.cmdErr(e.message))
+                }
             }
         }
+    });
+
+    mc.listen("onStartDestroyBlock", (player: Player, block: Block) => {
+        log(1)
+    });
+
+    mc.listen("onDestroyBlock", (player: Player, block: Block) => {
+        log(2)
     });
 }
 
