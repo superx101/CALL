@@ -34,8 +34,8 @@
 &emsp;Bug反馈与建议：[691552572](https://jq.qq.com/?_wv=1027&k=9soqRZuV)
 
 - ___自动更新___  
-&emsp;自1.0.0版本后CALL可在配置中开启自动更新，或输入后台指令`call update`半自动更新  
-&emsp;自动下载、自动安装、自动重载插件
+&emsp;自动下载、自动安装、自动重载插件  
+&emsp;自1.0.0版本后CALL可在配置中开启自动更新，或输入后台指令`call update`半自动更新
 
 - ___文档教程___   
 &emsp;CALL为您提供了[文档](https://superx101.github.io/CALL/)，记录了较为详细的插件安装、使用方法以及第三方插件开发教程
