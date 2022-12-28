@@ -1,4 +1,6 @@
 import ToolOperation from "../operation/ToolOperation";
+import { Listener } from "../type/Common";
+import { ToolType } from "../type/Tool";
 import StrFactory from "../util/StrFactory";
 import Form from "./Form";
 import Menu from "./Menu";
@@ -9,26 +11,26 @@ export default class SettingForm extends Form {
         return this;
     }
 
-    private deleteHotkey(type: string, name: string) {
-        this.player.runcmd(`ca to un ${type} "${name}"`);
+    private deleteHotkey(itemType: string, type: ToolType, name: string) {
+        this.player.runcmd(`ca to un ${itemType} ${type} "${name}"`);
     }
 
-    private updateHotkey(preArr: any[], type: string, name: string, describe: string, cmds: string) {
-        this.deleteHotkey(preArr[0], preArr[1]);
-        this.addHotkey(type, name, describe, cmds);
+    private updateHotkey(preArr: any[], itemType: string, type: ToolType, name: string, describe: string, cmds: string) {
+        this.deleteHotkey(preArr[0], type, preArr[1]);
+        this.addHotkey(itemType, type, name, describe, cmds);
     }
 
-    private addHotkey(type: string, name: string = "", describe: string, cmds: string) {
-        this.player.runcmd(`ca to bi ${type} "${cmds}" "${describe}" "${name}"`);
+    private addHotkey(itemType: string, type: ToolType, name: string = "", describe: string, cmds: string) {
+        this.player.runcmd(`ca to bi ${itemType} ${type} "${cmds}" "${describe}" "${name}"`);
     }
 
-    private getItem(type: string, name: string, describe: string) {
-        let item = mc.newItem(type, 1);
+    private getItem(itemType: string, name: string, describe: string) {
+        let item = mc.newItem(itemType, 1);
         item.setDisplayName(name + "\n" + describe);
         mc.spawnItem(item, this.player.pos);
     }
 
-    private hotkeyForm(v: any[], mod: number) {
+    private hotkeyForm(v: any[], mod: number, type: ToolType) {
         let arr;
         if (mod == 0) {
             arr = ["添加快捷键"];
@@ -45,7 +47,7 @@ export default class SettingForm extends Form {
         }
 
         let form = mc.newCustomForm()
-            .setTitle("快捷键设置")
+            .setTitle(`快捷键设置-${type}`)
             .addDropdown("执行操作:", arr, 0)
             .addLabel(`快捷键信息:`)
             .addInput("  物品种类", "请输入正确的物品英文id", v[0] == null ? "" : v[0])
@@ -56,15 +58,15 @@ export default class SettingForm extends Form {
         this.player.sendForm(form, (pl, data) => {
             if (data == null) return;
             if (mod == 0) {
-                this.addHotkey(data[2], data[3], data[4], data[5]);
+                this.addHotkey(data[2], type, data[3], data[4], data[5]);
             }
             else {
                 switch (data[0]) {
                     case 0:
-                        this.updateHotkey(v, data[2], data[3], data[4], data[5]);
+                        this.updateHotkey(v, data[2], type, data[3], data[4], data[5]);
                         break;
                     case 1:
-                        this.deleteHotkey(data[2], data[3]);
+                        this.deleteHotkey(data[2], type, data[3]);
                         break;
                     case 2:
                         this.getItem(data[2], data[3], data[4]);
@@ -74,12 +76,11 @@ export default class SettingForm extends Form {
         });
     }
 
-    private hotkeyListForm() {
+    private hotkeyListForm(type: ToolType) {
         let form = mc.newSimpleForm()
-            .setTitle("快捷键设置")
+            .setTitle(`快捷键设置-${type}`)
             .addButton("返回上一级", "")
-
-        let list = ToolOperation.getLinearList(this.player, this.playerData);
+        let list = ToolOperation.getLinearList(this.player, this.playerData, type);
         list.forEach((v: any) => {
             form.addButton(`${StrFactory.color(Format.Black, v[0])}\n名称: ${StrFactory.color(Format.DarkGreen, v[1])} 描述: ${StrFactory.color(Format.DarkPurple, v[2])}`);
         });
@@ -88,13 +89,13 @@ export default class SettingForm extends Form {
 
         this.player.sendForm(form, (pl, id) => {
             if (id == 0) {
-                this.sendForm()
+                this.hotkeyKindForm();
             }
             else if (id <= list.length) {
-                this.hotkeyForm(list[id - 1], 1);
+                this.hotkeyForm(list[id - 1], 1, type);
             }
             else if (id == list.length + 1) {
-                this.hotkeyForm([], 0);
+                this.hotkeyForm([], 0, type);
             }
             else if (id == list.length + 2) {
                 let form2 = mc.newSimpleForm()
@@ -105,7 +106,7 @@ export default class SettingForm extends Form {
                     .addButton("取消")
                 this.player.sendForm(form2, (pl, id) => {
                     if (id == 0) {
-                        this.hotkeyListForm();
+                        this.hotkeyListForm(type);
                     }
                     else if (id == 1) {
                         ToolOperation.restoreDefaults(this.player, this.playerData);
@@ -115,10 +116,32 @@ export default class SettingForm extends Form {
         });
     }
 
+    private hotkeyKindForm() {
+        let form = mc.newSimpleForm()
+            .setTitle("快捷键种类")
+            .addButton("返回上一级", "")
+            .addButton("点击(右键)式", "textures/ui/generic_right_trigger.png")
+            .addButton("破坏(左键)式", "textures/ui/generic_left_trigger.png")
+
+        this.player.sendForm(form, (pl, id) => {
+            switch (id) {
+                case 0:
+                    this.sendForm();
+                    break;
+                case 1:
+                    this.hotkeyListForm(ToolType.RIGHT);
+                    break;
+                case 2:
+                    this.hotkeyListForm(ToolType.LEFT);
+                    break;
+            }
+        })
+    }
+
     private otherSettingForm() {
         let barArr = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
         let barArr_select = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-        let setArr:any = [
+        let setArr: any = [
             ["barReplace", this.settings.barReplace - 1, barArr_select],
             ["barReplaced", this.settings.barReplaced - 1, barArr_select],
             ["loadChuckTip", this.settings.loadChuckTip],
@@ -163,7 +186,7 @@ export default class SettingForm extends Form {
                 new Menu(this.player, this.playerData).sendForm();
                 break;
             case 1:
-                this.hotkeyListForm()
+                this.hotkeyKindForm();
                 break;
             case 2:
                 this.otherSettingForm();

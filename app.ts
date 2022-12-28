@@ -3,8 +3,8 @@
 
 import Activity from "./src/activity/Activity";
 import Config from "./src/common/Config";
-import Enums from "./src/type/Enums";
 import Players from "./src/common/Players";
+import UpdateManager from "./src/manager/UpdateManager";
 import Area3D from "./src/model/Area3D";
 import AreaOperation from "./src/operation/AreaOperation";
 import BasicTranslOperation from "./src/operation/BasicTranslOperation";
@@ -19,11 +19,13 @@ import SettingsOperation from "./src/operation/SettingsOperation";
 import ShapeOperation from "./src/operation/ShapeOperation";
 import StructureOperation from "./src/operation/StructureOperation";
 import ToolOperation from "./src/operation/ToolOperation";
-import ShapeLoader from "./src/plugin/ShapeLoader";
-import { Pos } from "./src/type/Pos";
-import StrFactory from "./src/util/StrFactory";
-import UpdateManager from "./src/manager/UpdateManager";
 import UpdateOperation from "./src/operation/UpdateOperation";
+import ShapeLoader from "./src/plugin/ShapeLoader";
+import { Listener } from "./src/type/Common";
+import Enums from "./src/type/Enums";
+import { Pos } from "./src/type/Pos";
+import { ToolType } from "./src/type/Tool";
+import StrFactory from "./src/util/StrFactory";
 
 function displayLogo(show: boolean) {
     if (show) {
@@ -365,14 +367,16 @@ function command() {
     cmd.setEnum("tool", ["tool", "to"]);
     cmd.setEnum("bind", ["bind", "bi"]);
     cmd.setEnum("unbind", ["unbind", "un"]);
+    cmd.setEnum("type", ["right", "left"]);
     cmd.mandatory("action", ParamType.Enum, "tool", "tool_man");
     cmd.mandatory("enum_1", ParamType.Enum, "bind", "bind_man");
     cmd.mandatory("enum_1", ParamType.Enum, "unbind", "unbind_man");
+    cmd.mandatory("enum_2", ParamType.Enum, "type", "type_man");
     cmd.mandatory("cmd", ParamType.String, "", "cmd_man");
     cmd.mandatory("describe", ParamType.String, "", "describe_man");
     cmd.overload(["tool_man", "enum1_list_man"]);
-    cmd.overload(["tool_man", "bind_man", "item_man", "cmd_man", "describe_man", "name_opt"]);
-    cmd.overload(["tool_man", "unbind_man", "item_man", "name_opt"]);
+    cmd.overload(["tool_man", "bind_man", "item_man", "type_man", "cmd_man", "describe_man", "name_opt"]);
+    cmd.overload(["tool_man", "unbind_man", "item_man", "type_man", "name_opt"]);
 
     //setting
     cmd.setEnum("setting", ["setting"]);
@@ -432,21 +436,21 @@ function command() {
 }
 
 function listener() {
-    mc.listen("onJoin", (player) => {
+    mc.listen(Listener.Join, (player) => {
         if (Players.hasPermission(player)) {
             Activity.onCreate(player);
             Activity.onStart(player);
         }
     });
 
-    mc.listen("onLeft", (player) => {
+    mc.listen(Listener.Left, (player) => {
         if (Players.hasPermission(player)) {
             Activity.onStop(player);
             Activity.onDestroy(player);
         }
     });
 
-    mc.listen("onUseItemOn", (player, item, block, side, pos: Pos) => {
+    mc.listen(Listener.UseItemOn, (player, item, block, side, pos: Pos) => {
         if (Players.hasPermission(player) && EnableOperation.isEnable(player)) {
             let playerData = Players.getData(player.xuid);
             // 防抖
@@ -458,9 +462,9 @@ function listener() {
 
                 //业务
                 try {
-                    ToolOperation.onClick(player, playerData, item, block, pos);
+                    ToolOperation.onClick(ToolType.RIGHT, player, playerData, item, block, pos);
                 } catch (e) {
-                    if(Config.get(Config.GLOBAL, "debugMod")) {
+                    if (Config.get(Config.GLOBAL, "debugMod")) {
                         throw e;
                     }
                     player.sendText(StrFactory.cmdErr(e.message))
@@ -469,13 +473,22 @@ function listener() {
         }
     });
 
-    mc.listen("onStartDestroyBlock", (player: Player, block: Block) => {
-        log(1)
-    });
+    mc.listen(Listener.StartDestroyBlock, (player: Player, block: Block) => {
+        if (Players.hasPermission(player) && EnableOperation.isEnable(player)) {
+            let playerData = Players.getData(player.xuid);
 
-    mc.listen("onDestroyBlock", (player: Player, block: Block) => {
-        log(2)
-    });
+            //业务
+            try {
+                ToolOperation.onClick(ToolType.LEFT, player, playerData, player.getHand(), block, block.pos);
+            } catch (e) {
+                if (Config.get(Config.GLOBAL, "debugMod")) {
+                    throw e;
+                }
+                player.sendText(StrFactory.cmdErr(e.message))
+            }
+        }
+    }
+    );
 }
 
 function clock() {

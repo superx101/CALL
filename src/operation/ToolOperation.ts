@@ -1,6 +1,8 @@
 import Config from "../common/Config";
 import PlayerData from "../model/PlayerData";
 import Pos3D from "../model/Pos3D";
+import { Listener } from "../type/Common";
+import { ToolType } from "../type/Tool";
 import StrFactory from "../util/StrFactory";
 
 type ToolVariable = {
@@ -14,7 +16,7 @@ type ToolVariable = {
 }
 
 export default class ToolOperation {
-    public static start(player: Player, output: CommandOutput, playerData: PlayerData, res: { enum_1: any; item: Item; cmd: string; describe: string; Name: string; }) {
+    public static start(player: Player, output: CommandOutput, playerData: PlayerData, res: { enum_1: any; enum_2: any; item: Item; cmd: string; describe: string; Name: string; }) {
         switch (res.enum_1) {
             case "list":
             case "li":
@@ -22,12 +24,21 @@ export default class ToolOperation {
                 break;
             case "bind":
             case "bi":
-                ToolOperation.bind(player, output, playerData, res.item, res.cmd, res.describe, res.Name);
+                ToolOperation.bind(player, output, playerData, res.item, res.enum_2, res.cmd, res.describe, res.Name);
                 break;
             case "unbind":
             case "un":
-                ToolOperation.unbind(player, output, playerData, res.item, res.Name);
+                ToolOperation.unbind(player, output, playerData, res.item, res.enum_2, res.Name);
                 break;
+        }
+    }
+
+    private static getItems(playerData: PlayerData, type: ToolType) {
+        switch (type) {
+            case ToolType.RIGHT:
+                return playerData.settings.items.onUseItemOn
+            case ToolType.LEFT:
+                return playerData.settings.items.onStartDestroyBlock
         }
     }
 
@@ -41,8 +52,8 @@ export default class ToolOperation {
     }
 
     /*** private */
-    private static getList(player: Player, playerData: PlayerData) {
-        let items = playerData.settings.items;
+    private static getList(player: Player, playerData: PlayerData, type: ToolType) {
+        let items = ToolOperation.getItems(playerData, type);
         let arr: any[] = [];
         let nameArr: any[] = [];
         let tempArr: any[] = [];
@@ -62,8 +73,8 @@ export default class ToolOperation {
         return arr;
     }
 
-    public static getLinearList(player: Player, playerData: PlayerData) {
-        let items = playerData.settings.items;
+    public static getLinearList(player: Player, playerData: PlayerData, type: ToolType) {
+        let items = ToolOperation.getItems(playerData, type);
         let arr: any = [];
         Object.keys(items).forEach(type => {
             Object.keys(items[type]).forEach((name, i, a) => {
@@ -104,8 +115,8 @@ export default class ToolOperation {
         return arr;
     }
 
-    public static onClick(player: Player, playerData: PlayerData, item: Item, block: Block, posFloat: FloatPos) {
-        let items = playerData.settings.items;
+    public static onClick(type: ToolType, player: Player, playerData: PlayerData, item: Item, block: Block, posFloat: FloatPos) {
+        let items = ToolOperation.getItems(playerData, type);
         let name = "";
         try {
             //@ts-ignore
@@ -113,7 +124,7 @@ export default class ToolOperation {
                 .toString()
                 .split("\n")[0];
         }
-        catch (e) { }
+        catch (e) {}
         if (items[item.type] != null && items[item.type][name] != null) {
             const itemArr = player.getInventory().getAllItems();
             ToolOperation.cmdsTranslator(player, itemArr, playerData.settings.barReplace, playerData.settings.barReplaced, items[item.type][name].cmds, block, posFloat).forEach((cmd) => {
@@ -122,7 +133,7 @@ export default class ToolOperation {
         }
     }
 
-    public static bind(player: Player, output: CommandOutput, playerData: PlayerData, item: Item, cmd: string, describe: string, name: string) {
+    public static bind(player: Player, output: CommandOutput, playerData: PlayerData, item: Item, type: ToolType, cmd: string, describe: string, name: string) {
         if (name == null) {
             name = "";
         }
@@ -132,7 +143,7 @@ export default class ToolOperation {
         if (item.isBlock) {
             throw new Error("不能将方块设置为快捷键");
         }
-        let items = playerData.settings.items;
+        let items = ToolOperation.getItems(playerData, type);
         let cmds = cmd.split(";");
         items[item.type] = (items[item.type] == null ? {} : items[item.type]);
         items[item.type][name] = { cmds: cmds, describe: describe };
@@ -144,8 +155,8 @@ export default class ToolOperation {
         output.success(StrFactory.cmdSuccess(`已绑定指令组: ${cmd} 到 物品(id: ${item.type}, 名称: ${name === "" ? "无名称" : name} 描述: ${describe})`));
     }
 
-    public static unbind(player: Player, output: CommandOutput, playerData: PlayerData, item: Item, name: string) {
-        let items = playerData.settings.items;
+    public static unbind(player: Player, output: CommandOutput, playerData: PlayerData, item: Item, type: ToolType, name: string) {
+        let items = ToolOperation.getItems(playerData, type);
         name = (name == null ? "" : name);
         if (items[item.type] == null || items[item.type][name] == null) {
             throw new Error(`物品 (id: ${item.type} 名称: ${name === "" ? "无名称" : name}) 未找到绑定记录, 无法解绑, 请检查是否绑定或名称是否正确`);
@@ -158,6 +169,7 @@ export default class ToolOperation {
     }
 
     public static list(player: Player, output: CommandOutput, playerData: PlayerData) {
-        output.success("指令快捷键绑定列表如下:\n" + StrFactory.catalog(ToolOperation.getList(player, playerData)));
+        output.success("快捷键列表-右键:\n" + StrFactory.catalog(ToolOperation.getList(player, playerData, ToolType.RIGHT)));
+        output.success("快捷键列表-左键:\n" + StrFactory.catalog(ToolOperation.getList(player, playerData, ToolType.LEFT)));
     }
 }

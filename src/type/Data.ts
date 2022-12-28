@@ -9,7 +9,10 @@ export interface Settings {
     displayArea: boolean,
     displayPos: any,
     loadChuckTip: boolean,
-    items: any,
+    items: {
+        onUseItemOn: any,
+        onStartDestroyBlock: any
+    },
     area: any,
     [x: string]: any
 }
