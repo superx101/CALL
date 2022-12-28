@@ -44,6 +44,43 @@
                     "value": "minebbs"
                 }
             ]
+        },
+        {
+            "type": "patch_plus",
+            "path": "./plugins/CALL/config/configs.json",
+            "patch": {
+                "op": "insert",
+                "path": "/default/items",
+                "to": "/onUseItemOn",
+                "value": {
+                    "onUseItemOn": {},
+                    "onStartDestroyBlock": {}
+                }
+            }
+        },
+        {
+            "type": "patch_plus",
+            "path": "./plugins/CALL/data/settings.json",
+            "patch": [
+                {
+                    "op": "insert",
+                    "path": "/default/items",
+                    "to": "/onUseItemOn",
+                    "value": {
+                        "onUseItemOn": {},
+                        "onStartDestroyBlock": {}
+                    }
+                },
+                {
+                    "op": "insert",
+                    "path": "/player/*/items",
+                    "to": "/onUseItemOn",
+                    "value": {
+                        "onUseItemOn": {},
+                        "onStartDestroyBlock": {}
+                    }
+                }
+            ]
         }
     ]
 }

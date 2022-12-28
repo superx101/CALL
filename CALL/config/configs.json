@@ -132,62 +132,65 @@
         "displayPos": null,
         "loadChuckTip": true,
         "items": {
-            "minecraft:clock": {
-                "": {
-                    "cmds": [
-                        "ca"
-                    ],
-                    "describe": "打开菜单工具"
+            "onUseItemOn": {
+                "minecraft:clock": {
+                    "": {
+                        "cmds": [
+                            "ca"
+                        ],
+                        "describe": "打开菜单工具"
+                    }
+                },
+                "minecraft:wooden_axe": {
+                    "": {
+                        "cmds": [
+                            "ca ar se ${block.pos.x} ${block.pos.y} ${block.pos.z}"
+                        ],
+                        "describe": "选区工具"
+                    }
+                },
+                "minecraft:stick": {
+                    "": {
+                        "cmds": [
+                            "ca ar b ${block.pos.x} ${block.pos.y} ${block.pos.z}"
+                        ],
+                        "describe": "B点选区工具"
+                    }
+                },
+                "minecraft:arrow": {
+                    "": {
+                        "cmds": [
+                            "ca ar a ${block.pos.x} ${block.pos.y} ${block.pos.z}"
+                        ],
+                        "describe": "A点选区工具"
+                    }
+                },
+                "minecraft:blaze_rod": {
+                    "": {
+                        "cmds": [
+                            "ca co"
+                        ],
+                        "describe": "复制快捷键工具"
+                    }
+                },
+                "minecraft:bone": {
+                    "": {
+                        "cmds": [
+                            "ca pa ${block.pos.x} ${block.pos.y} ${block.pos.z}"
+                        ],
+                        "describe": "粘贴到点击的位置工具"
+                    }
+                },
+                "minecraft:wooden_pickaxe": {
+                    "": {
+                        "cmds": [
+                            "give @s ${block.type} 1 ${block.tileData}"
+                        ],
+                        "describe": "获取点击的方块工具 (需要有give指令权限)"
+                    }
                 }
             },
-            "minecraft:wooden_axe": {
-                "": {
-                    "cmds": [
-                        "ca ar se ${pos.x} ${pos.y} ${pos.z}"
-                    ],
-                    "describe": "选区工具"
-                }
-            },
-            "minecraft:stick": {
-                "": {
-                    "cmds": [
-                        "ca ar b ${pos.x} ${pos.y} ${pos.z}"
-                    ],
-                    "describe": "B点选区工具"
-                }
-            },
-            "minecraft:arrow": {
-                "": {
-                    "cmds": [
-                        "ca ar a ${pos.x} ${pos.y} ${pos.z}"
-                    ],
-                    "describe": "A点选区工具"
-                }
-            },
-            "minecraft:blaze_rod": {
-                "": {
-                    "cmds": [
-                        "ca co"
-                    ],
-                    "describe": "复制快捷键工具"
-                }
-            },
-            "minecraft:bone": {
-                "": {
-                    "cmds": [
-                        "ca pa ${pos.x} ${pos.y} ${pos.z}"
-                    ],
-                    "describe": "粘贴到点击的位置工具"
-                }
-            },
-            "minecraft:wooden_pickaxe": {
-                "": {
-                    "cmds": [
-                        "give @s ${type} 1 ${tileData}"
-                    ],
-                    "describe": "获取点击的方块工具 (需要有give指令权限)"
-                }
-            }
+            "onStartDestroyBlock": {}
         },
         "area": {
             "start": {
