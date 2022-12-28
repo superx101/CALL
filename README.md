@@ -39,20 +39,20 @@ Automatic download, automatic installation, and automatic reloading of plug-ins 
 CALL provides you [document](https://superx101.github.io/CALL/) with a detailed record of plug-in installation, usage, and third-party plug-in development tutorials.
 
 ## Function
--**Selection fill**  
--**The selection is cleared**  
--**Selection replacement**  
--**Selection translation**  
--**Selection stacking**  
--**Selection mirroring**  
--**Selection rotation**  
--**Undo**  
--**Redo**  
--**Copy**  
--**Paste**  
--**Save the structure**  
--**Load Save**  
--**Delete and save**  
--**Share and save**  
--**Shortcut key**  
--**Generate a shape**  
+- **Selection fill**  
+- **The selection is cleared**  
+- **Selection replacement**  
+- **Selection translation**  
+- **Selection stacking**  
+- **Selection mirroring**  
+- **Selection rotation**  
+- **Undo**  
+- **Redo**  
+- **Copy**  
+- **Paste**  
+- **Save the structure**  
+- **Load Save**  
+- **Delete and save**  
+- **Share and save**  
+- **Shortcut key**  
+- **Generate a shape**  
