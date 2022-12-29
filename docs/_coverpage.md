@@ -2,7 +2,7 @@
 # for 
 # LiteLoaderBDS
 
-![CALL](https://raw.githubusercontent.com/superx101/CALL/main/docs/image/CALL_light_ico.ico)
+![CALL](./image/CALL_light_ico.ico)
 
 - 建造助手 CALL
 
