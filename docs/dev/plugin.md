@@ -38,17 +38,17 @@
 命名：`形状包名_版本号.js`
 
 &emsp;*解释*：  
-&emsp;`形状包名`：格式->`作者名.包名`  
+&emsp;`形状包名`：格式->`call.作者名.包名`  
 &emsp;&emsp;作者名和包名 由 英文、数字 组成     
 &emsp;&emsp;作者名建议为github用户名或其他不会冲突的名称    
 
-&emsp;&emsp;例：`superx101.myShape`
+&emsp;&emsp;例：`call.superx101.myShape`
 
 &emsp;`版本号`：由三个整数组成，整数间用 "." 分隔
 
 &emsp;&emsp;例：`1.0.0`
 
-完整的js文件命名示例：`super101.myShape_1.0.0.js`
+完整的js文件命名示例：`call.super101.myShape_1.0.0.js`
 
 ### 调试
 #### 输出
@@ -88,7 +88,7 @@ function export_tutorial() {}
     <https://blog.csdn.net/zkl99999/article/details/44627911>
 
 ### 示例
-该示例为 `plugins/CALL/plugins/shape/superx101.basicShape_1.0.0.js` 中的部分代码，用体素的方法生成了一个可自由旋转的立方体
+该示例为 `plugins/CALL/plugins/shape/call.superx101.basicShape_1.0.0.js` 中的部分代码，用体素的方法生成了一个可自由旋转的立方体
 ```javascript
 //立方体参数表单
 function cube_form(player, index, intPos, plData) {
