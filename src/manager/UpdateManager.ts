@@ -6,7 +6,9 @@ import axios from 'axios';
 import * as fs from 'fs';
 import ReloadOperation from '../operation/ReloadOperation';
 import JsonPatch from '../util/JsonPatch';
+import path = require('path');
 
+const shapeFilePath = 'CALL/plugins/shape'
 const pluginFileName = 'CALL.llplugin';
 const URL = Config.get(Config.URL, "update");
 class Urls {
@@ -14,6 +16,29 @@ class Urls {
 }
 
 export default class UpdateManager {
+
+    //安装形状包
+    static async installShapePackage(file: string) {
+        fs.createReadStream(file)
+            .pipe(unzipper.Parse())
+            .on('entry', entry => {
+                const pathName = entry.path;
+
+                if (pathName.startsWith(shapeFilePath)) {
+                    const outputPathName = Config.PLUGINS + `/shape/${path.basename(pathName)}`;
+                    if (!fs.existsSync(outputPathName)) {
+                        File.mkdir(path.dirname(outputPathName));
+                    }
+                    entry.pipe(fs.createWriteStream(outputPathName));
+                } else {
+                    entry.autodrain();
+                }
+            })
+            .on("close", () => {
+                return new Promise(()=>{})
+            })
+    }
+
     //安装
     private static async install(file: string) {
         logger.warn('安装过程中请勿重启服务器或插件');
@@ -23,7 +48,8 @@ export default class UpdateManager {
         fs.createReadStream(file)
             .pipe(unzipper.ParseOne(new RegExp(pluginFileName)))
             .pipe(unzipper.Extract({ path: Config.ROOT }))
-            .on("close", () => {
+            .on("close", async () => {
+                await UpdateManager.installShapePackage(file);
                 logger.info(`安装完成, 已成功更新插件`);
                 //重载
                 ReloadOperation.start("自动更新完成, 已重新加载插件");

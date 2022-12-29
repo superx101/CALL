@@ -11,6 +11,9 @@
         {
             "type": "delete",
             "path": "./plugins/CALL/test"
+        },{
+            "type": "delete",
+            "path": "./plugins/CALL/plugins/shape/superx101.basicShape_1.0.0.js"
         },
         {
             "type": "delete",
