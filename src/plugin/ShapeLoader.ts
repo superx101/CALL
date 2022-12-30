@@ -74,7 +74,10 @@ export default class ShapeLoader {
         let im = File.readFrom(templatesPath + "/import.js");
         let ex = File.readFrom(templatesPath + "/export.js");
         loadMap.forEach((plugin, name) => {
-            let context = File.readFrom(pluginPath + "/" + name + "_" + plugin.version.toString() + ".js");
+            let context = File.readFrom(pluginPath + "/" + name + "_" + plugin.version.toString() + ".js")
+                .replace(/^\s*\/\/.+\n/gm, '')
+                .replace(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/gm, '$1')
+                .replace(/^\s*[\r\n]/gm, '');
             let target = buildPath + "/" + name.replaceAll(".", "_") + ".js";
             let ti = StrFactory.replaceAll(im, "APISAPCE", `"${APISAPCE}"`);
             ti = StrFactory.replaceAll(ti, "PKG", `"${name}"`);

@@ -234,7 +234,7 @@ export default class ShapeManager {
         }
         catch (e) {
             if (ShapeManager.debugMod) {
-                throw new Error(`[${pkgName}][异常] ${e}`);
+                throw new Error(`[${pkgName}][异常] ${e.message}\n${e.stack}`);
             }
         }
     }
