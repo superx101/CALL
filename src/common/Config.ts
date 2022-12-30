@@ -40,6 +40,7 @@ export default class Config {
     public static PLUGINS = DATAROOT + '/plugins';
     public static TEMP = DATAROOT + '/temp';
     public static UPDATE = CONFIG +  '/update.json';
+    public static TEMPLATES = ROOT + '/templates/'
     public static URL = new JsonConfigFile(URL);
     public static GLOBAL = new JsonConfigFile(GLOBAL);
     public static PERMISSIONS = new JsonConfigFile(PERMISSIONS);

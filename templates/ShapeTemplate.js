@@ -2,7 +2,37 @@ ll.registerPlugin(PKG.replaceAll(".", "_"), "CALL's shape package", VERSION, {})
 const SHP = {
     _registerPackage: ll.import(APISAPCE, "registerPackage"),
     _getData: ll.import(APISAPCE, "getData"),
+    _state: {
+        register: false,
+        cmd: false,
+        form: false,
+        tutorial: false
+    },
     THREE: require("./nodejs/CALL/third-party/three.js/src/Three.js"),
+    export_cmd: function (f) {
+        if (!this._state.cmd && typeof f == 'function') {
+            this._state.cmd = true;
+            return ll.export(f, EXPORTSAPCE, PKG + CMD);
+        } else {
+            throw new Error("请勿重复调用: export_cmd");
+        }
+    },
+    export_form: function (f) {
+        if (!this._state.form && typeof f == 'function') {
+            this._state.form = true;
+            return ll.export(f, EXPORTSAPCE, PKG + FORM);
+        } else {
+            throw new Error("请勿重复调用: export_form");
+        }
+    },
+    export_tutorial: function (f) {
+        if (!this._state.tutorial && typeof f == 'function') {
+            this._state.tutorial = true;
+            return ll.export(f, EXPORTSAPCE, PKG + TUTORAIL);
+        } else {
+            throw new Error("请勿重复调用: export_tutorial");
+        }
+    },
     getData: function (player) {
         let res = this._getData(player.xuid);
         if (res == null) return null;
@@ -20,8 +50,13 @@ const SHP = {
             itemB
         }
     },
-    registerPackage: function (name, shapeNames, introduction, icon) {
-        this._registerPackage(PKG, name, shapeNames, introduction, icon);
+    registerPackage: function (name, shapeNames, introduction, shapeImages, icon) {
+        if (!this._state.register) {
+            this._state.register = true;
+            this._registerPackage(PKG, name, shapeNames, introduction, shapeImages, icon);
+        } else {
+            throw new Error("请勿重复调用: registerPackage");
+        }
     },
     Message: {
         warn: function (player, str, mode = 0) {
@@ -81,4 +116,8 @@ const SHP = {
         });
     }
 }
-Object.keys(SHP).forEach(key => { Object.freeze(SHP[key]); });
+Object.keys(SHP).forEach(key => {if(key !== '_state') Object.freeze(SHP[key]); });
+CODE
+if(!SHP._state.cmd) throw new Error("CALL形状包 " + PKG + ": 未使用export_cmd导出指令处理函数");
+if(!SHP._state.form) throw new Error("CALL形状包 " + PKG + ": 未使用export_form导出表单函数");
+if(!SHP._state.tutorial) throw new Error("CALL形状包 " + PKG + ": 未使用export_tutorial导出教程函数");

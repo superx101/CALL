@@ -11,6 +11,7 @@ export type Blocks = Array<BlockData>
 export interface data  {
     name: string;
     shapeNames: string[];
+    shapeImages: string[];
     author: string;
     introduction: string;
     icon: string;

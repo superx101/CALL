@@ -101,7 +101,6 @@ export default class JsonPatch {
         paths.forEach((directory: string) => {
             //获取数据
             const data = JsonPatch.getData(obj, directory);
-            // log(data)
             JsonPatch.setData(obj, directory, value);//替换
             JsonPatch.setData(obj, directory + to, data);//拼接
         })

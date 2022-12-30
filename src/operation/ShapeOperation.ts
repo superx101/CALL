@@ -24,7 +24,10 @@ export default class ShapeOperation {
     }
 
     public static load(player: Player, output: CommandOutput, playerData: PlayerData, pack: string, index: number, intPos: IntPos, Json: string) {
-        ShapeManager.run(player, playerData, pack, index, Pos3D.fromPos(intPos).calibration().floor(), Json);
+        let pos;
+        if(intPos == null) pos = player.pos;
+        else pos = intPos;
+        ShapeManager.run(player, playerData, pack, index, Pos3D.fromPos(pos).calibration().floor(), Json);
     }
 
     public static sendForm(player: Player, playerData: PlayerData, pkgName: string, index: number) {

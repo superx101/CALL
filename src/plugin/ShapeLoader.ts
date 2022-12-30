@@ -11,7 +11,7 @@ const TUTORAIL = "_tutorail"
 
 const pluginPath = Config.PLUGINS + "/shape";
 const buildPath = Config.DATAPATH + "/build/shape";
-const templatesPath = Config.ROOT + "/src/plugin/ShapeTemplates";
+const templatesPath = Config.TEMPLATES + "/ShapeTemplate.js";
 
 interface Plugin {
     version: Version;
@@ -71,23 +71,24 @@ export default class ShapeLoader {
         });
 
         //加工
-        let im = File.readFrom(templatesPath + "/import.js");
-        let ex = File.readFrom(templatesPath + "/export.js");
+        let template = File.readFrom(templatesPath);
         loadMap.forEach((plugin, name) => {
-            let context = File.readFrom(pluginPath + "/" + name + "_" + plugin.version.toString() + ".js")
+            let code = File.readFrom(pluginPath + "/" + name + "_" + plugin.version.toString() + ".js")
                 .replace(/^\s*\/\/.+\n/gm, '')
                 .replace(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/gm, '$1')
                 .replace(/^\s*[\r\n]/gm, '');
             let target = buildPath + "/" + name.replaceAll(".", "_") + ".js";
-            let ti = StrFactory.replaceAll(im, "APISAPCE", `"${APISAPCE}"`);
-            ti = StrFactory.replaceAll(ti, "PKG", `"${name}"`);
-            ti = StrFactory.replaceAll(ti, "VERSION", `[${plugin.version.major},${plugin.version.minor},${plugin.version.revision}]`);
-            let te = StrFactory.replaceAll(ex, "EXPORTSAPCE", `"${EXPORTSAPCE}"`);
-            te = StrFactory.replaceAll(te, "CMD", `"${CMD}"`);
-            te = StrFactory.replaceAll(te, "FORM", `"${FORM}"`);
-            te = StrFactory.replaceAll(te, "TUTORAIL", `"${TUTORAIL}"`);
-            te = StrFactory.replaceAll(te, "PKG", `"${name}"`);
-            File.writeTo(target, ti + "\n" + context + "\n" + te);
+            let output = template
+                .replace(/APISAPCE/g, `"${APISAPCE}"`)
+                .replace(/PKG/g, `"${name}"`)
+                .replace(/VERSION/g, `[${plugin.version.major},${plugin.version.minor},${plugin.version.revision}]`)
+                .replace(/EXPORTSAPCE/g, `"${EXPORTSAPCE}"`)
+                .replace(/CMD/g, `"${CMD}"`)
+                .replace(/FORM/g, `"${FORM}"`)
+                .replace(/TUTORAIL/g, `"${TUTORAIL}"`)
+                .replace(/CODE/g, code)
+
+            File.writeTo(target, output);
         });
 
         //加载未加载的js

@@ -1,7 +1,4 @@
 /// <reference path="../Shape.d.ts"/> 
-
-SHP.registerPackage("基础形状", ["自由立方体", "自由平面", "两点生成直线", "球体", "自由椭球体", "自由圆柱体"], "CALL自带的一个简单形状包", "textures/ui/switch_face_button_down.png");
-
 /////////////////////////////////////////// common //////////////////////////////////////////////////
 //包围盒
 class Box {
@@ -683,13 +680,135 @@ function cylinder_generate(param, player, itemA) {
         })
     }
 }
-
-
 /////////////////////////////////////////// Cylinder end //////////////////////////////////////////////////
 
-/////////////////////////////////////////// global //////////////////////////////////////////////////
+/////////////////////////////////////////// Cone //////////////////////////////////////////////////
+class Cone extends Geometry {
+    constructor(a, b, h) {
+        super();
+        this.a = a;
+        this.b = b;
+        this.h = h;
+        this.a2 = a ** 2;
+        this.b2 = b ** 2;
+        this.h_ = h - 1;
+        this.a_2 = (a - 1.2) ** 2;
+        this.b_2 = (b - 1.2) ** 2;
+        this.p = {
+            a: this.a == 1,
+            b: this.b == 1,
+        }
 
-function export_cmd(player, index, intPos, param) {
+        this.computeBoundingBox();
+    }
+    computeBoundingBox() {
+        if (this.boundingBox == null) {
+            this.boundingBox = new Box();
+        }
+        this.boundingBox.set(new SHP.THREE.Vector3(-this.a, 0, -this.b), new SHP.THREE.Vector3(this.a, this.h, this.b));
+    }
+    isPointInsideGeometry(x, y, z) {
+        const n = this.h / (this.h - y);
+        return (x ** 2 / this.a2 + z ** 2 / this.b2) * n <= 1 && y <= this.h; 
+    }
+    isPointOnSurface(x, y, z) {
+        const x2 = x ** 2;
+        const z2 = z ** 2;
+
+        if(y >= this.h_) 
+            return (x2 / this.a2 + z2 / this.b2) * this.h / (this.h - y) <= 1 && y <= this.h;
+        else 
+            return (x2 / this.a2 + z2 / this.b2) * this.h / (this.h - y) <= 1 && (x2 / this.a_2 + z2 / this.b_2) * this.h_ / (this.h_ - y) >= 1 && y <= this.h;
+    }
+}
+
+//圆锥表单
+function cone_form(player, index, intPos, plData) {
+    let itemStr = plData.itemA.isNull() ? "" : `${plData.itemA.type} ${plData.itemA.aux}`;
+    const orderArr = ["XYZ", "XZY", "YXZ", "YZX", "ZXY", "ZYX"];
+
+    let form = mc.newCustomForm()
+        .setTitle("椭圆柱体参数")
+        .addLabel(`材质: 从${plData.itemAIndex + 1}号物品栏选择\n:${itemStr}`)
+        .addInput("椭圆面半长轴: a b", "输入两个正数(空格隔开)", "")
+        .addInput("高", "输入正数", "")
+        .addSwitch("是否空心", false)
+        .addInput("输入生成位置\n默认为当前坐标", "输入三个正数(空格隔开)", `${intPos.x} ${intPos.y} ${intPos.z}`)
+        .addLabel("  变换部分：")
+        .addStepSlider("绕轴旋转顺序(欧拉角)", orderArr)
+        .addSlider("绕x轴旋转角度", 0, 360, 1, 0)
+        .addSlider("绕y轴旋转角度", 0, 360, 1, 0)
+        .addSlider("绕z轴旋转角度", 0, 360, 1, 0)
+
+    player.sendForm(form, (pl, data) => {
+        if (data != null) {
+            let json = {};
+            let pos = {};
+            let strs;
+
+            strs = data[1].split(" ");
+            json.a = parseInt(strs[0]);
+            json.b = parseInt(strs[1]);
+            json.h = parseInt(data[2]);
+            json.isHollow = data[3];
+            json.snbt = common_getBlockSNBT(plData.itemA, player);
+
+            //生成位置
+            strs = data[4].split(" ");
+            pos.x = parseInt(strs[0]);
+            pos.y = parseInt(strs[1]);
+            pos.z = parseInt(strs[2]);
+
+            json.order = orderArr[data[6]];//绕轴旋转顺序
+            //旋转值
+            json.xrote = parseFloat(data[7]);
+            json.yrote = parseFloat(data[8]);
+            json.zrote = parseFloat(data[9]);
+
+            pl.runcmd(`/call shape load "${SHP.getPackageName()}" ${index} ${JSON.stringify(json)} ${pos.x} ${pos.y} ${pos.z}`);
+        }
+    });
+}
+
+//圆锥生成
+function cone_generate(param, player, itemA) {
+    common_checkNumber(param.xrote, false);
+    common_checkNumber(param.yrote, false);
+    common_checkNumber(param.zrote, false);
+    common_checkNumber(param.a, false);
+    common_checkNumber(param.b, false);
+    common_checkNumber(param.h, false);
+    common_checkSNBT(param.snbt);
+
+    const cone = new Cone(param.a, param.b, param.h);
+    const isOddX = (cone.a % 2 != 0);
+    const isOddY = (cone.h % 2 != 0);
+    const isOddZ = (cone.b % 2 != 0)
+    let m4 = SHP.getRoteMAT4(param.xrote, param.yrote, param.zrote, param.order);//变换矩阵
+    let m4_i = m4.clone().invert();//逆矩阵
+
+    //变换后包围盒
+    cone.transformedBoundingBox(m4);
+    const box = cone.boundingBox;
+
+    if (param.isHollow) {
+        return common_boxForeach(box, isOddX, isOddY, isOddZ, param.snbt, (x, y, z) => {
+            //逆变换点后根据原几何体进行判断
+            const v3 = new SHP.THREE.Vector3(x, y, z).applyMatrix4(m4_i);
+            return cone.isPointOnSurface(v3.x, v3.y, v3.z);
+        })
+    }
+    else {
+        return common_boxForeach(box, isOddX, isOddY, isOddZ, param.snbt, (x, y, z) => {
+            const v3 = new SHP.THREE.Vector3(x, y, z).applyMatrix4(m4_i);
+            return cone.isPointInsideGeometry(v3.x, v3.y, v3.z);
+        })
+    }
+}
+/////////////////////////////////////////// Cone end //////////////////////////////////////////////////
+
+/////////////////////////////////////////// global //////////////////////////////////////////////////
+function cmd(player, index, intPos, param) {
     try {
         let plData = SHP.getData(player);
         let shape = { pos: null, arr: null };
@@ -717,6 +836,10 @@ function export_cmd(player, index, intPos, param) {
                 shape.arr = cylinder_generate(param, player, plData.itemA);
                 shape.pos = intPos;
                 break;
+            case 6:
+                shape.arr = cone_generate(param, player, plData.itemA);
+                shape.pos = intPos;
+                break;
         }
         return shape;
     } catch (e) {
@@ -724,7 +847,7 @@ function export_cmd(player, index, intPos, param) {
     }
 }
 
-function export_form(player, index, intPos) {
+function form(player, index, intPos) {
     let plData = SHP.getData(player);
     try {
         switch (index) {
@@ -746,6 +869,9 @@ function export_form(player, index, intPos) {
             case 5:
                 cylinder_form(player, index, intPos, plData);
                 break;
+            case 6:
+                cone_form(player, index, intPos, plData);
+                break;
         }
     }
     catch (e) {
@@ -753,12 +879,21 @@ function export_form(player, index, intPos) {
     }
 }
 
-function export_tutorial() {
+function tutorial() {
     return {
         基础概念介绍: "[自由变换]\n  本形状包中的“自由变换”为任意角度的旋转\n[生成位置]\n  默认的生成位置为您脚下\n您也可自定义生成位置\n  形状包将以您指定的位置为中心生成形状",
         立方体: "生成立方体\n可自由变换角度",
         平面: "生成平面\n可定义平面的法向量\n(即定义平面的朝向)",
-        直线: "根据您选区中的两点生成一条直线\n或自定义两点来生成直线"
+        直线: "根据您选区中的两点生成一条直线\n或自定义两点来生成直线",
+        球体:"根据半径生成球体\n可为空心",
+        椭球体:"根据长半轴abc生成椭球体\n可为空心\n参数abc有关方程: x^2/a^2 + y^2/b^2 + z^2/c^2 = 1",
+        圆柱: "根据圆面(或椭圆)和高生成圆柱体\n可为中空",
+        圆锥: "根据圆面(或椭圆)和高生成圆锥\n可为空心"
     }
 }
+
+SHP.registerPackage("基础形状", ["§l自由§2立方体", "§l自由§2平面", "§l两点生成§2直线", "§l§9球体", "§l自由§9椭球体", "§l自由§9圆柱体", "§l自由§9圆锥"], "CALL自带的一个简单形状包", [], "textures/ui/switch_face_button_down.png");
+SHP.export_cmd(cmd);
+SHP.export_form(form);
+SHP.export_tutorial(tutorial);
 /////////////////////////////////////////// global end //////////////////////////////////////////////////

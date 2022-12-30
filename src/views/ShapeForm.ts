@@ -16,8 +16,8 @@ export default class ShapeForm extends Form {
         .setContent(data.introduction)
         .addButton("返回上一级", "")
 
-        data.shapeNames.forEach((name: string)=>{
-            form.addButton(name, "");
+        data.shapeNames.forEach((name: string, i: number)=>{
+            form.addButton(name, data.shapeImages[i]);
         });
 
         this.player.sendForm(form, (pl, i) => {

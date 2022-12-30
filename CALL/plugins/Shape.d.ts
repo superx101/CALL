@@ -29,8 +29,11 @@ declare {
             info(player: Player, str: string, mode = 0): void;
             success(player: Player, str: string, mode = 0): void;
         };
+        function export_cmd(callback: (player: Player, index: number, intPos: IntPos, param: JSON) => { pos: IntPos, arr: [] }): void;
+        function export_form(callback: (player: Player, index: number, intPos: IntPos) => void): void;
+        function export_tutorial(callback: () => any): void;
         function getData(player: Player): { posA: IntPos, posB: IntPos, itemAIndex: number, itemBIndex: number, itemA: Item, itemB: Item }
-        function registerPackage(name: string, shapeNames: string[], introduction: string, icon: string): void;
+        function registerPackage(name: string, shapeNames: string[], introduction: string, shapeImages: string[], icon: string): void;
         function setBlock(x: number, y: number, z: number, block_palette = '{"name":"minecraft:concrete","states":{"color":"white"},"version":17959425}', block_position_data = null): { x: number, y: number, z: number, block_palette: string, block_position_data: string };
         function getPackageName(): string;
         function getVector3(x: number, y: number, z: number): THREE.Vector3;
@@ -43,7 +46,4 @@ declare {
         function getMirrorMAT4(x: number, y: number, z: number): THREE.Matrix4;
         function transform(shape: { pos: IntPos, arr: [] }, m4: THREE.Matrix4): void;
     }
-    function export_cmd(player: Player, index: number, intPos: IntPos, param: JSON): { pos: IntPos, arr: [] }
-    function export_form(player: Player, index: number, intPos: IntPos): void
-    function export_tutorial(): any;
 } 

@@ -16,11 +16,18 @@ export default class ShapeManager {
     public static debugMod = Config.get(Config.GLOBAL, "debugMod");
 
     /*** export */
-    public static registerPackage(pkgName: string, name: string, shapeNames: string[], introduction: string, icon: string = "") {
+    public static registerPackage(pkgName: string, name: string, shapeNames: string[], introduction: string, shapeImages: string[] = [], icon: string = "") {
         if (ShapeManager.pkgs[pkgName] == null || Config.get(Config.GLOBAL, "debugMod")) {
+            //填充shapeImages
+            if(shapeImages.length < shapeNames.length) {
+                for(let i = 0, l = shapeNames.length - shapeImages.length; i < l; i++) {
+                    shapeImages.push("");
+                }
+            }
             let data: data = {
                 name: name,
                 shapeNames: shapeNames,
+                shapeImages: shapeImages,
                 author: pkgName.split(".")[1],
                 introduction: introduction,
                 icon: icon
