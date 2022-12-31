@@ -33,6 +33,9 @@ const SHP = {
             throw new Error("请勿重复调用: export_tutorial");
         }
     },
+    getVersion() {
+        return VERSION;
+    },
     getData: function (player) {
         let res = this._getData(player.xuid);
         if (res == null) return null;
@@ -53,7 +56,7 @@ const SHP = {
     registerPackage: function (name, shapeNames, introduction, shapeImages, icon) {
         if (!this._state.register) {
             this._state.register = true;
-            this._registerPackage(PKG, name, shapeNames, introduction, shapeImages, icon);
+            this._registerPackage(VERSION ,PKG, name, shapeNames, introduction, shapeImages, icon);
         } else {
             throw new Error("请勿重复调用: registerPackage");
         }

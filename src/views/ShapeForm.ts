@@ -42,7 +42,7 @@ export default class ShapeForm extends Form {
         let datas = ShapeOperation.getPkgs();
         let ids = Object.keys(datas);
         ids.forEach(pkgName => {
-            form.addButton(`${datas[pkgName].name}\n${pkgName}`, datas[pkgName].icon);
+            form.addButton(`${datas[pkgName].name.replace(/\n*/g, "")} -- ${datas[pkgName].version.toString()}\n${pkgName}`, datas[pkgName].icon);
         });
 
         this.player.sendForm(form, (pl, i) => {

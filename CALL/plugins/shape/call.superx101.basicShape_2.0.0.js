@@ -705,11 +705,11 @@ class Cone extends Geometry {
         if (this.boundingBox == null) {
             this.boundingBox = new Box();
         }
-        this.boundingBox.set(new SHP.THREE.Vector3(-this.a, 0, -this.b), new SHP.THREE.Vector3(this.a, this.h, this.b));
+        this.boundingBox.set(new SHP.THREE.Vector3(-this.a, -1, -this.b), new SHP.THREE.Vector3(this.a, this.h + 1, this.b));
     }
     isPointInsideGeometry(x, y, z) {
         const n = this.h / (this.h - y);
-        return (x ** 2 / this.a2 + z ** 2 / this.b2) * n <= 1 && y <= this.h; 
+        return (x ** 2 / this.a2 + z ** 2 / this.b2) * n <= 1 && y <= this.h && y >= 0; 
     }
     isPointOnSurface(x, y, z) {
         const x2 = x ** 2;
@@ -718,7 +718,7 @@ class Cone extends Geometry {
         if(y >= this.h_) 
             return (x2 / this.a2 + z2 / this.b2) * this.h / (this.h - y) <= 1 && y <= this.h;
         else 
-            return (x2 / this.a2 + z2 / this.b2) * this.h / (this.h - y) <= 1 && (x2 / this.a_2 + z2 / this.b_2) * this.h_ / (this.h_ - y) >= 1 && y <= this.h;
+            return (x2 / this.a2 + z2 / this.b2) * this.h / (this.h - y) <= 1 && (x2 / this.a_2 + z2 / this.b_2) * this.h_ / (this.h_ - y) >= 1 && y <= this.h && y >= 0;
     }
 }
 

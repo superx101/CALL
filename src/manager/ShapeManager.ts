@@ -10,13 +10,14 @@ import StrFactory from "../util/StrFactory";
 import StructureManager from "./StructureManager";
 import { Pos } from "../type/Pos";
 import PlayerData from "../model/PlayerData";
+import Version from "../util/Version";
 
 export default class ShapeManager {
     public static pkgs: pkgs = {};
     public static debugMod = Config.get(Config.GLOBAL, "debugMod");
 
     /*** export */
-    public static registerPackage(pkgName: string, name: string, shapeNames: string[], introduction: string, shapeImages: string[] = [], icon: string = "") {
+    public static registerPackage(version: number[], pkgName: string, name: string, shapeNames: string[], introduction: string, shapeImages: string[] = [], icon: string = "") {
         if (ShapeManager.pkgs[pkgName] == null || Config.get(Config.GLOBAL, "debugMod")) {
             //填充shapeImages
             if(shapeImages.length < shapeNames.length) {
@@ -25,6 +26,7 @@ export default class ShapeManager {
                 }
             }
             let data: data = {
+                version: Version.fromArr(version),
                 name: name,
                 shapeNames: shapeNames,
                 shapeImages: shapeImages,

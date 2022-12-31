@@ -1,3 +1,5 @@
+import Version from "../util/Version";
+
 export interface BlockData {
     x: number;
     y: number;
@@ -9,6 +11,7 @@ export interface BlockData {
 export type Blocks = Array<BlockData>
 
 export interface data  {
+    version: Version;
     name: string;
     shapeNames: string[];
     shapeImages: string[];
