@@ -450,17 +450,20 @@ function listener() {
         }
     });
 
-    mc.listen(Listener.UseItemOn, (player, item, block, side, pos: Pos) => {
-        if (Players.hasPermission(player) && EnableOperation.isEnable(player)) {
-            let playerData = Players.getData(player.xuid);
-            // 防抖
-            if (playerData.click == null || !playerData.click) {
-                playerData.click = true;
-                setTimeout(() => {
-                    playerData.click = false;
-                }, 200);
+    const clickMap = new Map<string, boolean>();
 
-                //业务
+    mc.listen(Listener.UseItemOn, (player, item, block, side, pos: Pos) => {
+        // 防抖
+        const click = clickMap.get(player.xuid);
+        if (!click) {
+            clickMap.set(player.xuid, true);
+            setTimeout(() => {
+                clickMap.set(player.xuid, false);
+            }, 200);
+
+            //业务
+            if (Players.hasPermission(player) && EnableOperation.isEnable(player)) {
+                let playerData = Players.getData(player.xuid);
                 try {
                     ToolOperation.onClick(ToolType.RIGHT, player, playerData, item, block, pos);
                 } catch (e) {
@@ -545,8 +548,8 @@ function init() {
         listener(); //监听器初始化
         command();//指令初始化
     }
-    catch (ex) {
-        colorLog("red", ex.message);
+    catch (e) {
+        logger.error(e.message + "\nstack:" + e.stack);
         return false;
     }
     return true;
@@ -583,4 +586,4 @@ function main(debug: boolean) {
     }
 }
 
-main(true);
+main(false);
