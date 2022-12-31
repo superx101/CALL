@@ -40,7 +40,7 @@ export default class Config {
     public static PLUGINS = DATAROOT + '/plugins';
     public static TEMP = DATAROOT + '/temp';
     public static UPDATE = CONFIG +  '/update.json';
-    public static TEMPLATES = ROOT + '/templates/'
+    public static TEMPLATES = ROOT + '/templates'
     public static URL = new JsonConfigFile(URL);
     public static GLOBAL = new JsonConfigFile(GLOBAL);
     public static PERMISSIONS = new JsonConfigFile(PERMISSIONS);
@@ -51,11 +51,6 @@ export default class Config {
     public static SERVER_VERSION = SERVER_VERSION;
     public static PLUGIN_VERSION = getVersion();
     public static DATA_VERSION = getDataVersion();
-    public static PERMISSIONS_TYPE_ENUM = {
-        ALL: "all",
-        OP: "op",
-        CUSTOMIZE: "customize"
-    }
 
     public static get(config: JsonConfigFile, str: string, def?: any): any {
         let strArr = str.split(".");

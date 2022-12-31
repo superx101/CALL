@@ -1,11 +1,12 @@
 import Activity from "../activity/Activity";
 import Config from "../common/Config";
+import { PermissionsType } from "../type/Config";
 import StrFactory from "../util/StrFactory";
 
 export default class PermissionOperation {
     /*** private */
     private static check(name: string) {
-        if (Config.get(Config.PERMISSIONS, "permission") != Config.PERMISSIONS_TYPE_ENUM.CUSTOMIZE) {
+        if (Config.get(Config.GLOBAL, "permission") != PermissionsType.CUSTOMIZE) {
             throw new Error("当前设置不为: 自定义玩家(\"permission\": \"customize\"), 无法使用add/ban");
         }
         if (name == null) {

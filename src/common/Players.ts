@@ -1,6 +1,7 @@
 import Activity from "../activity/Activity";
 import Pos3D from "../model/Pos3D";
 import PermissionOperation from "../operation/PermissionOperation";
+import { PermissionsType } from "../type/Config";
 import StrFactory from "../util/StrFactory";
 import Config from "./Config";
 
@@ -9,9 +10,9 @@ export default class Players {
 
     public static hasPermission(player: Player) {
         switch (Config.get(Config.GLOBAL, "permission")) {
-            case "all":
+            case PermissionsType.ALL:
                 return true;
-            case "op":
+            case PermissionsType.OP:
                 let isOp = player.isOP();
                 let playerData = Players.getData(player.xuid);
                 if(isOp && playerData == null) {
@@ -21,7 +22,7 @@ export default class Players {
                     Activity.onDestroy(player);
                 }
                 return isOp;
-            case "customize":
+            case PermissionsType.CUSTOMIZE:
                 return PermissionOperation.find(player.realName);
             default:
                 return false;

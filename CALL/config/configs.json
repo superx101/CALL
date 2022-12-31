@@ -17,7 +17,7 @@
     *   当选择"customize"时请到userlist.json文件中指定可使用CALL的玩家
     *   或
     *   通过快捷命令添加可使用CALL的玩家，命令如下：
-    *       在后台输入：call 玩家名字
+    *       在后台输入：call add 玩家名字
     *       输入后将自动将玩家列入可使用CALL的名单
     *       在后台输入：call ban 玩家名字
     *       输入后将自动从名单中移除该玩家
@@ -50,7 +50,7 @@
     *   true  [解析] 启用
     *   false [解析] 关闭
     */
-    "debugMod":false,
+    "debugMod":true,
     
     /*
     *    ###第一次加载时是否显示字符图标###
