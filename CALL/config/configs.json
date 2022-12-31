@@ -50,7 +50,7 @@
     *   true  [解析] 启用
     *   false [解析] 关闭
     */
-    "debugMod":true,
+    "debugMod":false,
     
     /*
     *    ###第一次加载时是否显示字符图标###
