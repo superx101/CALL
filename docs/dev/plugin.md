@@ -64,15 +64,23 @@ CALL默认不会输出异常，您需要在配置文件中设置 [debugMod](user
 SHP.registerPackage("形状包中文名称", ["形状名称"], "简介");
 
 //导出函数--根据指令中的参数生成形状
-function export_cmd(player, index, intPos, param) {}
+SHP.export_cmd((player, index, intPos, param)=>{
+    return {pos: [0, 0, 0], arr: []}
+})
 
 //导出函数--参数表单
-function export_form(player, index, intPos) {}
+SHP.export_form((player, index, intPos)=>{
+
+})
 
 //导出函数--帮助文本
-function export_tutorial() {}
+SHP.export_tutorial(()=>{
+    return {
+        名称: "详细说明"
+    }
+});
 ```
-代码中的的函数用于导出，**不可修改**为其他名称。函数详细功能请见 [形状包API](dev/shape.md)
+代码中的的函数用于导出。函数详细功能请见 [形状包API](dev/shape.md)
 
 ### 开发思路
 ?> 形状包生成本质是将一个结构NBT对象放置到指定位置。为了简化开发，CALL封装了构造NBT对象的部分，因此您只需要传入一些列的方块坐标和材质即可，不必关心如何构造一个NBT对象。
@@ -88,7 +96,7 @@ function export_tutorial() {}
     <https://blog.csdn.net/zkl99999/article/details/44627911>
 
 ### 示例
-该示例为 `plugins/CALL/plugins/shape/call.superx101.basicShape_1.0.0.js` 中的部分代码，用体素的方法生成了一个可自由旋转的立方体
+该示例为 `plugins/CALL/plugins/shape/call.superx101.basicShape_2.0.0.js` 中的部分代码，用体素的方法生成了一个可自由旋转的立方体
 ```javascript
 //立方体参数表单
 function cube_form(player, index, intPos, plData) {
@@ -173,7 +181,7 @@ function cube(param, player, itemA) {
     return simpleCubeVoxelization(cube, m4, blockSNBT);
 }
 
-function export_form(player, index, intPos) {
+function form(player, index, intPos) {
     let plData = SHP.getData(player);
     switch (index) {
         case 0:
@@ -183,7 +191,7 @@ function export_form(player, index, intPos) {
     }
 }
 
-function export_cmd(player, index, intPos, param) {
+function cmd(player, index, intPos, param) {
     try {
         let plData = SHP.getData(player);
         let shape = { pos: null, arr: null };
@@ -200,10 +208,15 @@ function export_cmd(player, index, intPos, param) {
     }
 }
 
-function export_tutorial() {
+function tutorial() {
     return {
         基础概念介绍: "[自由变换]\n  本形状包中的“自由变换”为任意角度的旋转\n[生成位置]\n  默认的生成位置为您脚下\n您也可自定义生成位置\n  形状包将以您指定的位置为中心生成形状",
         立方体: "生成立方体\n可自由变换角度",
     }
 }
+
+SHP.registerPackage("基础形状", ["自由立方体"], "CALL自带的一个简单形状包", [], "textures/ui/switch_face_button_down.png");
+SHP.export_cmd(cmd);
+SHP.export_form(form);
+SHP.export_tutorial(tutorial);
 ```

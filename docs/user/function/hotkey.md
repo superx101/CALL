@@ -185,4 +185,5 @@
 - [轮流设定ab点](user/function/area?id=%e8%bd%ae%e6%b5%81%e8%ae%be%e5%ae%9aab%e7%82%b9)：**木斧**`id: minecraft:wooden_axe`
 - [复制](user/function/other?id=%e5%a4%8d%e5%88%b6-copy)：**烈焰棒**`id: minecraft:blaze_rod`
 - [粘贴](user/function/other?id=%e7%b2%98%e8%b4%b4-paste)：**骨头**`id: minecraft:bone`
+- 编辑点击方块的属性：**绿宝石**`id: minecraft:wooden_emerald`
 - 获取点击的方块：**木稿**`id: minecraft:wooden_pickaxe`

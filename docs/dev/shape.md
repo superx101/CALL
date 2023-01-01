@@ -2,11 +2,11 @@
 ## 导出函数
 形状包中您需要定义一个生成形状函数，通过指令生成形状。再定义一个表单帮助玩家输入参数，提交表单后执行形状生成指令。这样就定义两种方式生成表单，其他插件也可通过指令方式调用此形状。
 ### 生成形状
-`function export_cmd(player, index, intPos, param) {}`
+`SHP.export_cmd((player, index, intPos, param)=>{ pos: IntPos, arr: [] }) {}`
 
 [示例](dev/plugin?id=%e7%a4%ba%e4%be%8b)
 
-用于导出的函数，**名称必须是export_cmd**，您需要在您的代码中自己定义该函数
+用于导出的函数
 
 **该函数用于处理玩家发送的指令，并生成对应形状**
 
@@ -47,11 +47,11 @@
     ```
 
 ### 参数表单
-`function export_form(player, index, intPos) {}`
+`SHP.export_form((player, index, intPos)=>void) {}`
 
 [示例](dev/plugin?id=%e7%a4%ba%e4%be%8b)
 
-用于导出的函数，名称必须是export_form，您需要在您的代码中自己定义该函数
+用于导出的函数  
 
 - 表单
   
@@ -64,11 +64,11 @@
   其中 `参数json对象` 的内容由您自己定义，这个对象作为 `export_cmd` 的 param 参数
 
 ### 帮助/教程
-`function export_tutorial() {}`
+`SHP.export_tutorial(()=>any) {}`
 
 [示例](dev/plugin?id=%e7%a4%ba%e4%be%8b)
 
-用于导出的函数，名称必须是export_tutorial，您需要在您的代码中自己定义该函数
+用于导出的函数  
 
 定义一个教程，在 `菜单->基础教程` 中可以看到这个教程
 
@@ -78,8 +78,8 @@
   例：
 
   ```javascript
-  function export_tutorial() {
-    return {
+  SHP.export_tutorial(()=>{
+      return {
         简介: "简介内容"
         立方体: "立方体参数解释",
         球体: {
@@ -87,7 +87,7 @@
           正球体: "正球体参数解释",
         }
       }
-  }
+  })
   ```
 
 ## SHP 对象
@@ -163,6 +163,16 @@ CALL为形状包提供的一个对象，该对象内包含一些形状包开发�
         itemB
     }
     ```
+
+### 显示列表表单
+`SHP.listForm(player)`
+
+用于关闭子表单时返回上一级
+
+- 参数 **player**
+  - 说明：玩家对象
+  - 类型：Player
+
 
 ### 发送消息
 `SHP.Message.info(player, str, mode = 0)`
