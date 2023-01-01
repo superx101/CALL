@@ -58,5 +58,5 @@ CALL provides you [document](https://superx101.github.io/CALL/) with a detailed 
 - **Generate a shape**
 
 ## Shape
-The shape of the current version is as follows:
+The shapes of the current version are as follows:
 ![Shape](./docs/image/shape.png)
