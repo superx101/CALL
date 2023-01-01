@@ -30,7 +30,7 @@
 &emsp;CALL支持其他开发者编写拓展功能的插件，您可安装**第三方插件**来获取**更多的功能**  
 
 - ___开源免费___  
-&emsp;本插件使用MIT协议，完全**开源免费**  
+&emsp;本插件使用GPL-3.0协议，完全**开源免费**  
 &emsp;项目地址：<https://github.com/superx101/CALL> _(首次编写BDS插件，大佬轻喷)_  
 &emsp;Bug反馈与建议：[691552572](https://jq.qq.com/?_wv=1027&k=9soqRZuV)
 
