@@ -40,15 +40,26 @@ export default class AreaDisplayerManager {
     /*** private */
     private static undo(pos: Pos3D, player: Player, playerData: PlayerData) {
         try {
-            StructureManager.savePos(player, playerData);
-            player.teleport(pos.x, pos.y, pos.z, pos.dimid);
-
+            const block = mc.getBlock(pos.x, pos.y, pos.z, pos.dimid);
             let data = AreaDisplayerManager.posMap.get(pos);
-            mc.getBlock(pos.x, pos.y, pos.z, pos.dimid).setNbt(data.blockNbt);
-            if (data.blockEntityNbt != null) {
-                mc.getBlock(pos.x, pos.y, pos.z, pos.dimid).getBlockEntity().setNbt(data.blockEntityNbt);
+            
+            if (block != null) {
+                block.setNbt(data.blockNbt);
+                if (data.blockEntityNbt != null) {
+                    block.getBlockEntity().setNbt(data.blockEntityNbt);
+                }
             }
-            StructureManager.tp(player, playerData);
+            else {
+                player.teleport(pos.x, pos.y, pos.z, pos.dimid);
+                StructureManager.savePos(player, playerData);
+                const bl = mc.getBlock(pos.x, pos.y, pos.z, pos.dimid);
+                bl.setNbt(data.blockNbt);
+                if (data.blockEntityNbt != null) {
+                    bl.getBlockEntity().setNbt(data.blockEntityNbt);
+                }
+                StructureManager.tp(player, playerData, false);
+            }
+
         }
         catch (e) { }
     };
