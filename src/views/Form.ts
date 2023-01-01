@@ -8,5 +8,5 @@ export default class Form {
         this.settings = playerData.settings;
     }
 
-    public sendForm(opts: Array<number>) {}
+    public sendForm(opts: Array<number>, content?: string) {}
 }

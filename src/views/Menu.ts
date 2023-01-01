@@ -2,6 +2,7 @@ import PlayerData from "../model/PlayerData";
 import StructureOperation from "../operation/StructureOperation";
 import StrFactory from "../util/StrFactory";
 import AreaForm from "./AreaForm";
+import BlockEditerForm from "./BlockEditerForm";
 import Form from "./Form";
 import OperationForm from "./OperationForm";
 import SaveForm from "./SaveForm";
@@ -31,9 +32,11 @@ export default class Menu extends Form {
             .addButton("保存", "textures/ui/download_backup.png")
             .addButton("保存的结构", "textures/ui/structure_block.png")
             .addButton("生成形状", "textures/ui/worldsIcon.png")
+            .addButton("方块属性编辑", "textures/ui/book_edit_default.png")
             .addButton("刷新区块", "textures/ui/refresh.png")
             .addButton("设置", "textures/ui/settings_glyph_color_2x.png")
             .addButton("基础教程", "textures/ui/sidebar_icons/my_content.png")
+
         if (opts.length > 0) {
             this.opt(opts);
         }
@@ -72,15 +75,18 @@ export default class Menu extends Form {
                 new StructureForm(this).sendForm(opts);
                 break;
             case 8:
-                new ShapeForm(this).sendForm(opts);
+                new ShapeForm(this.player, this.playerData).sendForm(opts);
                 break;
             case 9:
-                this.player.runcmd("ca rf");
+                new BlockEditerForm(this.player, this.playerData).sendForm(opts);
                 break;
             case 10:
-                new SettingForm(this).sendForm(opts);
+                this.player.runcmd("ca rf");
                 break;
             case 11:
+                new SettingForm(this).sendForm(opts);
+                break;
+            case 12:
                 new TutorailForm(this).sendForm();
                 break;
             default:
