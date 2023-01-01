@@ -27,7 +27,7 @@ export default class BasicTranslOperation {
             });
             //清空原位置
             FillManager.ergod(player, playerData, st1.getAreas(), (yBottom: number, yTop: number, area: Area3D) => {
-                Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} air 0`);
+                Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} air 0`, false);
             }, () => {
                 //粘贴
                 setTimeout(() => {

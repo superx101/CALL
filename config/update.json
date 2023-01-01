@@ -11,7 +11,8 @@
         {
             "type": "delete",
             "path": "./plugins/CALL/test"
-        },{
+        },
+        {
             "type": "delete",
             "path": "./plugins/CALL/plugins/shape/superx101.basicShape_1.0.0.js"
         },
@@ -45,6 +46,18 @@
                     "op": "add",
                     "path": "/updateFrom",
                     "value": "minebbs"
+                },
+                {
+                    "op": "add",
+                    "path": "/default/items/minecraft:emerald",
+                    "value": {
+                        "": {
+                            "cmds": [
+                                "ca bl ${block.pos.x} ${block.pos.y} ${block.pos.z} me"
+                            ],
+                            "describe": "编辑点击的方块"
+                        }
+                    }
                 }
             ]
         },

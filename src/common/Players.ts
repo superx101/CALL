@@ -38,7 +38,7 @@ export default class Players {
         return Players.dataMap.get(xuid);
     }
 
-    public static cmd(player:Player, cmd:string, isTell:boolean = false) {
+    public static cmd(player:Player, cmd:string, isTell:boolean = true) {
         if(Config.get(Config.GLOBAL, "oldCommandType") && Config.ISOLDVERSION) {
             cmd = `/execute "${player.realName}" ${Pos3D.fromPos(player.pos).floor().formatStr()} ` + cmd;
         }

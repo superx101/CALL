@@ -73,12 +73,12 @@ export default class AreaOperation {
             case "se":
                 let pos3d = (pos == null ? Pos3D.fromPos(player.pos).floor().calibration() : Pos3D.fromPos(pos));
                 if (playerData.isSetPosA) {
-                    player.runcmd(`call area clear`);
-                    player.runcmd(`call area start ${pos3d.formatStr()}`);
+                    player.runcmd(`ca ar cl`);
+                    player.runcmd(`ca ar a ${pos3d.formatStr()}`);
                     playerData.isSetPosA = false;
                 }
                 else {
-                    player.runcmd(`call area end ${pos3d.formatStr()}`);
+                    player.runcmd(`ca ar b ${pos3d.formatStr()}`);
                     playerData.isSetPosA = true;
                 }
                 break;
