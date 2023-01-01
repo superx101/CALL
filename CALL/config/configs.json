@@ -188,6 +188,14 @@
                         ],
                         "describe": "获取点击的方块工具 (需要有give指令权限)"
                     }
+                },
+                "minecraft:emerald": {
+                    "": {
+                        "cmds": [
+                            "ca bl ${block.pos.x} ${block.pos.y} ${block.pos.z} me"
+                        ],
+                        "describe": "编辑点击的方块"
+                    }
                 }
             },
             "onStartDestroyBlock": {}

@@ -8,6 +8,7 @@ import UpdateManager from "./src/manager/UpdateManager";
 import Area3D from "./src/model/Area3D";
 import AreaOperation from "./src/operation/AreaOperation";
 import BasicTranslOperation from "./src/operation/BasicTranslOperation";
+import BlockEditerOperation from "./src/operation/BlockEditerOperation";
 import ChunkOperation from "./src/operation/ChunkOperation";
 import EnableOperation from "./src/operation/EnableOperation";
 import FillOperation from "./src/operation/FillOperation";
@@ -110,9 +111,10 @@ function command_playerCallback(ori: CommandOrigin, output: CommandOutput, res: 
         case "sh":
             ShapeOperation.start(player, output, playerData, res);
             break;
-        // case "brush":
-        // case "br":
-        //     break;
+        case "block":
+        case "bl":
+            BlockEditerOperation.start(player, output, playerData, res);
+            break;
         case "copy":
         case "co":
             StructureOperation.copy(player, output, playerData);
@@ -212,10 +214,13 @@ function command() {
     cmd.mandatory("block", ParamType.Item, "", "block_man");//Item用于LL2.9.0版本过渡
     cmd.mandatory("key", ParamType.String, "", "key_man");
     cmd.mandatory("item", ParamType.Item, "", "item_man");
+    cmd.mandatory("intPos", ParamType.BlockPos, "", "intPos_man");
+    cmd.mandatory("nbt", ParamType.JsonValue, "", "nbt_man");
     cmd.optional("TileData", ParamType.Int, "", "tileData_opt");
-    cmd.optional("PosInt", ParamType.BlockPos, "", "posInt_opt");
+    cmd.optional("IntPos", ParamType.BlockPos, "", "intPos_opt");
     cmd.optional("AxisPos", ParamType.BlockPos, "", "axisPos_opt");
     cmd.optional("Name", ParamType.String, "", "name_opt");
+    cmd.optional("BlockEntity", ParamType.JsonValue, "", "blockEntity_man");
 
     //menu
     cmd.setEnum("menu", ["menu", "me"]);
@@ -247,9 +252,9 @@ function command() {
     cmd.mandatory("enum_1", ParamType.Enum, "show", "show_man", 1);
     cmd.mandatory("enum_2", ParamType.Enum, "view", "view_man", 1);
     cmd.optional("enum_2", ParamType.Enum, "on|off", "on-off_opt", 1);
-    cmd.overload(["area_man", "start-end_man", "posInt_opt"]);
+    cmd.overload(["area_man", "start-end_man", "intPos_opt"]);
     cmd.overload(["area_man", "start-end_man", "view_man"]);
-    cmd.overload(["area_man", "se_man", "posInt_opt"]);
+    cmd.overload(["area_man", "se_man", "intPos_opt"]);
     cmd.overload(["area_man", "clear_par"]);
     cmd.overload(["area_man", "show_man", "on-off_opt"]);
 
@@ -294,7 +299,7 @@ function command() {
     cmd.optional("Waterlogged", ParamType.Bool, "", "waterlogged_opt");
     cmd.optional("Integrity", ParamType.Float, "", "integrity_opt");
     cmd.optional("Seed", ParamType.String, "", "seed_opt");
-    cmd.overload(["load_man", "id_man", "posInt_opt", "degrees_opt", "mirror_opt"]);
+    cmd.overload(["load_man", "id_man", "intPos_opt", "degrees_opt", "mirror_opt"]);
 
     //delete
     cmd.setEnum("delete", ["delete", "de"]);
@@ -314,12 +319,12 @@ function command() {
     //paste
     cmd.setEnum("paste", ["paste", "pa"]);
     cmd.mandatory("action", ParamType.Enum, "paste", "paste_man", 1);
-    cmd.overload(["paste_man", "posInt_opt"]);
+    cmd.overload(["paste_man", "intPos_opt"]);
 
     //move
     cmd.setEnum("move", ["move", "mo"]);
     cmd.mandatory("action", ParamType.Enum, "move", "move_man", 1);
-    cmd.overload(["move_man", "posInt_opt"]);
+    cmd.overload(["move_man", "intPos_opt"]);
 
     //mirror
     cmd.setEnum("mirror_act", ["mirror", "mi"]);
@@ -343,6 +348,13 @@ function command() {
     cmd.mandatory("zMultiple", ParamType.Int, "", "zMultiple_man");
     cmd.overload(["stack_man", "xMultiple_man", "yMultiple_man", "zMultiple_man"]);
 
+    //block
+    cmd.setEnum("block", ["block", "bl"]);
+    cmd.mandatory("action", ParamType.Enum, "block", "block_enum_man");
+    cmd.mandatory("enum_1", ParamType.Enum, "menu", "menu_man");
+    cmd.overload(["block_enum_man", "intPos_man", "nbt_man", "blockEntity_man"]);
+    cmd.overload(["block_enum_man", "intPos_man", "menu_man"]);
+
     //shape
     cmd.setEnum("shape", ["shape", "sh"]);
     cmd.mandatory("action", ParamType.Enum, "shape", "shape_man");
@@ -350,7 +362,7 @@ function command() {
     cmd.mandatory("enum_1", ParamType.Enum, "list", "enum1_list_man");
     cmd.mandatory("enum_1", ParamType.Enum, "load", "enum1_load_man");
     cmd.optional("Json", ParamType.JsonValue, "", "json_opt");
-    cmd.overload(["shape_man", "enum1_load_man", "package_man", "index_man", "json_opt", "posInt_opt"]);
+    cmd.overload(["shape_man", "enum1_load_man", "package_man", "index_man", "json_opt", "intPos_opt"]);
     cmd.overload(["shape_man", "enum1_list_man"]);
 
     //undo
