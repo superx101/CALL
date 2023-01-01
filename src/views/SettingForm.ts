@@ -98,14 +98,11 @@ export default class SettingForm extends Form {
             if (id == 0) {
                 this.hotkeyKindForm();
             }
-            else if (id <= list.length) {
-                this.hotkeyForm(list[id - 1], 1, type);
-            }
-            else if (id == list.length + 1) {
+            if (id == 1) {
                 this.hotkeyForm([], 0, type);
             }
-            else if (id == list.length + 2) {
-
+            else {
+                this.hotkeyForm(list[id - 2], 1, type);
             }
         });
     }
@@ -114,9 +111,10 @@ export default class SettingForm extends Form {
         let form = mc.newSimpleForm()
             .setTitle("快捷键种类")
             .addButton("返回上一级", "")
+            .addButton("恢复默认快捷键", "textures/ui/switch_home_button.png")
+            .addButton("获取所有快捷键", "textures/ui/xbox_start_button.png")
             .addButton("点击(右键)式", "textures/ui/generic_right_trigger.png")
             .addButton("破坏(左键)式", "textures/ui/generic_left_trigger.png")
-            .addButton("恢复默认快捷键", "textures/ui/switch_home_button.png")
 
         this.player.sendForm(form, (pl, id) => {
             switch (id) {
@@ -124,12 +122,6 @@ export default class SettingForm extends Form {
                     this.sendForm();
                     break;
                 case 1:
-                    this.hotkeyListForm(ToolType.RIGHT);
-                    break;
-                case 2:
-                    this.hotkeyListForm(ToolType.LEFT);
-                    break;
-                case 3:
                     let form2 = mc.newSimpleForm()
                         .setTitle("恢复默认快捷键")
                         .setContent("是否清空当前所有快捷键设置并恢复默认设置？\n\n\n\n\n\n\n\n")
@@ -146,6 +138,24 @@ export default class SettingForm extends Form {
                         }
                         this.hotkeyKindForm();
                     });
+                    break;
+                case 2:
+                    let list: {[x: string]: any[]} = {
+                        left: ToolOperation.getLinearList(this.player, this.playerData, ToolType.LEFT),
+                        right: ToolOperation.getLinearList(this.player, this.playerData, ToolType.RIGHT)
+                    }
+                    for(let key of Object.keys(list)) {
+                        const arr = list[key];
+                        arr.forEach((v: any)=>{
+                            this.getItem(v[0], v[1], v[2]);
+                        });
+                    }
+                    break;
+                case 3:
+                    this.hotkeyListForm(ToolType.RIGHT);
+                    break;
+                case 4:
+                    this.hotkeyListForm(ToolType.LEFT);
                     break;
             }
         })

@@ -75,7 +75,7 @@ export default class ToolOperation {
 
     public static getLinearList(player: Player, playerData: PlayerData, type: ToolType) {
         let items = ToolOperation.getItems(playerData, type);
-        let arr: any = [];
+        let arr: any[] = [];
         Object.keys(items).forEach(type => {
             Object.keys(items[type]).forEach((name, i, a) => {
                 arr.push([type, name, items[type][name].describe, items[type][name].cmds]);
