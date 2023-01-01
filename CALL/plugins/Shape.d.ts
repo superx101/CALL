@@ -54,6 +54,7 @@ declare namespace SHP {
     function export_form(callback: (player: Player, index: number, intPos: IntPos) => void): void;
     function export_tutorial(callback: () => any): void;
     function getData(player: Player): { posA: IntPos, posB: IntPos, itemAIndex: number, itemBIndex: number, itemA: Item, itemB: Item }
+    function listForm(player: Player): void;
     function getVersion(): number[];
     function registerPackage(name: string, shapeNames: string[], introduction: string, shapeImages: string[], icon: string): void;
     function setBlock(x: number, y: number, z: number, block_palette?: string, block_position_data?: string): { x: number, y: number, z: number, block_palette: string, block_position_data: string };

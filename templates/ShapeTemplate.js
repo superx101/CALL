@@ -2,6 +2,7 @@ ll.registerPlugin(PKG.replaceAll(".", "_"), "CALL's shape package", VERSION, {})
 const SHP = {
     _registerPackage: ll.import(APISAPCE, "registerPackage"),
     _getData: ll.import(APISAPCE, "getData"),
+    _shapeForm: ll.import(APISAPCE, "shapeForm"),
     _state: {
         register: false,
         cmd: false,
@@ -60,6 +61,9 @@ const SHP = {
         } else {
             throw new Error("请勿重复调用: registerPackage");
         }
+    },
+    listForm: function (player) {
+        this._shapeForm(player, PKG);
     },
     Message: {
         warn: function (player, str, mode = 0) {

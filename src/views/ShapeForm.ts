@@ -1,3 +1,6 @@
+import Players from "../common/Players";
+import ShapeManager from "../manager/ShapeManager";
+import PlayerData from "../model/PlayerData";
 import ShapeOperation from "../operation/ShapeOperation";
 import { data, pkgs } from "../type/Shape";
 import Form from "./Form";
@@ -5,12 +8,15 @@ import Menu from "./Menu";
 
 
 export default class ShapeForm extends Form {
-    constructor(form: Form) {
-        super(form.player, form.playerData);
+    constructor(player: Player, playerData: PlayerData) {
+        super(player, playerData);
         return this;
     }
 
-    private shapeForm(data: data, pkgName: string) {
+    /** export */
+    public static shapeForm(player: Player, pkgName: string) {
+        let playerData = Players.getData(player.xuid);
+        let data = ShapeOperation.getPkgs()[pkgName];
         let form = mc.newSimpleForm()
         .setTitle(`${data.name} ${pkgName}`)
         .setContent(data.introduction)
@@ -20,15 +26,15 @@ export default class ShapeForm extends Form {
             form.addButton(name, data.shapeImages[i]);
         });
 
-        this.player.sendForm(form, (pl, i) => {
+        player.sendForm(form, (pl, i) => {
             if (i == null) {
                 return;
             }
             else if (i == 0) {
-                this.sendForm([]);
+                new ShapeForm(player, playerData).sendForm([]);
             }
             else {
-                ShapeOperation.sendForm(this.player, this.playerData, pkgName, i - 1);
+                ShapeOperation.sendForm(player, playerData, pkgName, i - 1);
             }
         });
     }
@@ -53,7 +59,7 @@ export default class ShapeForm extends Form {
                 new Menu(this.player, this.playerData).sendForm();
             }
             else {
-                this.shapeForm(datas[ids[i - 1]], ids[i - 1]);
+                ShapeForm.shapeForm(this.player, ids[i - 1]);
             }
         });
     }

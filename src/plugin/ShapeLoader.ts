@@ -2,6 +2,7 @@ import Config from "../common/Config"
 import ShapeManager from "../manager/ShapeManager"
 import StrFactory from "../util/StrFactory"
 import Version from "../util/Version"
+import ShapeForm from "../views/ShapeForm"
 
 const APISAPCE = "call_shape_api"
 const EXPORTSAPCE = "call_shape_plugin"
@@ -47,6 +48,8 @@ export default class ShapeLoader {
         ll.export(ShapeManager.registerPackage, APISAPCE, "registerPackage");
         //@ts-ignore
         ll.export(ShapeManager.getData, APISAPCE, "getData");
+        //@ts-ignore
+        ll.export(ShapeForm.shapeForm, APISAPCE, "shapeForm")
 
         let loadMap = new Map<string, Plugin>();
         let plugins = ll.listPlugins();

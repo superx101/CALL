@@ -227,6 +227,9 @@ function cube_form(player, index, intPos, plData) {
 
             pl.runcmd(`/call shape load "${SHP.getPackageName()}" ${index} ${JSON.stringify(json)} ${pos.x} ${pos.y} ${pos.z}`);
         }
+        else {
+            SHP.listForm(player);
+        }
     })
 }
 
@@ -279,6 +282,9 @@ function plane_form(player, index, intPos, plData) {
 
             pl.runcmd(`/call shape load "${SHP.getPackageName()}" ${index} ${JSON.stringify(json)} ${pos.x} ${pos.y} ${pos.z}`);
         }
+        else {
+            SHP.listForm(player);
+        }
     });
 }
 
@@ -330,6 +336,9 @@ function line_form(player, index, intPos, plData) {
             pos.z = parseInt(strs[2]);
 
             pl.runcmd(`/call shape load "${SHP.getPackageName()}" ${index} ${JSON.stringify(json)} ${pos.x} ${pos.y} ${pos.z}`);
+        }
+        else {
+            SHP.listForm(player);
         }
     });
 }
@@ -407,6 +416,9 @@ function sphere_form(player, index, intPos, plData) {
             pos.z = parseInt(strs[2]);
 
             pl.runcmd(`/call shape load "${SHP.getPackageName()}" ${index} ${JSON.stringify(json)} ${pos.x} ${pos.y} ${pos.z}`);
+        }
+        else {
+            SHP.listForm(player);
         }
     });
 }
@@ -516,6 +528,9 @@ function ellipsoid_form(player, index, intPos, plData) {
             json.zrote = parseFloat(data[8]);
 
             pl.runcmd(`/call shape load "${SHP.getPackageName()}" ${index} ${JSON.stringify(json)} ${pos.x} ${pos.y} ${pos.z}`);
+        }
+        else {
+            SHP.listForm(player);
         }
     });
 }
@@ -642,6 +657,9 @@ function cylinder_form(player, index, intPos, plData) {
 
             pl.runcmd(`/call shape load "${SHP.getPackageName()}" ${index} ${JSON.stringify(json)} ${pos.x} ${pos.y} ${pos.z}`);
         }
+        else {
+            SHP.listForm(player);
+        }
     });
 }
 
@@ -766,6 +784,9 @@ function cone_form(player, index, intPos, plData) {
             json.zrote = parseFloat(data[9]);
 
             pl.runcmd(`/call shape load "${SHP.getPackageName()}" ${index} ${JSON.stringify(json)} ${pos.x} ${pos.y} ${pos.z}`);
+        }
+        else {
+            SHP.listForm(player);
         }
     });
 }

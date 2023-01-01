@@ -1,3 +1,4 @@
+import Config from "../common/Config";
 import ToolOperation from "../operation/ToolOperation";
 import { Listener } from "../type/Common";
 import { ToolType } from "../type/Tool";
@@ -56,7 +57,10 @@ export default class SettingForm extends Form {
             .addInput("  指令组", "输入指令 (;号分割多条指令)", cmdstr)
 
         this.player.sendForm(form, (pl, data) => {
-            if (data == null) return;
+            if (data == null) {
+                this.hotkeyListForm(type);
+                return;
+            }
             if (mod == 0) {
                 this.addHotkey(data[2], type, data[3], data[4], data[5]);
             }
@@ -80,12 +84,15 @@ export default class SettingForm extends Form {
         let form = mc.newSimpleForm()
             .setTitle(`快捷键设置-${type}`)
             .addButton("返回上一级", "")
+            .addButton("添加快捷键", "textures/ui/color_plus.png")
         let list = ToolOperation.getLinearList(this.player, this.playerData, type);
         list.forEach((v: any) => {
-            form.addButton(`${StrFactory.color(Format.Black, v[0])}\n名称: ${StrFactory.color(Format.DarkGreen, v[1])} 描述: ${StrFactory.color(Format.DarkPurple, v[2])}`);
+            const type = v[0].replace("minecraft:", "");
+            form.addButton(
+                `${StrFactory.color(Format.Black, v[0])}\n名称: ${StrFactory.color(Format.DarkGreen, v[1])} 描述: ${StrFactory.color(Format.DarkPurple, v[2])}`,
+                Config.ITEM_TEXTURES.has(type) ? `textures/items/${type}` : ""
+            );
         });
-        form.addButton("添加快捷键")
-            .addButton("恢复默认快捷键")
 
         this.player.sendForm(form, (pl, id) => {
             if (id == 0) {
@@ -98,20 +105,7 @@ export default class SettingForm extends Form {
                 this.hotkeyForm([], 0, type);
             }
             else if (id == list.length + 2) {
-                let form2 = mc.newSimpleForm()
-                    .setTitle("恢复默认快捷键")
-                    .setContent("是否清空当前所有快捷键设置并恢复默认设置？\n\n\n\n\n\n")
-                    .addButton("返回上一级", "")
-                    .addButton("确认")
-                    .addButton("取消")
-                this.player.sendForm(form2, (pl, id) => {
-                    if (id == 0) {
-                        this.hotkeyListForm(type);
-                    }
-                    else if (id == 1) {
-                        ToolOperation.restoreDefaults(this.player, this.playerData);
-                    }
-                });
+
             }
         });
     }
@@ -122,6 +116,7 @@ export default class SettingForm extends Form {
             .addButton("返回上一级", "")
             .addButton("点击(右键)式", "textures/ui/generic_right_trigger.png")
             .addButton("破坏(左键)式", "textures/ui/generic_left_trigger.png")
+            .addButton("恢复默认快捷键", "textures/ui/switch_home_button.png")
 
         this.player.sendForm(form, (pl, id) => {
             switch (id) {
@@ -133,6 +128,24 @@ export default class SettingForm extends Form {
                     break;
                 case 2:
                     this.hotkeyListForm(ToolType.LEFT);
+                    break;
+                case 3:
+                    let form2 = mc.newSimpleForm()
+                        .setTitle("恢复默认快捷键")
+                        .setContent("是否清空当前所有快捷键设置并恢复默认设置？\n\n\n\n\n\n\n\n")
+                        .addButton("确认", "textures/ui/check.png")
+                        .addButton("取消", "textures/ui/cancel.png")
+                    this.player.sendForm(form2, (pl, id) => {
+                        switch (id) {
+                            case 0:
+                                ToolOperation.restoreDefaults(this.player, this.playerData);
+                                break;
+                            case 1:
+                            default:
+                                break;
+                        }
+                        this.hotkeyKindForm();
+                    });
                     break;
             }
         })
@@ -159,7 +172,10 @@ export default class SettingForm extends Form {
             .addSwitch("退出后保存复制", setArr[5][1])
 
         this.player.sendForm(form, (pl, data) => {
-            if (data == null) return;
+            if (data == null) {
+                this.sendForm();
+                return;
+            }
             if (data[0] == data[1]) {
                 pl.sendText(StrFactory.cmdErr("填充方块和被替换方块不能相同"));
                 return;
