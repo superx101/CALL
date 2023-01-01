@@ -40,14 +40,14 @@ export default class BasicTranslOperation {
         });
     }
 
-    public static move(player: Player, output: CommandOutput, playerData: PlayerData, res: { PosInt: IntPos; }) {
+    public static move(player: Player, output: CommandOutput, playerData: PlayerData, res: { IntPos: IntPos; }) {
         AreaOperation.hasArea(playerData);
         let pos: Pos3D;
-        if (res.PosInt == null) {
+        if (res.IntPos == null) {
             pos = Pos3D.fromPos(player.pos).floor().calibration();
         }
         else {
-            pos = Pos3D.fromPos(res.PosInt).floor();
+            pos = Pos3D.fromPos(res.IntPos).floor();
         }
         let st1 = new Structure(playerData.settings.area);
         let st2 = StructureManager.getTargetStruct(st1, pos);

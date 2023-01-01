@@ -68,16 +68,16 @@ export default class StructureOperation {
         });
     }
 
-    public static load(player: Player, output: CommandOutput, playerData: PlayerData, res: { id: string; posInt: IntPos; Mirror: string; Degrees: string; IncludeEntities: boolean; IncludeBlocks: boolean; Waterlogged: boolean; Integrity: number; Seed: string; }) {
+    public static load(player: Player, output: CommandOutput, playerData: PlayerData, res: { id: string; intPos: IntPos; Mirror: string; Degrees: string; IncludeEntities: boolean; IncludeBlocks: boolean; Waterlogged: boolean; Integrity: number; Seed: string; }) {
         let r = StructureOperation.findId(res.id, player.xuid);
         let st = Config.get(Config.STRUCTURES, `private.${r.xuid}.saveList.${r.structid}`);
         let structure = new Structure(st.area, st.name, st.isPublic);
         let pos: Pos3D;
-        if (res.posInt == null) {
+        if (res.intPos == null) {
             pos = Pos3D.fromPos(player.pos).calibration().floor();
         }
         else {
-            pos = Pos3D.fromPos(res.posInt);
+            pos = Pos3D.fromPos(res.intPos);
         }
         StructureOperation.checkTargetStruct(st.area, pos);
         let targetArea = Area3D.fromArea3D(st.area)
@@ -227,7 +227,7 @@ export default class StructureOperation {
         });
     }
 
-    public static paste(player: Player, output: CommandOutput, playerData: PlayerData, res: { PosInt: Pos; }) {
+    public static paste(player: Player, output: CommandOutput, playerData: PlayerData, res: { IntPos: Pos; }) {
         let data = StructureManager.getData(player.xuid);
         let keys = Object.keys(data.copy);
         if (keys.length == 0) {
@@ -235,8 +235,8 @@ export default class StructureOperation {
             return;
         }
         let pos: Pos3D;
-        if (res.PosInt != null) {
-            pos = Pos3D.fromPos(res.PosInt);
+        if (res.IntPos != null) {
+            pos = Pos3D.fromPos(res.IntPos);
         }
         else {
             pos = Pos3D.fromPos(player.pos).calibration().floor();

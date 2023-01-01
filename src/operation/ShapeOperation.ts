@@ -8,7 +8,7 @@ export default class ShapeOperation {
         ShapeOperation.list(output);
     }
 
-    public static start(player: Player, output: CommandOutput, playerData: PlayerData, res: { enum_1: string; package: string; index: number; PosInt: IntPos; Json: string; }) {
+    public static start(player: Player, output: CommandOutput, playerData: PlayerData, res: { enum_1: string; package: string; index: number; IntPos: IntPos; Json: string; }) {
         switch (res.enum_1) {
             case "list":
             case "li":
@@ -16,7 +16,7 @@ export default class ShapeOperation {
                 break;
             case "load":
             case "lo":
-                ShapeOperation.load(player, output, playerData, res.package, res.index, res.PosInt, res.Json);
+                ShapeOperation.load(player, output, playerData, res.package, res.index, res.IntPos, res.Json);
                 break;
             default:
                 break;

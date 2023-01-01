@@ -95,29 +95,21 @@ export default class StrFactory {
     }
 
     public static choose(bool: boolean, a: string, b: string) {
-        if(bool) {
-            return a;
-        }
-        else {
-            return b;
-        }
+        if(bool) return a;
+        else return b;
     }
 
     public static on_off(bool: boolean, off: string, on: string) {
-        if(bool) {
+        if(bool) 
             return Format.Bold + Format.Red + off + Format.Clear;
-        }
-        else {
+        else 
             return Format.Bold + Format.DarkGreen + on + Format.Clear;
-        }
     }
 
     public static formEnable(bool: boolean, text: string) {
-        if(bool) {
+        if(bool)
             return text;
-        }
-        else {
+        else 
             return Format.Bold + Format.Gray + text + Format.Clear;
-        }
     }
 }

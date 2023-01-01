@@ -9,7 +9,7 @@ import StrFactory from "../util/StrFactory";
 
 export default class AreaOperation {
     public static start(player: Player, output: CommandOutput, playerData: PlayerData, res: any) {
-        let pos: IntPos = res.PosInt;
+        let pos: IntPos = res.IntPos;
         let enum_1 = res.enum_1;
         let enum_2 = res.enum_2;
         switch (enum_1) {

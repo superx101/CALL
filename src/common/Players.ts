@@ -1,4 +1,5 @@
 import Activity from "../activity/Activity";
+import PlayerData from "../model/PlayerData";
 import Pos3D from "../model/Pos3D";
 import PermissionOperation from "../operation/PermissionOperation";
 import { PermissionsType } from "../type/Config";
@@ -6,7 +7,7 @@ import StrFactory from "../util/StrFactory";
 import Config from "./Config";
 
 export default class Players {
-    public static dataMap = new Map();
+    public static dataMap = new Map<string, PlayerData>();
 
     public static hasPermission(player: Player) {
         switch (Config.get(Config.GLOBAL, "permission")) {
@@ -29,7 +30,7 @@ export default class Players {
         }
     }
 
-    public static setData(xuid:string, data:any) {
+    public static setData(xuid:string, data:PlayerData) {
         Players.dataMap.set(xuid, data);
     }
 
