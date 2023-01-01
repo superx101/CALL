@@ -1,3 +1,4 @@
+![CALL](../image/introduction_1.0.0.png)
 # 插件介绍
 ## 简介
 &emsp;&emsp;Construct Assistant for LiteLoaderBDS, 简称CALL、建造助手，是针对**基岩版服务器（BDS）**的辅助建造工具，且提供API支持其他插件开发者拓展CALL的功能。
@@ -58,3 +59,7 @@
 - **[共享保存](user/function/other?id=%e7%bb%93%e6%9e%84%e5%85%ac%e5%bc%80-public)**
 - **[快捷键](user/function/hotkey)**
 - **[生成形状](user/function/shape)**
+
+## 形状
+当前版本中自带的形状如下：
+![Shape](../image/shape.png)

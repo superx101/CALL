@@ -55,4 +55,8 @@ CALL provides you [document](https://superx101.github.io/CALL/) with a detailed 
 - **Delete and save**  
 - **Share and save**  
 - **Shortcut key**  
-- **Generate a shape**  
+- **Generate a shape**
+
+## Shape
+The shape of the current version is as follows:
+![Shape](./docs/image/shape.png)
