@@ -1,6 +1,6 @@
 {
   "name": "call",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Construct Assistant for LiteLoaderBDS",
   "main": "app.js",
   "directories": {
