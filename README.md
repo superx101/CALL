@@ -30,7 +30,7 @@ CALL uses a thread-wait approach to avoid the situation where the operation fail
 CALL allows other developers to write plug-ins that extend functionality, which you can install **Third-party plug-ins** to get **More functions**
 
 - ___Open source and free___  
-This plugin uses the GPL-3.0 protocol, full **Open source and free** project address: Bug <https://github.com/superx101/CALL> _(It's my time to program a BDS plug-in, Please forgive if there are any mistakes)_ Feedback and Suggestions: [691552572](https://jq.qq.com/?_wv=1027&k=9soqRZuV)
+This plugin uses the GPL-3.0 protocol, full **Open source and free** project address: <https://github.com/superx101/CALL> _(It's my first BDS plug-in, Please forgive if there are any mistakes)_ Feedback and Suggestions: [691552572](https://jq.qq.com/?_wv=1027&k=9soqRZuV)
 
 - ___Automatic update___  
 Automatic download, automatic installation, and automatic reloading of plug-ins Since version 1.0.0, CALL can enable automatic updates in the configuration, or enter background commands for semi-automatic `call update` updates.
