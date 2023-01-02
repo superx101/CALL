@@ -1,3 +1,4 @@
+import Config from "../common/Config";
 import PlayerData from "../model/PlayerData";
 import StructureOperation from "../operation/StructureOperation";
 import StrFactory from "../util/StrFactory";
@@ -22,7 +23,7 @@ export default class Menu extends Form {
         let redoSize = StructureOperation.getRedoSize(this.player.xuid);
         let canPaste = StructureOperation.canPaste(this.player.xuid);
         let form = mc.newSimpleForm()
-            .setTitle("CALL快捷菜单")
+            .setTitle(`CALL快捷菜单 --${Config.PLUGIN_VERSION.toString()}`)
             .addButton("选区", "textures/gui/newgui/buttons/new_checkbox/spaceHover.png")
             .addButton(StrFactory.formEnable(undoSize > 0, `撤销 (${undoSize})`), "textures/ui/arrow_dark_left_stretch.png")
             .addButton(StrFactory.formEnable(redoSize > 0, `恢复撤销 (${redoSize})`), "textures/ui/arrow.png")
