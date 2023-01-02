@@ -98,5 +98,16 @@
                 }
             ]
         }
+    ],
+    "1.0.1": [
+        {
+            "type": "delete",
+            "path": "./plugins/CALL/version"
+        },
+        {
+            "type": "create",
+            "path": "./plugins/CALL/version",
+            "value": "1.0.1"
+        }
     ]
 }
