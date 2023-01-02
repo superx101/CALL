@@ -2,6 +2,10 @@
     "1.0.0": [
         {
             "type": "delete",
+            "path": "./plugins/CALL.lxl.js"
+        },
+        {
+            "type": "delete",
             "path": "./plugins/CALL/lib"
         },
         {
