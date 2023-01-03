@@ -21,7 +21,7 @@ export default class Activity {
 
     public static onStop(player: Player) {
         let playerData = Players.getData(player.xuid);
-        AreaOperation.onStop(playerData);//area 清除选区
+        AreaOperation.onStop(playerData);//area 清除选区显示
     }
 
     public static onDestroy(player: Player) {

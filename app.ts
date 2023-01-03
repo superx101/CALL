@@ -516,7 +516,7 @@ function clock() {
             playerData = singleMap[1];
             player = mc.getPlayer(xuid);
             //选区提示
-            if (playerData.settings.areaTextShow && playerData.hasSetArea) {
+            if (playerData.settings.areaTextShow && playerData.hasSetArea && playerData.settings.enable) {
                 let area = Area3D.fromArea3D(playerData.settings.area);
                 player.sendText(`当前选区: ${playerData.settings.area.start}->${playerData.settings.area.end}\n长度: ${area.getLensStr()}`, Enums.msg.TIP);
             }
