@@ -4,10 +4,11 @@ import shutil
 import os
 import json
 
-shutil.copytree("test", "nodejs/CALL/test", dirs_exist_ok=True)
-shutil.copytree("templates", "nodejs/CALL/templates", dirs_exist_ok=True)
-shutil.copytree("third-party", "nodejs/CALL/third-party", dirs_exist_ok=True)
-shutil.copytree("config", "nodejs/CALL/config", dirs_exist_ok=True)
+shutil.copytree("test", "nodejs/call/test", dirs_exist_ok=True)
+shutil.copytree("templates", "nodejs/call/templates", dirs_exist_ok=True)
+shutil.copytree("third-party", "nodejs/call/third-party", dirs_exist_ok=True)
+shutil.copytree("config", "nodejs/call/config", dirs_exist_ok=True)
+shutil.copytree("node_modules", "nodejs/call/node_modules", dirs_exist_ok=True)
 
 with open("package.json", "r") as f:
     data = json.load(f)
