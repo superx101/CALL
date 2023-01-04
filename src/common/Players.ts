@@ -45,7 +45,14 @@ export default class Players {
         else {
             cmd = `/execute as "${player.realName}" positioned ${Pos3D.fromPos(player.pos).floor().formatStr()} run ` + cmd;
         }
-        let res = mc.runcmdEx(cmd);
+
+        let res: {success: boolean;output: string;}
+        if(player.pos.dimid == 0) {
+            res = mc.runcmdEx(cmd);
+        }
+        else {
+            res = {success: player.runcmd(cmd), output: ""}
+        }
         if (!res.success && isTell) {
             player.sendText(StrFactory.cmdErr(res.output));
         }

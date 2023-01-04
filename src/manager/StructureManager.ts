@@ -66,7 +66,14 @@ export default class StructureManager {
     public static tp(player: Player, playerData: PlayerData, refresh: boolean = true) {
         let pos = playerData.prePos;
         let diArr = Pos3D.directionToPosArr(playerData.direction);
-        let res = Players.cmd(player, `/tp "${player.realName}" ${pos.x.toFixed(2)} ${(pos.y - 0.5).toFixed(2)} ${pos.z.toFixed(2)} facing ${parseFloat(pos.x.toFixed(2)) + diArr[0]} ${parseFloat(pos.y.toFixed(2)) + diArr[1]} ${parseFloat(pos.z.toFixed(2)) + diArr[2]}`, false);
+        let res: { success: boolean; output: string; };
+        if (pos.dimid == 0) {
+            res = Players.cmd(player, `/tp "${player.realName}" ${pos.x.toFixed(2)} ${(pos.y - 0.5).toFixed(2)} ${pos.z.toFixed(2)} facing ${parseFloat(pos.x.toFixed(2)) + diArr[0]} ${parseFloat(pos.y.toFixed(2)) + diArr[1]} ${parseFloat(pos.z.toFixed(2)) + diArr[2]}`, false);
+        }
+        //非主世界
+        else {
+            res = {success: player.teleport(pos.x, pos.y, pos.z, pos.dimid), output: ""}
+        }
         if (res.success && refresh) {
             player.refreshChunks();
         }
@@ -145,11 +152,11 @@ export default class StructureManager {
         let data = StructureManager.getData(player.xuid);
         let areas = structure.getAreas();
         //@ts-ignore
-        let structid = "c" + data.pid+ system.getTimeStr()
-                .replaceAll(" ", "")
-                .replaceAll("-", "")
-                .replaceAll(":", "")
-                .substring(2)
+        let structid = "c" + data.pid + system.getTimeStr()
+            .replaceAll(" ", "")
+            .replaceAll("-", "")
+            .replaceAll(":", "")
+            .substring(2)
             + ("000" + StructureManager.getId().toString(16)).slice(-3);
         //保存所有分结构
         StructureManager.traversal(player, playerData, areas, 0, 0, (x: number, z: number) => {
@@ -178,7 +185,7 @@ export default class StructureManager {
         let degreeNum = parseFloat(degrees);
         //area变换矩阵
         let trans = Transform3.getBasicRota(parseFloat(degrees))
-        .mul(Transform3.getMirror(mirror));
+            .mul(Transform3.getMirror(mirror));
         let sta2 = area.start.transform2D(trans as Matrix3D);
         let end2 = area.end.transform2D(trans as Matrix3D);
         let lens2 = [end2.x - sta2.x, end2.z - sta2.z];
