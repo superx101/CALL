@@ -66,14 +66,7 @@ export default class StructureManager {
     public static tp(player: Player, playerData: PlayerData, refresh: boolean = true) {
         let pos = playerData.prePos;
         let diArr = Pos3D.directionToPosArr(playerData.direction);
-        let res: { success: boolean; output: string; };
-        if (pos.dimid == 0) {
-            res = Players.cmd(player, `/tp "${player.realName}" ${pos.x.toFixed(2)} ${(pos.y - 0.5).toFixed(2)} ${pos.z.toFixed(2)} facing ${parseFloat(pos.x.toFixed(2)) + diArr[0]} ${parseFloat(pos.y.toFixed(2)) + diArr[1]} ${parseFloat(pos.z.toFixed(2)) + diArr[2]}`, false);
-        }
-        //非主世界
-        else {
-            res = {success: player.teleport(pos.x, pos.y, pos.z, pos.dimid), output: ""}
-        }
+        let res: { success: boolean; output: string; } = Players.cmd(player, `/tp "${player.realName}" ${pos.x.toFixed(2)} ${(pos.y - 0.5).toFixed(2)} ${pos.z.toFixed(2)} facing ${parseFloat(pos.x.toFixed(2)) + diArr[0]} ${parseFloat(pos.y.toFixed(2)) + diArr[1]} ${parseFloat(pos.z.toFixed(2)) + diArr[2]}`, false);
         if (res.success && refresh) {
             player.refreshChunks();
         }
