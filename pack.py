@@ -60,12 +60,12 @@ zip_file.close()
 
 #dependencies
 with zipfile.ZipFile('output/依赖包(非特殊情况不用下载).zip', 'w') as zip:
-    for root, dirs, files in os.walk('nodejs/call/node_modules/'):
+    for root, dirs, files in os.walk('node_modules/'):
         for file in files:
             file_path = os.path.join(root, file)
-            arcname = os.path.join('node_modules', os.path.relpath(file_path, 'nodejs/call/node_modules/'))
+            arcname = os.path.join('node_modules', os.path.relpath(file_path, 'node_modules/'))
             zip.write(file_path, arcname=arcname)
-    zip.write('nodejs/call/package-lock.json', "package-lock.json")
+    zip.write('package-lock.json', "package-lock.json")
     zip.writestr('依赖包安装说明.txt', '[说明]\n初次安装无法下载依赖时, 需手动下载该依赖包补充。\n\n[安装]\n将里面的node_modules和package-lock.json文件解压到 plugins/nodejs/call 下即可')
 
 shutil.rmtree("./output/temp")
