@@ -4,6 +4,9 @@ import Pos3D from "../model/Pos3D";
 import { Listener } from "../type/Common";
 import { ToolType } from "../type/Tool";
 import StrFactory from "../util/StrFactory";
+import * as acorn from "acorn";
+import * as escodegen from "escodegen";
+import * as estraverse from "estraverse";
 
 type ToolVariable = {
     readonly pos: Pos3D;
@@ -103,14 +106,26 @@ export default class ToolOperation {
         const arr: string[] = [];
         cmds.forEach((cmd, i) => {
             const strs = cmd.match(/\$\{.+?\}/g);
-            const varRegex = /[a-zA-Z_][0-9a-zA-Z_]*(\.[a-zA-Z_][0-9a-zA-Z_]*)*(\(\))?/g;
             if (strs != null) {
                 for (let i = 0; i < strs.length; i++) {
-                    cmd = cmd.replace(new RegExp(/\$\{.+?\}/), eval('`' + strs[i].replace(varRegex, 'data.$&') + '`'));//`1 + block.pos.x * 2`
+                    // 解析表达式
+                    const ast: any = acorn.parse(strs[i].slice(2, -1), { ecmaVersion: 2021 });
+                    // 遍历语法树的函数
+                    estraverse.replace(ast, {
+                        enter(node, parent) {
+                            if (node.type === "Identifier" && !(parent.type === "MemberExpression" && parent.property == node)) {
+                                node.name = 'data.' + node.name;
+                            }
+                        }
+                    })
+                    // 表达式生成指令
+                    cmd = cmd.replace(new RegExp(/\$\{.+?\}/), eval('`${' + escodegen.generate(ast).slice(0, -1) + '}`'));//`1 + block.pos.x * 2`
                 }
             }
 
-            arr.push(cmd);
+            if(!(cmd === '' || cmd === '/')) {
+                arr.push(cmd);
+            }
         });
         return arr;
     }
@@ -124,7 +139,7 @@ export default class ToolOperation {
                 .toString()
                 .split("\n")[0];
         }
-        catch (e) {}
+        catch (e) { }
         if (items[item.type] != null && items[item.type][name] != null) {
             const itemArr = player.getInventory().getAllItems();
             ToolOperation.cmdsTranslator(player, itemArr, playerData.settings.barReplace, playerData.settings.barReplaced, items[item.type][name].cmds, block, posFloat).forEach((cmd) => {

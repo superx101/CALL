@@ -21,13 +21,18 @@
   },
   "homepage": "https://github.com/superx101/CALL#readme",
   "dependencies": {
-    "@types/node": "^18.11.17",
+    "acorn": "^8.8.1",
     "axios": "^1.2.1",
+    "escodegen": "^2.0.0",
+    "estraverse": "^5.3.0",
     "fast-json-patch": "^3.1.1",
     "fs": "^0.0.1-security",
     "unzipper": "^0.10.11"
   },
   "devDependencies": {
+    "@types/node": "^18.11.17",
+    "@types/escodegen": "^0.0.7",
+    "@types/estraverse": "^5.1.2",
     "@types/unzipper": "^0.10.5"
   }
 }
