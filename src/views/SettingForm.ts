@@ -95,17 +95,18 @@ export default class SettingForm extends Form {
         });
 
         this.player.sendForm(form, (pl, id) => {
-            if (id == 0) {
-                this.hotkeyKindForm();
-                return;
-            }
-            if (id == 1) {
-                this.hotkeyForm([], 0, type);
-                return;
-            }
-            else {
-                this.hotkeyForm(list[id - 2], 1, type);
-                return;
+            switch (id) {
+                case 0:
+                    this.hotkeyKindForm();
+                    break;
+                case 1:
+                    this.hotkeyForm([], 0, type);
+                    break;
+                case 2:
+                    this.hotkeyForm(list[id - 2], 1, type);
+                    break;
+                default:
+                    break;
             }
         });
     }
@@ -143,13 +144,13 @@ export default class SettingForm extends Form {
                     });
                     break;
                 case 2:
-                    let list: {[x: string]: any[]} = {
+                    let list: { [x: string]: any[] } = {
                         left: ToolOperation.getLinearList(this.player, this.playerData, ToolType.LEFT),
                         right: ToolOperation.getLinearList(this.player, this.playerData, ToolType.RIGHT)
                     }
-                    for(let key of Object.keys(list)) {
+                    for (let key of Object.keys(list)) {
                         const arr = list[key];
-                        arr.forEach((v: any)=>{
+                        arr.forEach((v: any) => {
                             this.getItem(v[0], v[1], v[2]);
                         });
                     }
@@ -159,6 +160,8 @@ export default class SettingForm extends Form {
                     break;
                 case 4:
                     this.hotkeyListForm(ToolType.LEFT);
+                    break;
+                default:
                     break;
             }
         })
