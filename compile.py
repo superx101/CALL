@@ -12,7 +12,7 @@ shutil.copytree("node_modules", "nodejs/call/node_modules", dirs_exist_ok=True)
 
 with open("package.json", "r") as f:
     data = json.load(f)
-del data['dependencies']['@types/node']
+del data['devDependencies']
 with open('nodejs/CALL/package.json', "w") as f:
     json.dump(data, f)
 
