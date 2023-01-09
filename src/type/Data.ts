@@ -7,6 +7,7 @@ export interface Settings {
     saveArea: boolean,
     saveUndo: boolean,
     saveCopy: boolean,
+    saveEntity: boolean,
     areaTextShow: boolean,
     displayArea: boolean,
     displayPos: any,

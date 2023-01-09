@@ -141,23 +141,28 @@
             "patch":[
                 {
                     "op": "add",
+                    "path": "/traversalWaitTime",
+                    "value": 300
+                },
+                {
+                    "op": "add",
+                    "path": "/fillWaitTime",
+                    "value": 20
+                },
+                                {
+                    "op": "add",
+                    "path": "/outputCmd",
+                    "value": false
+                },
+                {
+                    "op": "add",
                     "path": "/default/displayProgressBar",
                     "value": true
                 },
                 {
                     "op": "add",
-                    "path": "/default/traversalWaitTime",
-                    "value": 300
-                },
-                {
-                    "op": "add",
-                    "path": "/default/fillWaitTime",
-                    "value": 20
-                },
-                                {
-                    "op": "add",
-                    "path": "/default/outputCmd",
-                    "value": false
+                    "path": "/default/saveEntity",
+                    "value": true
                 }
             ]
         },
@@ -169,6 +174,12 @@
                     "op": "add",
                     "path": "/player/*",
                     "name": "displayProgressBar",
+                    "value": true
+                },
+                {
+                    "op": "add",
+                    "path": "/player/*",
+                    "name": "saveEntity",
                     "value": true
                 }
             ]

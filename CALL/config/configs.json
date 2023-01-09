@@ -161,6 +161,7 @@
         "saveArea": false,
         "saveUndo": true,
         "saveCopy": false,
+        "saveEntity": true,
         "areaTextShow": true,
         "displayArea": true,
         "displayPos": null,

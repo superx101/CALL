@@ -82,6 +82,12 @@
         "default.saveUndo": {
             "type": "boolean"
         },
+        "default.saveCopy": {
+            "type": "boolean"
+        },
+        "default.saveEntity": {
+            "type": "boolean"
+        },
         "default.areaTextShow": {
             "type": "boolean"
         },

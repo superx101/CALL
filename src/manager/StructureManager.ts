@@ -169,7 +169,7 @@ export default class StructureManager {
         await StructureManager.traversal(player, playerData, areas, `保存中 ${index + 1}/${total}`, 1, (x: number, z: number) => {
             let saveid;
             saveid = structid + "_" + x + "_" + z;
-            NBTManager.save(saveid, areas[x][z]);
+            NBTManager.save(saveid, areas[x][z], false, !playerData.settings.saveEntity);
             return Promise.resolve(true);
         }, () => {
             //结束

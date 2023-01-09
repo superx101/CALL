@@ -170,15 +170,16 @@ export default class SettingForm extends Form {
 
     private otherSettingForm() {
         let barArr = ["1", "2", "3", "4", "5", "6", "7", "8", "9"];
-        let barArr_select = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        let barArr_select = [0, 1, 2, 3, 4, 5, 6, 7, 8];
         let setArr: any = [
-            ["barReplace", this.settings.barReplace - 1, barArr_select],
-            ["barReplaced", this.settings.barReplaced - 1, barArr_select],
+            ["barReplace", this.settings.barReplace, barArr_select],
+            ["barReplaced", this.settings.barReplaced, barArr_select],
             ["loadChuckTip", this.settings.loadChuckTip],
             ["displayProgressBar", this.settings.displayProgressBar],
             ["saveArea", this.settings.saveArea],
             ["saveUndo", this.settings.saveUndo],
-            ["saveCopy", this.settings.saveCopy]
+            ["saveCopy", this.settings.saveCopy],
+            ["saveEntity", this.settings.saveEntity]
         ];
         let form = mc.newCustomForm()
             .setTitle("其他设置")
@@ -189,6 +190,7 @@ export default class SettingForm extends Form {
             .addSwitch("退出后保存选区", setArr[4][1])
             .addSwitch("退出后保存撤销", setArr[5][1])
             .addSwitch("退出后保存复制", setArr[6][1])
+            .addSwitch("结构中保存实体", setArr[7][1])
 
         this.player.sendForm(form, (pl, data) => {
             if (data == null) {
@@ -201,6 +203,7 @@ export default class SettingForm extends Form {
             }
             let json: any = {};
             data.forEach((v, i) => {
+                //比较修改过的值
                 if (v !== setArr[i][1]) {
                     if (typeof (v) == "number") {
                         v = setArr[i][2][v];
