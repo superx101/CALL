@@ -2,6 +2,8 @@ import Constant from "../common/Constant";
 import Area3D from "../model/Area3D";
 import PlayerData from "../model/PlayerData";
 import Pos3D from "../model/Pos3D";
+import { Warn } from "../type/Error";
+import StrFactory from "../util/StrFactory";
 import StructureManager from "./StructureManager";
 
 export default class AreaDisplayerManager {
@@ -42,7 +44,7 @@ export default class AreaDisplayerManager {
         try {
             const block = mc.getBlock(pos.x, pos.y, pos.z, pos.dimid);
             let data = AreaDisplayerManager.posMap.get(pos);
-            
+
             if (block != null) {
                 block.setNbt(data.blockNbt);
                 if (data.blockEntityNbt != null) {
@@ -50,16 +52,23 @@ export default class AreaDisplayerManager {
                 }
             }
             else {
-                player.teleport(pos.x, pos.y, pos.z, pos.dimid);
+                player.sendText(StrFactory.cmdWarn('正在取消选区显示'));
                 StructureManager.savePos(player, playerData);
-                const bl = mc.getBlock(pos.x, pos.y, pos.z, pos.dimid);
-                bl.setNbt(data.blockNbt);
-                if (data.blockEntityNbt != null) {
-                    bl.getBlockEntity().setNbt(data.blockEntityNbt);
-                }
-                StructureManager.tp(player, playerData, false);
-            }
 
+                const id = setInterval(()=>{
+                    player.teleport(pos.x, pos.y, pos.z, pos.dimid);
+                    const bl = mc.getBlock(pos.x, pos.y, pos.z, pos.dimid);
+                    if(bl != null) {
+                        bl.setNbt(data.blockNbt);
+                        if (data.blockEntityNbt != null) {
+                            bl.getBlockEntity().setNbt(data.blockEntityNbt);
+                        }
+                        StructureManager.tp(player, playerData, false);
+                        player.sendText(StrFactory.cmdTip('已取消选区显示'));
+                        clearInterval(id);
+                    }
+                }, 200);
+            }
         }
         catch (e) { }
     };
@@ -73,6 +82,12 @@ export default class AreaDisplayerManager {
         let mapPos;
         let offset = 0;
         let success = false;
+
+        //无法加载则退出
+        if (mc.getBlock(tempPos.x, tempPos.y, tempPos.z, tempPos.dimid) == null) {
+            throw new Warn("无法加载区块, 已取消选区显示")
+        }
+
         //寻找一个未被记录的位置
         for (let y = top + 1; y < Constant.SPACE.MAX_HIGHT; y++) {
             let canSet = true;
@@ -125,7 +140,7 @@ export default class AreaDisplayerManager {
             return tempPos;
         }
         else {
-            return null;
+            throw new Error("可用显示位置已满,无法显示");
         }
     }
 

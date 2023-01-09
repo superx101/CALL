@@ -24,6 +24,7 @@ import UpdateOperation from "./src/operation/UpdateOperation";
 import ShapeLoader from "./src/plugin/ShapeLoader";
 import { Listener } from "./src/type/Common";
 import Enums from "./src/type/Enums";
+import { Warn } from "./src/type/Error";
 import { Pos } from "./src/type/Pos";
 import { ToolType } from "./src/type/Tool";
 import StrFactory from "./src/util/StrFactory";
@@ -437,8 +438,14 @@ function command() {
             else if (ori.type == OriginType.Server) {
                 command_consoleCallback(output, res);
             }
+        
         } catch (ex) {
-            output.error(StrFactory.cmdErr(ex.message));
+            if(ex instanceof Warn) {
+                output.error(StrFactory.cmdWarn(ex.message));
+            }
+            else {
+                output.error(StrFactory.cmdErr(ex.message));
+            }
             if (Config.get(Config.GLOBAL, "debugMod")) {
                 throw ex;
             }

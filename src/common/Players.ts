@@ -41,9 +41,8 @@ export default class Players {
     public static silenceCmd(player: Player, cmd: string) {
         if (!Config.get(Config.GLOBAL, "outputCmd", false)) {
             player.runcmd(cmd);
-            //控制台清除输出
+            //控制台清除输出 (密集输出时删除错误)
             process.stdout.write('\x1B[1A');
-            process.stdout.cursorTo(0);
             process.stdout.clearLine(1);
         }
     }
@@ -65,7 +64,7 @@ export default class Players {
             logger.debug(cmd);
             logger.debug(res);
         }
-        if(Config.get(Config.GLOBAL, "outputCmd", false) || true) {
+        if(Config.get(Config.GLOBAL, "outputCmd", false)) {
             logger.info(cmd);
         }
         return res;

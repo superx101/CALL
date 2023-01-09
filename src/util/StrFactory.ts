@@ -1,3 +1,5 @@
+const tag = "CALL-";
+
 export default class StrFactory {
     public static isLegalName(str: string) {
         if (str == null) {
@@ -55,19 +57,23 @@ export default class StrFactory {
     }
 
     public static cmdMsg(str: string) {
-        return Format.White + "CALL-" + str;
+        return Format.White + tag + str;
     }
 
     public static cmdTip(str: string) {
-        return Format.Green + "CALL-" + str;
+        return Format.Green + tag + str;
     }
 
     public static cmdSuccess(str: string) {
-        return Format.Yellow + "CALL-" + str;
+        return Format.Yellow + tag + str;
     }
 
     public static cmdErr(str: string) {
-        return Format.Red + "CALL-" + str;
+        return Format.Red + tag + str;
+    }
+
+    public static cmdWarn(str: string) {
+        return Format.Gold + tag + str;
     }
 
     public static item(str: string) {

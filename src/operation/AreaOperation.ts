@@ -182,9 +182,6 @@ export default class AreaOperation {
         if (AreaOperation.hasSetArea(playerData)) {
             //结构方块显示
             playerData.displayPos = AreaDisplayerManager.set(playerData.settings.area);
-            if (playerData.displayPos == null) {
-                throw new Error("可用显示位置已满,无法显示");
-            }
             return true;
         }
         else {
