@@ -1,3 +1,4 @@
+import Players from "../common/Players";
 import AreaOperation from "../operation/AreaOperation";
 import StrFactory from "../util/StrFactory";
 import Form from "./Form";
@@ -26,7 +27,7 @@ export default class SaveForm extends Form {
                 this.sendForm(null);
                 return;
             }
-            pl.runcmd(`ca sa "${data[0]}"`);
+            Players.silenceCmd(pl, `ca sa "${data[0]}"`);
         });
     }
 }

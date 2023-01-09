@@ -1,3 +1,4 @@
+import Players from "../common/Players";
 import Pos3D from "../model/Pos3D";
 import StructureOperation from "../operation/StructureOperation";
 import StrFactory from "../util/StrFactory";
@@ -74,7 +75,7 @@ export default class StructureForm extends Form {
                 z = parseInt(arr[2]);
             }
             catch (e) { }
-            pl.runcmd(`ca lo ${stData.id} ${x} ${y} ${z} ${degreeArr[data[2]]}_degrees ${mirrorArr_select[data[3]]}`);
+            Players.silenceCmd(pl, `ca lo ${stData.id} ${x} ${y} ${z} ${degreeArr[data[2]]}_degrees ${mirrorArr_select[data[3]]}`);
         });
     }
 
@@ -116,14 +117,14 @@ export default class StructureForm extends Form {
                     this.loadOpertionForm(data);
                     break;
                 case 2:
-                    pl.runcmd(`ca de ${data.id}`);
+                    Players.silenceCmd(pl, `ca de ${data.id}`);
                     break;
                 case 3:
                     if (data.isPublic) {
-                        pl.runcmd(`ca pr ${data.id}`);
+                        Players.silenceCmd(pl, `ca pr ${data.id}`);
                     }
                     else {
-                        pl.runcmd(`ca pu ${data.id}`);
+                        Players.silenceCmd(pl, `ca pu ${data.id}`);
                     }
                     break;
                 default:

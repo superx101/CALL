@@ -1,4 +1,5 @@
 import Config from "../common/Config";
+import Players from "../common/Players";
 import PlayerData from "../model/PlayerData";
 import Pos3D from "../model/Pos3D";
 import { Listener } from "../type/Common";
@@ -123,7 +124,7 @@ export default class ToolOperation {
                 }
             }
 
-            if(!(cmd === '' || cmd === '/')) {
+            if (!(cmd === '' || cmd === '/')) {
                 arr.push(cmd);
             }
         });
@@ -143,7 +144,7 @@ export default class ToolOperation {
         if (items[item.type] != null && items[item.type][name] != null) {
             const itemArr = player.getInventory().getAllItems();
             ToolOperation.cmdsTranslator(player, itemArr, playerData.settings.barReplace, playerData.settings.barReplaced, items[item.type][name].cmds, block, posFloat).forEach((cmd) => {
-                player.runcmd(cmd);
+                Players.silenceCmd(player, cmd);
             });
         }
     }

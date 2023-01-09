@@ -6,6 +6,7 @@ import Area3D from "../model/Area3D";
 import PlayerData from "../model/PlayerData";
 import Pos3D from "../model/Pos3D";
 import StrFactory from "../util/StrFactory";
+import Players from "../common/Players";
 
 export default class AreaOperation {
     public static start(player: Player, output: CommandOutput, playerData: PlayerData, res: any) {
@@ -73,12 +74,12 @@ export default class AreaOperation {
             case "se":
                 let pos3d = (pos == null ? Pos3D.fromPos(player.pos).floor().calibration() : Pos3D.fromPos(pos));
                 if (playerData.isSetPosA) {
-                    player.runcmd(`ca ar cl`);
-                    player.runcmd(`ca ar a ${pos3d.formatStr()}`);
+                    Players.silenceCmd(player, `ca ar cl`);
+                    Players.silenceCmd(player, `ca ar a ${pos3d.formatStr()}`);
                     playerData.isSetPosA = false;
                 }
                 else {
-                    player.runcmd(`ca ar b ${pos3d.formatStr()}`);
+                    Players.silenceCmd(player, `ca ar b ${pos3d.formatStr()}`);
                     playerData.isSetPosA = true;
                 }
                 break;

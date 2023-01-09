@@ -1,4 +1,5 @@
 import Config from "../common/Config";
+import Players from "../common/Players";
 import PlayerData from "../model/PlayerData";
 import StructureOperation from "../operation/StructureOperation";
 import StrFactory from "../util/StrFactory";
@@ -55,19 +56,19 @@ export default class Menu extends Form {
                 new AreaForm(this).sendForm(opts);
                 break;
             case 1:
-                this.player.runcmd("ca ud");
+                Players.silenceCmd(this.player, "ca ud");
                 break;
             case 2:
-                this.player.runcmd("ca rd");
+                Players.silenceCmd(this.player, "ca rd");
                 break;
             case 3:
                 new OperationForm(this).sendForm(opts);
                 break;
             case 4:
-                this.player.runcmd("ca co");
+                Players.silenceCmd(this.player, "ca co");
                 break;
             case 5:
-                this.player.runcmd("ca pa");
+                Players.silenceCmd(this.player, "ca pa");
                 break;
             case 6:
                 new SaveForm(this).sendForm(opts);
@@ -82,7 +83,7 @@ export default class Menu extends Form {
                 new BlockEditerForm(this.player, this.playerData).sendForm(opts);
                 break;
             case 10:
-                this.player.runcmd("ca rf");
+                Players.silenceCmd(this.player, "ca rf");
                 break;
             case 11:
                 new SettingForm(this).sendForm(opts);

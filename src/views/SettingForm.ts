@@ -1,4 +1,5 @@
 import Config from "../common/Config";
+import Players from "../common/Players";
 import ToolOperation from "../operation/ToolOperation";
 import { Listener } from "../type/Common";
 import { ToolType } from "../type/Tool";
@@ -13,7 +14,7 @@ export default class SettingForm extends Form {
     }
 
     private deleteHotkey(itemType: string, type: ToolType, name: string) {
-        this.player.runcmd(`ca to un ${itemType} ${type} "${name}"`);
+        Players.silenceCmd(this.player, `ca to un ${itemType} ${type} "${name}"`);
     }
 
     private updateHotkey(preArr: any[], itemType: string, type: ToolType, name: string, describe: string, cmds: string) {
@@ -22,7 +23,7 @@ export default class SettingForm extends Form {
     }
 
     private addHotkey(itemType: string, type: ToolType, name: string = "", describe: string, cmds: string) {
-        this.player.runcmd(`ca to bi ${itemType} ${type} "${cmds}" "${describe}" "${name}"`);
+        Players.silenceCmd(this.player, `ca to bi ${itemType} ${type} "${cmds}" "${describe}" "${name}"`);
     }
 
     private getItem(itemType: string, name: string, describe: string) {
@@ -208,7 +209,7 @@ export default class SettingForm extends Form {
                 }
             });
             if (Object.keys(json).length > 0) {
-                pl.runcmd("ca setting set " + JSON.stringify(json));
+                Players.silenceCmd(pl, "ca setting set " + JSON.stringify(json));
             }
         });
 
@@ -227,10 +228,10 @@ export default class SettingForm extends Form {
                 break;
             case 3:
                 if (this.settings.enable) {
-                    this.player.runcmd(`ca off`);
+                    Players.silenceCmd(this.player, `ca off`);
                 }
                 else {
-                    this.player.runcmd(`ca on`);
+                    Players.silenceCmd(this.player, `ca on`);
                 }
                 break;
             default:

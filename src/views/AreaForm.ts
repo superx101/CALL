@@ -1,3 +1,4 @@
+import Players from "../common/Players";
 import Pos3D from "../model/Pos3D";
 import StrFactory from "../util/StrFactory";
 import Form from "./Form";
@@ -15,19 +16,19 @@ export default class AreaForm extends Form {
                 new Menu(this.player, this.playerData).sendForm();
                 break;
             case 1:
-                this.player.runcmd(`ca ar st ${Pos3D.fromPos(this.player.pos).calibration().floor().formatStr()}`);
+                Players.silenceCmd(this.player, `ca ar st ${Pos3D.fromPos(this.player.pos).calibration().floor().formatStr()}`);
                 break;
             case 2:
-                this.player.runcmd(`ca ar en ${Pos3D.fromPos(this.player.pos).calibration().floor().formatStr()}`);
+                Players.silenceCmd(this.player, `ca ar en ${Pos3D.fromPos(this.player.pos).calibration().floor().formatStr()}`);
                 break;
             case 3:
-                this.player.runcmd("ca ar cl");
+                Players.silenceCmd(this.player, "ca ar cl");
                 break;
             case 4:
-                this.player.runcmd(`ca setting set {"areaTextShow":${this.settings.areaTextShow ? false : true}}`);
+                Players.silenceCmd(this.player, `ca setting set {"areaTextShow":${this.settings.areaTextShow ? false : true}}`);
                 break;
             case 5:
-                this.player.runcmd(`ca ar sh ${this.settings.displayArea ? "off" : "on"}`);
+                Players.silenceCmd(this.player, `ca ar sh ${this.settings.displayArea ? "off" : "on"}`);
                 break;
             default:
                 break;

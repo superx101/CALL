@@ -1,3 +1,4 @@
+import Players from "../common/Players";
 import Area3D from "../model/Area3D";
 import Pos3D from "../model/Pos3D";
 import AreaOperation from "../operation/AreaOperation";
@@ -33,7 +34,7 @@ export default class OperationForm extends Form {
                 this.fillForm(OperationForm.MODE.OUTLINE);
                 break;
             case 4:
-                this.player.runcmd("ca cl");
+                Players.silenceCmd(this.player, "ca cl");
                 break;
             case 5:
                 this.fillForm(OperationForm.MODE.REPLACE);
@@ -114,17 +115,17 @@ export default class OperationForm extends Form {
             let blockA = data[0].split(" ");
             switch (mode) {
                 case OperationForm.MODE.NULL:
-                    this.player.runcmd(`ca fi ${blockA[0]} ${blockA[1]} nu`);
+                    Players.silenceCmd(this.player, `ca fi ${blockA[0]} ${blockA[1]} nu`);
                     break;
                 case OperationForm.MODE.HOLLOW:
-                    this.player.runcmd(`ca fi ${blockA[0]} ${blockA[1]} ho`);
+                    Players.silenceCmd(this.player, `ca fi ${blockA[0]} ${blockA[1]} ho`);
                     break;
                 case OperationForm.MODE.OUTLINE:
-                    this.player.runcmd(`ca fi ${blockA[0]} ${blockA[1]} ou`);
+                    Players.silenceCmd(this.player, `ca fi ${blockA[0]} ${blockA[1]} ou`);
                     break;
                 case OperationForm.MODE.REPLACE:
                     let blockB = data[1].split(" ");
-                    this.player.runcmd(`ca re ${blockA[0]} ${blockA[1]} ${blockB[0]} ${blockB[1]}`);
+                    Players.silenceCmd(this.player, `ca re ${blockA[0]} ${blockA[1]} ${blockB[0]} ${blockB[1]}`);
                     break;
             }
         });
@@ -158,7 +159,7 @@ export default class OperationForm extends Form {
                     z = z + pos.z;
                     break;
             }
-            pl.runcmd(`ca mo ${x} ${y} ${z}`);
+            Players.silenceCmd(pl, `ca mo ${x} ${y} ${z}`);
         });
     }
 
@@ -177,7 +178,7 @@ export default class OperationForm extends Form {
                 z = parseInt(arr[2]);
             }
             catch (e) { }
-            pl.runcmd(`ca st ${x} ${y} ${z}`);
+            Players.silenceCmd(pl, `ca st ${x} ${y} ${z}`);
         });
     }
 
@@ -199,7 +200,7 @@ export default class OperationForm extends Form {
                 z = parseInt(data[3]);
             }
             catch (e) { }
-            pl.runcmd(`ca mi ${arr[data[0]]} ${x} ${y} ${z}`);
+            Players.silenceCmd(pl, `ca mi ${arr[data[0]]} ${x} ${y} ${z}`);
         });
     }
 
@@ -221,7 +222,7 @@ export default class OperationForm extends Form {
                 z = parseInt(data[3]);
             }
             catch (e) { }
-            pl.runcmd(`ca ro ${arr[data[0]]}_degrees ${x} ${y} ${z}`);
+            Players.silenceCmd(pl, `ca ro ${arr[data[0]]}_degrees ${x} ${y} ${z}`);
         });
     }
 }

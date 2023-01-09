@@ -16,10 +16,10 @@ export default class Players {
             case PermissionsType.OP:
                 let isOp = player.isOP();
                 let playerData = Players.getData(player.xuid);
-                if(isOp && playerData == null) {
+                if (isOp && playerData == null) {
                     Activity.onCreate(player);
                 }
-                else if(!isOp && playerData != null) {
+                else if (!isOp && playerData != null) {
                     Activity.onDestroy(player);
                 }
                 return isOp;
@@ -30,25 +30,43 @@ export default class Players {
         }
     }
 
-    public static setData(xuid:string, data:PlayerData) {
+    public static setData(xuid: string, data: PlayerData) {
         Players.dataMap.set(xuid, data);
     }
 
-    public static getData(xuid:string) {
+    public static getData(xuid: string) {
         return Players.dataMap.get(xuid);
     }
 
-    public static cmd(player:Player, cmd:string, isTell:boolean = true) {
-        if(Config.get(Config.GLOBAL, "oldCommandType") && Config.ISOLDVERSION) {
+    public static silenceCmd(player: Player, cmd: string) {
+        if (!Config.get(Config.GLOBAL, "outputCmd", false)) {
+            player.runcmd(cmd);
+            //控制台清除输出
+            process.stdout.write('\x1B[1A');
+            process.stdout.cursorTo(0);
+            process.stdout.clearLine(1);
+        }
+    }
+
+    public static cmd(player: Player, cmd: string, isTell: boolean = true) {
+        if (Config.get(Config.GLOBAL, "oldCommandType") && Config.ISOLDVERSION) {
             cmd = `/execute "${player.realName}" ${Pos3D.fromPos(player.pos).floor().formatStr()} ` + cmd;
         }
         else {
             cmd = `/execute at "${player.realName}" run ` + cmd;
         }
-
+        //sendText
         let res = mc.runcmdEx(cmd);
         if (!res.success && isTell) {
             player.sendText(StrFactory.cmdErr(res.output));
+        }
+        //debug
+        if(Config.get(Config.GLOBAL, "debugMod", false)) {
+            logger.debug(cmd);
+            logger.debug(res);
+        }
+        if(Config.get(Config.GLOBAL, "outputCmd", false) || true) {
+            logger.info(cmd);
         }
         return res;
     }

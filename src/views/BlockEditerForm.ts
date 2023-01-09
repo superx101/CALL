@@ -186,7 +186,7 @@ export default class BlockEditerForm extends Form {
                     }
                     break;
                 case 3:
-                    this.player.runcmd(`ca bl ${this.pos.formatStr()} ${JSON.stringify(this.blockNbt)} ${this.hasEntity ? JSON.stringify(this.entityNbt) : ""}`)
+                    Players.silenceCmd(this.player, `ca bl ${this.pos.formatStr()} ${JSON.stringify(this.blockNbt)} ${this.hasEntity ? JSON.stringify(this.entityNbt) : ""}`)
                     break;
                 default:
                     this.failMsg();
