@@ -48,6 +48,7 @@ export default class Config {
     public static STRUCTURES = new JsonConfigFile(STRUCTURES);
     public static CHECK = new JsonConfigFile(CHECK);
     public static ITEM_TEXTURES = new Set<string>(JSON.parse(File.readFrom(CONFIG + "/item_texture.json")));
+    public static BLOCKS_TYPE = new Set<string>(JSON.parse(File.readFrom(CONFIG + "/blocks.json")))
     public static LL_MINVERSION = Version.fromArr([2, 8, 1]);
     public static SERVER_VERSION = SERVER_VERSION;
     public static PLUGIN_VERSION = getVersion();

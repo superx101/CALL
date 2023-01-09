@@ -1,3 +1,4 @@
+import Config from "../common/Config";
 import FillManager from "../manager/FillManager";
 import StructureManager from "../manager/StructureManager";
 import Area3D from "../model/Area3D";
@@ -7,7 +8,7 @@ import AreaOperation from "./AreaOperation";
 
 
 export default class FillOperation {
-    public static fill(player: Player, output: CommandOutput, playerData: PlayerData, res: { block: Item; TileData: number; FillMode: string; }) {
+    public static fill(player: Player, output: CommandOutput, playerData: PlayerData, res: { block: string; TileData: number; FillMode: string; }) {
         //检查参数
         AreaOperation.hasArea(playerData);
         let blockType = FillOperation.getTypeFromBlock(res.block);
@@ -54,7 +55,7 @@ export default class FillOperation {
         });
     }
 
-    public static replace(player: Player, output: CommandOutput, playerData: PlayerData, res: { tileData2: number; block: Item; block2: Item; tileData: number; }) {
+    public static replace(player: Player, output: CommandOutput, playerData: PlayerData, res: { tileData2: number; block: string; block2: string; tileData: number; }) {
         let tileData2 = res.tileData2;
         let blockType1 = FillOperation.getTypeFromBlock(res.block);
         let blockType2 = FillOperation.getTypeFromBlock(res.block2);
@@ -69,13 +70,12 @@ export default class FillOperation {
         });
     }
 
-    public static getTypeFromBlock(block: Item) {
-        if (block.id == 0) return "air";
-        if (!block.isBlock) {
+    public static getTypeFromBlock(str: string) {
+        if (!Config.BLOCKS_TYPE.has(StrFactory.item(str))) {
             throw new Error(`当前名称不能被识别为方块, 请重试`);
         }
         else {
-            return block.type
+            return str;
         }
     }
 }
