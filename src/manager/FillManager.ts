@@ -9,11 +9,11 @@ import Players from "../common/Players";
 import Pos3D from "../model/Pos3D";
 
 export default class FillManager {
-    public static ergod(player: Player, playerData: PlayerData, areas: Areas, cmdCallback: (yBottom: number, yTop: number, area: Area3D) => void, overCallback: () => void) {
+    public static async ergod(player: Player, playerData: PlayerData, areas: Areas, index: number, total: number, cmdCallback: (yBottom: number, yTop: number, area: Area3D) => void, overCallback: () => void) {
         const ySize = Math.ceil(areas[0][0].getLens()[1] / Constant.FILL.MAX_HIGHT);
         const waitTime = Config.get(Config.GLOBAL, "fillWaitTime") * ySize;
 
-        StructureManager.traversal(player, playerData, areas, "填充中", 11, (x: number, z: number) => {
+        await StructureManager.traversal(player, playerData, areas, `填充中 ${index + 1}/${total}`, 11, (x: number, z: number) => {
             const area = areas[x][z];
             let yTop: number, yBottom: number = area.start.y;
 
@@ -34,12 +34,14 @@ export default class FillManager {
         }, () => {
             overCallback();
         }, () => {});
+
+        return ;
     }
 
     public static soildFill(player: Player, playerData: PlayerData, targetArea: Area3D, blockName1: string, tileData1: number, blockName2: string, tileData2: number | "", mod: string, overCallback: () => void) {
         let st = new Structure(Area3D.fromArea3D(targetArea));
         StructureManager.undoSave(player, playerData, [st], () => {
-            FillManager.ergod(player, playerData, st.getAreas(), (yBottom: number, yTop: number, area: Area3D) => {
+            FillManager.ergod(player, playerData, st.getAreas(), 0, 1, (yBottom: number, yTop: number, area: Area3D) => {
                 Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} ${blockName1} ${tileData1} ${mod} ${blockName2} ${tileData2}`, false);
             },
                 overCallback
@@ -65,19 +67,21 @@ export default class FillManager {
                 sts.push(new Structure(ar));
             }
         }
-        StructureManager.undoSave(player, playerData, sts, () => {
-            sts.forEach((st, i) => {
-                FillManager.ergod(player, playerData, st.getAreas(), (yBottom: number, yTop: number, area: Area3D) => {
-                    Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} ${blockName1} ${tileData1}`, false);
+        StructureManager.undoSave(player, playerData, sts, async () => {
+            for(let i = 0; i < sts.length; i++) {
+                await FillManager.ergod(player, playerData, sts[i].getAreas(), i, sts.length, (yBottom: number, yTop: number, area: Area3D) => {
                     if (i == 6) {
                         Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} air 0`, false);
+                    }
+                    else {
+                        Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} ${blockName1} ${tileData1}`, false);
                     }
                 }, () => {
                     if (i == sts.length - 1) {
                         overCallback();
                     }
                 });
-            })
+            }
         });
     }
 }

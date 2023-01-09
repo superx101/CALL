@@ -60,7 +60,7 @@ export default class StructureOperation {
         }
         let st = new Structure(playerData.settings.area, name);
         StructureManager.savePos(player, playerData);
-        StructureManager.save(player, playerData, st, (structid: string, data: Data) => {
+        StructureManager.save(player, playerData, st, 0, 1, (structid: string, data: Data) => {
             data.saveList[`${structid}`] = st;
             Config.set(Config.STRUCTURES, `private.${player.xuid}`, data);
             StructureManager.tp(player, playerData);
@@ -86,7 +86,7 @@ export default class StructureOperation {
         StructureManager.savePos(player, playerData);
         //撤销保存
         StructureManager.undoSave(player, playerData, [new Structure(targetArea)], () => {
-            StructureManager.load(player, playerData, structure, r.structid, pos, res.Mirror, res.Degrees, res.IncludeEntities, res.IncludeBlocks, res.Waterlogged, res.Integrity, res.Seed, () => {
+            StructureManager.load(player, playerData, structure, r.structid, pos, 0, 1, res.Mirror, res.Degrees, res.IncludeEntities, res.IncludeBlocks, res.Waterlogged, res.Integrity, res.Seed, () => {
                 StructureManager.tp(player, playerData);
                 player.sendText(StrFactory.cmdSuccess(`已加载结构 ${st.name} 到 ${pos}\n    -id: ${r.structid}\n    -加载目标: ${targetArea} `));
             });

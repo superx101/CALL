@@ -26,16 +26,14 @@ export default class BasicTranslOperation {
                 }
             });
             //清空原位置
-            FillManager.ergod(player, playerData, st1.getAreas(), (yBottom: number, yTop: number, area: Area3D) => {
+            FillManager.ergod(player, playerData, st1.getAreas(), 0, 1, (yBottom: number, yTop: number, area: Area3D) => {
                 Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} air 0`, false);
             }, () => {
                 //粘贴
-                setTimeout(() => {
-                    StructureManager.load(player, playerData, st1, st1id, st2.area.start, mirror, degrees, true, true, false, 100, "", () => {
-                        overCallback();
-                        StructureManager.tp(player, playerData);
-                    });
-                }, 100);
+                StructureManager.load(player, playerData, st1, st1id, st2.area.start, 0, 1, mirror, degrees, true, true, false, 100, "", () => {
+                    overCallback();
+                    StructureManager.tp(player, playerData);
+                });
             });
         });
     }
@@ -57,7 +55,7 @@ export default class BasicTranslOperation {
         });
     }
 
-    public static rote(player:Player, output:CommandOutput, playerData:PlayerData, res: { AxisPos: Pos; degrees: string; }) {
+    public static rote(player: Player, output: CommandOutput, playerData: PlayerData, res: { AxisPos: Pos; degrees: string; }) {
         AreaOperation.hasArea(playerData);
         let axisPos: Pos3D;
         if (res.AxisPos == null) {
@@ -129,11 +127,9 @@ export default class BasicTranslOperation {
             let area = st.area;
             let lens = area.getLens();
             let pos = new Pos3D(area.start.x + is[0] * lens[0], area.start.y + is[1] * lens[1], area.start.z + is[2] * lens[2], area.start.dimid);
-            setTimeout(() => {
-                StructureManager.load(player, playerData, st, sid, pos, "none", "0_degrees", true, true, false, 100, "", () => {
-                    BasicTranslOperation.sErgod(player, playerData, st, sid, arr, ++n, overCallback);
-                });
-            }, 80);
+            StructureManager.load(player, playerData, st, sid, pos, 0, 1, "none", "0_degrees", true, true, false, 100, "", () => {
+                BasicTranslOperation.sErgod(player, playerData, st, sid, arr, ++n, overCallback);
+            });
         } else {
             overCallback();
         }
@@ -164,7 +160,7 @@ export default class BasicTranslOperation {
         let allst = new Structure(new Area3D(p1, p2));
         StructureManager.savePos(player, playerData);
         //save st
-        StructureManager.save(player, playerData, st, (stSid: string, data: any) => {
+        StructureManager.save(player, playerData, st, 0, 1, (stSid: string, data: any) => {
             //undoSave
             StructureManager.undoSave(player, playerData, [allst], (complex: any) => {
                 //load ALL

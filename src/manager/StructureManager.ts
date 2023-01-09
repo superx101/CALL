@@ -58,7 +58,7 @@ export default class StructureManager {
                     }
                     player.teleport((area.start.x + area.end.x) / 2, (area.start.y + area.end.y) / 2, (area.start.z + area.end.z) / 2, area.start.dimid);
                     n--;
-                }, 1000);
+                }, 400);
             }
         });
     }
@@ -106,7 +106,7 @@ export default class StructureManager {
         }
     }
 
-    public static async traversal(player: Player, playerData: PlayerData, areas: Areas, title: string, color: number, successCallback: (x: number, z: number) => Promise<boolean>, overCallback: () => void, failCallback: (x: number, z: number) => void, waitTime: number = Config.get(Config.GLOBAL, "traversalWaitTime")) {
+    public static async traversal(player: Player, playerData: PlayerData, areas: Areas, title: string, color: number, successCallback: (x: number, z: number) => Promise<boolean>, overCallback: () => void, failCallback: (x: number, z: number) => void, waitTime: number = Config.get(Config.GLOBAL, "traversalWaitTime")): Promise<void> {
         async function waiter() {
             return new Promise(resolve => {
                 setTimeout(() => {
@@ -147,13 +147,15 @@ export default class StructureManager {
         player.removeBossBar(barUid)//移除进度条
         playerData.forbidCmd = false;
         overCallback();
+
+        return ;
     }
 
     public static getId(): number {
         return StructureManager.uid++;
     }
 
-    public static save(player: Player, playerData: PlayerData, structure: Structure, overCallback: (structid: string, data: any) => void) {
+    public static async save(player: Player, playerData: PlayerData, structure: Structure, index: number, total: number, overCallback: (structid: string, data: any) => void) {
         let data = StructureManager.getData(player.xuid);
         let areas = structure.getAreas();
         //@ts-ignore
@@ -164,7 +166,7 @@ export default class StructureManager {
             .substring(2)
             + ("000" + StructureManager.getId().toString(16)).slice(-3);
         //保存所有分结构
-        StructureManager.traversal(player, playerData, areas, "保存中", 1, (x: number, z: number) => {
+        await StructureManager.traversal(player, playerData, areas, `保存中 ${index + 1}/${total}`, 1, (x: number, z: number) => {
             let saveid;
             saveid = structid + "_" + x + "_" + z;
             NBTManager.save(saveid, areas[x][z]);
@@ -182,9 +184,10 @@ export default class StructureManager {
                 }
             }
         }, 20);
+        return;
     }
 
-    public static load(player: Player, playerData: PlayerData, preStructure: Structure, structid: string, posInt: Pos3D, mirror = "none", degrees = "0_degrees", includeEntities = false, includeBlocks = true, waterlogged = false, integrity = 100, seed = "", overCallback: () => void) {
+    public static async load(player: Player, playerData: PlayerData, preStructure: Structure, structid: string, posInt: Pos3D, index: number, total: number, mirror = "none", degrees = "0_degrees", includeEntities = false, includeBlocks = true, waterlogged = false, integrity = 100, seed = "", overCallback: () => void) {
         let area = Area3D.fromArea3D(preStructure.area).relative();
         let areas = new Structure(area).getAreas();
         let degreeNum = parseFloat(degrees);
@@ -214,7 +217,7 @@ export default class StructureManager {
         }
         let saveid;
         let start;
-        StructureManager.traversal(player, playerData, areas, "加载中", 6, (x: number, z: number) => {
+        await StructureManager.traversal(player, playerData, areas, `加载中 ${index + 1}/${total}`, 6, (x: number, z: number) => {
             //index变换
             saveid = structid + "_" + x + "_" + z;
             // Players.cmd(player, `/structure load "${saveid}" ${areas[x][z].start.formatStr()} ${degrees} ${mirror} ${String(includeEntities)} ${String(includeBlocks)} ${integrity} ${seed}`);
@@ -223,6 +226,8 @@ export default class StructureManager {
         }, () => {
             overCallback();
         }, (x: number, z: number) => {}, Config.get(Config.GLOBAL, "traversalWaitTime"));
+
+        return ;
     }
 
     public static delete(player: Player, sid: string, st: Structure) {
@@ -284,36 +289,39 @@ export default class StructureManager {
     }
 
     /*** private */
-    private static otherSave(player: Player, playerData: PlayerData, structArr: Array<Structure>, overCallback: (complex: Complex) => void) {
+    private static async otherSave(player: Player, playerData: PlayerData, structArr: Array<Structure>, overCallback: (complex: Complex) => void) {
         //保存结构
         let complex: Complex = {};
-        structArr.forEach((st, i, arr) => {
+        for(let i = 0; i < structArr.length; i++) {
+            const st = structArr[i];
             st.name = "system_save";
-            StructureManager.save(player, playerData, st, (structid: string) => {
+            await StructureManager.save(player, playerData, st, i, structArr.length, (structid: string) => {
                 //成功结束
                 //保存文件
                 complex[structid] = st;
-                if (i >= arr.length - 1) {
+                if (i >= structArr.length - 1) {
                     overCallback(complex);
                 }
             });
-        });
+        }
     }
 
     /*** private */
-    private static pop(player: Player, playerData: PlayerData, overCallback: () => void, mod: string) {
+    private static async pop(player: Player, playerData: PlayerData, overCallback: () => void, mod: string) {
         let list = Config.get(Config.STRUCTURES, `private.${player.xuid}.${mod}List`);
         let complex = list.pop();
-        Object.keys(complex).forEach((sid, i, arr) => {
-            let st = complex[sid];
-            StructureManager.load(player, playerData, st, sid, st.area.start, "none", "0_degrees", false, true, false, 100, "", () => {
-                if (i == arr.length - 1) {
+        const keys = Object.keys(complex);
+        for(let i = 0; i < keys.length; i++) {
+            const sid = keys[i];
+            const st = complex[sid];
+            await StructureManager.load(player, playerData, st, sid, st.area.start, i, keys.length, "none", "0_degrees", false, true, false, 100, "", () => {
+                if (i == keys.length - 1) {
                     StructureManager.delete(player, sid, st);
                     Config.set(Config.STRUCTURES, `private.${player.xuid}.${mod}List`, list);
                     overCallback();
                 }
             });
-        });
+        }
     }
 
     public static clearCopy(player: Player) {
@@ -403,14 +411,16 @@ export default class StructureManager {
         });
     }
 
-    public static paste(player: Player, playerData: PlayerData, pos: Pos3D, data: any, overCallback: () => void) {
+    public static async paste(player: Player, playerData: PlayerData, pos: Pos3D, data: any, overCallback: () => void) {
         let complex = data.copy;
-        Object.keys(complex).forEach((sid, i, arr) => {
-            StructureManager.load(player, playerData, complex[sid], sid, pos, "none", "0_degrees", false, true, false, 100, "", () => {
-                if (i == arr.length - 1) {
+        const keys = Object.keys(complex);
+        for(let i = 0; i < keys.length; i++) {
+            const sid = keys[i];
+            await StructureManager.load(player, playerData, complex[sid], sid, pos, i, keys.length, "none", "0_degrees", false, true, false, 100, "", () => {
+                if (i == keys.length - 1) {
                     overCallback();
                 }
             });
-        });
+        }
     }
 }
