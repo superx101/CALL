@@ -18,17 +18,51 @@ export default class StructureManager {
     public static uid = 0;
 
     /*** private */
-    private static loadCheck(player: Player, area: Area3D) {
-        let tx = (area.start.x + area.end.x) / 2;
-        let ty = (area.start.y + area.end.y) / 2;
-        let tz = (area.start.z + area.end.z) / 2;
-        let dimid = area.start.dimid;
-        player.teleport(tx, ty, tz, dimid);
-        if (mc.getBlock(tx, ty, tz, dimid) != null) {
+    private static canGetBlock(area: Area3D): boolean {
+        if (mc.getBlock(area.start.x, area.start.y, area.start.z, area.start.dimid) != null
+            && mc.getBlock(area.end.x, area.end.y, area.end.z, area.start.dimid) != null) {
             return true;
         }
         return false;
     }
+
+    private static async loadChunk(player: Player, playerData: PlayerData, area: Area3D): Promise<boolean> {
+        const max = Config.get(Config.GLOBAL, "maxLoadCheckNum");
+        let n = max;
+        return new Promise(resolve => {
+            if (StructureManager.canGetBlock(area)) {
+                resolve(true);
+                return;
+            }
+            else {
+                if (playerData.settings.loadChuckTip) {
+                    player.sendText(StrFactory.cmdMsg(`${area} 超出加载范围\n正在尝试加载...`));
+                }
+                const id = setInterval(() => {
+                    if (StructureManager.canGetBlock(area)) {
+                        if (playerData.settings.loadChuckTip) {
+                            player.sendText(StrFactory.cmdTip(`${area} 加载成功`));
+                        }
+                        clearInterval(id);
+                        resolve(true);
+                        return;
+                    }
+                    else if (n <= 0) {
+                        //失败
+                        if (playerData.settings.loadChuckTip) {
+                            player.sendText(StrFactory.cmdErr(`${area} 尝试加载区块${max}次均失败, 已取消操作`));
+                        }
+                        clearInterval(id);
+                        resolve(false);
+                        return;
+                    }
+                    player.teleport((area.start.x + area.end.x) / 2, (area.start.y + area.end.y) / 2, (area.start.z + area.end.z) / 2, area.start.dimid);
+                    n--;
+                }, 1000);
+            }
+        });
+    }
+
 
     public static register(xuid: string) {
         let pr = Config.get(Config.STRUCTURES, "private");
@@ -72,76 +106,54 @@ export default class StructureManager {
         }
     }
 
-    public static traversal(player: Player, playerData: PlayerData, areas: Areas, x: number, z: number, successCallback: Function, overCallback: Function, failCallback: Function, wait = 0) {
-        function suc() {
-            //成功
-            if (successCallback(x, z) == true) {
-                //继续执行下一区域
-                x++;
-                if (x >= areas.length) {
-                    x = 0;
-                    z++;
-                }
+    public static async traversal(player: Player, playerData: PlayerData, areas: Areas, title: string, color: number, successCallback: (x: number, z: number) => Promise<boolean>, overCallback: () => void, failCallback: (x: number, z: number) => void, waitTime: number = Config.get(Config.GLOBAL, "traversalWaitTime")) {
+        async function waiter() {
+            return new Promise(resolve => {
                 setTimeout(() => {
-                    if (z < areas[0].length) {
-                        StructureManager.traversal(player, playerData, areas, x, z, successCallback, overCallback, failCallback, wait);
+                    resolve(true);
+                }, waitTime)
+            });
+        }
+
+        playerData.forbidCmd = true;//禁止执行指令
+        const mx = areas.length;
+        const mz = areas[0].length;
+        const barUid = Math.floor(Math.random() * 1000);//进度条id
+        const total = mx * mz;//进度条总数
+
+        let res: boolean;
+        for (let x = 0; x < mx; x++) {
+            for (let z = 0; z < mz; z++) {
+                res = await StructureManager.loadChunk(player, playerData, areas[x][z]);
+                //加载或执行失败, 退出
+                if (!res || !await successCallback(x, z)) {
+                    playerData.forbidCmd = false;
+                    if (playerData.settings.displayProgressBar) {
+                        player.removeBossBar(barUid)//移除进度条
                     }
-                    else {
-                        //结束
-                        playerData.forbidCmd = false;
-                        overCallback(x, z);
-                    }
-                }, wait);
+                    StructureManager.tp(player, playerData);
+                    failCallback(x, z);
+                    return;
+                }
+                //显示进度条
+                if (playerData.settings.displayProgressBar) {
+                    player.setBossBar(barUid, StrFactory.cmdMsg(title), (x * mz + z + 1) * 100 / total , color);
+                }
+                await waiter();//等待
             }
         }
-        let pos = areas[x][z].start;
-        if (x == 0 && z == 0) {
-            playerData.forbidCmd = true;//禁止执行指令
-        }
-        if (mc.getBlock(pos.x, pos.y, pos.z, pos.dimid) == null) {
-            //建立新线程
-            if (playerData.settings.loadChuckTip) {
-                player.sendText(StrFactory.cmdMsg(`${areas[x][z]} 超出加载范围\n正在新线程中尝试加载...`));
-            }
-            let n = Config.get(Config.GLOBAL, "maxLoadCheckNum");
-            let ns = n;
-            let success = false;
-            let threaID = setInterval(() => {
-                if (StructureManager.loadCheck(player, areas[x][z])) {
-                    success = true;
-                    n = 0;
-                }
-                if (n <= 0) {
-                    if (success) {
-                        if (playerData.settings.loadChuckTip) {
-                            player.sendText(StrFactory.cmdTip(`${areas[x][z]} 加载成功`));
-                        }
-                        suc();
-                    }
-                    else {
-                        //失败
-                        failCallback(x, z);
-                        StructureManager.tp(player, playerData);
-                        playerData.forbidCmd = false;
-                        if (playerData.settings.loadChuckTip) {
-                            player.sendText(StrFactory.cmdErr(`${areas[x][z]} 尝试加载区块${ns}次均失败, 已取消操作`));
-                        }
-                    }
-                    clearInterval(threaID);
-                }
-                n--;
-            }, 1000);
-        }
-        else {
-            suc();
-        }
+
+        //结束
+        player.removeBossBar(barUid)//移除进度条
+        playerData.forbidCmd = false;
+        overCallback();
     }
 
     public static getId(): number {
         return StructureManager.uid++;
     }
 
-    public static save(player: Player, playerData: PlayerData, structure: Structure, overCallback: Function) {
+    public static save(player: Player, playerData: PlayerData, structure: Structure, overCallback: (structid: string, data: any) => void) {
         let data = StructureManager.getData(player.xuid);
         let areas = structure.getAreas();
         //@ts-ignore
@@ -152,12 +164,12 @@ export default class StructureManager {
             .substring(2)
             + ("000" + StructureManager.getId().toString(16)).slice(-3);
         //保存所有分结构
-        StructureManager.traversal(player, playerData, areas, 0, 0, (x: number, z: number) => {
+        StructureManager.traversal(player, playerData, areas, "保存中", 1, (x: number, z: number) => {
             let saveid;
             saveid = structid + "_" + x + "_" + z;
             NBTManager.save(saveid, areas[x][z]);
-            return true;
-        }, (x: number, z: number) => {
+            return Promise.resolve(true);
+        }, () => {
             //结束
             overCallback(structid, data);
         }, (x: number, z: number) => {
@@ -169,10 +181,10 @@ export default class StructureManager {
                     NBTManager.del(saveid);
                 }
             }
-        });
+        }, 20);
     }
 
-    public static load(player: Player, playerData: PlayerData, preStructure: Structure, structid: string, posInt: Pos3D, mirror = "none", degrees = "0_degrees", includeEntities = false, includeBlocks = true, waterlogged = false, integrity = 100, seed = "", overCallback: Function) {
+    public static load(player: Player, playerData: PlayerData, preStructure: Structure, structid: string, posInt: Pos3D, mirror = "none", degrees = "0_degrees", includeEntities = false, includeBlocks = true, waterlogged = false, integrity = 100, seed = "", overCallback: () => void) {
         let area = Area3D.fromArea3D(preStructure.area).relative();
         let areas = new Structure(area).getAreas();
         let degreeNum = parseFloat(degrees);
@@ -202,15 +214,15 @@ export default class StructureManager {
         }
         let saveid;
         let start;
-        StructureManager.traversal(player, playerData, areas, 0, 0, (x: number, z: number) => {
+        StructureManager.traversal(player, playerData, areas, "加载中", 6, (x: number, z: number) => {
             //index变换
             saveid = structid + "_" + x + "_" + z;
             // Players.cmd(player, `/structure load "${saveid}" ${areas[x][z].start.formatStr()} ${degrees} ${mirror} ${String(includeEntities)} ${String(includeBlocks)} ${integrity} ${seed}`);
             start = areas[x][z].start;
-            return NBTManager.load(player, saveid, new Pos3D(start.x + tx, start.y, start.z + tz, start.dimid), mirror, degreeNum);
-        }, (x: number, z: number) => {
+            return Promise.resolve(NBTManager.load(player, saveid, new Pos3D(start.x + tx, start.y, start.z + tz, start.dimid), mirror, degreeNum));
+        }, () => {
             overCallback();
-        }, (x: number, z: number) => { });
+        }, (x: number, z: number) => {}, Config.get(Config.GLOBAL, "traversalWaitTime"));
     }
 
     public static delete(player: Player, sid: string, st: Structure) {
@@ -272,7 +284,7 @@ export default class StructureManager {
     }
 
     /*** private */
-    private static otherSave(player: Player, playerData: PlayerData, structArr: Array<Structure>, overCallback: Function) {
+    private static otherSave(player: Player, playerData: PlayerData, structArr: Array<Structure>, overCallback: (complex: Complex) => void) {
         //保存结构
         let complex: Complex = {};
         structArr.forEach((st, i, arr) => {
@@ -289,7 +301,7 @@ export default class StructureManager {
     }
 
     /*** private */
-    private static pop(player: Player, playerData: PlayerData, overCallback: Function, mod: string) {
+    private static pop(player: Player, playerData: PlayerData, overCallback: () => void, mod: string) {
         let list = Config.get(Config.STRUCTURES, `private.${player.xuid}.${mod}List`);
         let complex = list.pop();
         Object.keys(complex).forEach((sid, i, arr) => {
@@ -335,7 +347,7 @@ export default class StructureManager {
     }
 
     /**普通操作调用入口*/
-    public static undoSave(player: Player, playerData: PlayerData, structArr: Array<Structure>, overCallback: Function) {
+    public static undoSave(player: Player, playerData: PlayerData, structArr: Array<Structure>, overCallback: (complex: Complex) => void) {
         function overCallback2(complex: Complex) {
             StructureManager.clearRedoList(player);//清空redoList
             overCallback(complex);
@@ -344,7 +356,7 @@ export default class StructureManager {
     }
 
     /**undo调用入口*/
-    public static undoPush(player: Player, playerData: PlayerData, structArr: Array<Structure>, overCallback: Function) {
+    public static undoPush(player: Player, playerData: PlayerData, structArr: Array<Structure>, overCallback: (complex: Complex) => void) {
         let data = StructureManager.getData(player.xuid);
         let undoList = data.undoList;
         StructureManager.otherSave(player, playerData, structArr, (complex: Complex) => {
@@ -361,7 +373,7 @@ export default class StructureManager {
         });
     }
 
-    public static redoPush(player: Player, playerData: PlayerData, structArr: Array<Structure>, overCallback: Function) {
+    public static redoPush(player: Player, playerData: PlayerData, structArr: Array<Structure>, overCallback: () => void) {
         StructureManager.otherSave(player, playerData, structArr, (complex: Complex) => {
             let list = Config.get(Config.STRUCTURES, `private.${player.xuid}.redoList`);
             list.push(complex);
@@ -370,15 +382,15 @@ export default class StructureManager {
         });
     }
 
-    public static undoPop(player: Player, playerData: PlayerData, overCallback: Function) {
+    public static undoPop(player: Player, playerData: PlayerData, overCallback: () => void) {
         StructureManager.pop(player, playerData, overCallback, "undo");
     }
 
-    public static redoPop(player: Player, playerData: PlayerData, overCallback: Function) {
+    public static redoPop(player: Player, playerData: PlayerData, overCallback: () => void) {
         StructureManager.pop(player, playerData, overCallback, "redo");
     }
 
-    public static copy(player: Player, playerData: PlayerData, structArr: Array<Structure>, delLast: any, lastComplex: Complex, overCallback: Function) {
+    public static copy(player: Player, playerData: PlayerData, structArr: Array<Structure>, delLast: any, lastComplex: Complex, overCallback: (complex: Complex) => void) {
         //删除上个存储结构
         if (delLast) {
             Object.keys(lastComplex).forEach((sid, i, a) => {
@@ -391,7 +403,7 @@ export default class StructureManager {
         });
     }
 
-    public static paste(player: Player, playerData: PlayerData, pos: Pos3D, data: any, overCallback: Function) {
+    public static paste(player: Player, playerData: PlayerData, pos: Pos3D, data: any, overCallback: () => void) {
         let complex = data.copy;
         Object.keys(complex).forEach((sid, i, arr) => {
             StructureManager.load(player, playerData, complex[sid], sid, pos, "none", "0_degrees", false, true, false, 100, "", () => {

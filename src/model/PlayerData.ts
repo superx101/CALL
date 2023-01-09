@@ -12,10 +12,10 @@ export default class PlayerData {
     public displayPos: any;
     public forbidCmd: boolean;
     public prePos: any;
-    public direction: DirectionAngle
+    public direction: DirectionAngle;
 
     constructor(xuid: string) {
-        let settings = Config.get(Config.PLAYERS_SETTINGS, `player.${xuid}`);
+        let settings: Settings = Config.get(Config.PLAYERS_SETTINGS, `player.${xuid}`);
         if (settings == null) {
             settings = Config.get(Config.PLAYERS_SETTINGS, `default`);
         }

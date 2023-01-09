@@ -9,16 +9,17 @@ import Players from "../common/Players";
 import Pos3D from "../model/Pos3D";
 
 export default class FillManager {
-    public static ergod(player: Player, playerData: PlayerData, areas: Areas, cmdCallback: Function, overCallback: Function) {
-        StructureManager.traversal(player, playerData, areas, 0, 0, (x: number, z: number) => {
-            let area = areas[x][z];
-            let lens = area.getLens();
-            let ySize = Math.ceil(lens[1] / Constant.FILL.MAX_HIGHT);
-            let dimid;
-            let yTop: number, yBottom: number;
-            dimid = area.start.dimid;
-            yBottom = area.start.y;
-            player.teleport((area.start.x + area.end.x) / 2, yBottom, (area.start.z + area.end.z) / 2, dimid);
+    public static ergod(player: Player, playerData: PlayerData, areas: Areas, cmdCallback: (yBottom: number, yTop: number, area: Area3D) => void, overCallback: () => void) {
+        const ySize = Math.ceil(areas[0][0].getLens()[1] / Constant.FILL.MAX_HIGHT);
+        const waitTime = Config.get(Config.GLOBAL, "fillWaitTime") * ySize;
+
+        StructureManager.traversal(player, playerData, areas, "填充中", 11, (x: number, z: number) => {
+            const area = areas[x][z];
+            let yTop: number, yBottom: number = area.start.y;
+
+            //传送
+            player.teleport((area.start.x + area.end.x) / 2, yBottom, (area.start.z + area.end.z) / 2, area.start.dimid);
+            //执行cmd
             setTimeout(() => {
                 for (let i = 0; i < ySize - 1; i++) {
                     yTop = yBottom + Constant.FILL.MAX_HIGHT - 1;
@@ -28,23 +29,21 @@ export default class FillManager {
                 yBottom = area.start.y + (ySize - 1) * Constant.FILL.MAX_HIGHT;
                 yTop = area.end.y;
                 cmdCallback(yBottom, yTop, area);
-            }, 500);
-            return true;
-        }, (x: number, z: number) => {
-            overCallback();
+            }, waitTime);
+            return Promise.resolve(true);
         }, () => {
-
-        }, 300 + Config.get(Config.GLOBAL, "maxLoadCheckNum") * 100);
+            overCallback();
+        }, () => {});
     }
 
-    public static soildFill(player: Player, playerData: PlayerData, targetArea: Area3D, blockName1: string, tileData1: number, blockName2: string, tileData2: number | "", mod: string, overCallback: Function) {
+    public static soildFill(player: Player, playerData: PlayerData, targetArea: Area3D, blockName1: string, tileData1: number, blockName2: string, tileData2: number | "", mod: string, overCallback: () => void) {
         let st = new Structure(Area3D.fromArea3D(targetArea));
         StructureManager.undoSave(player, playerData, [st], () => {
             FillManager.ergod(player, playerData, st.getAreas(), (yBottom: number, yTop: number, area: Area3D) => {
                 Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} ${blockName1} ${tileData1} ${mod} ${blockName2} ${tileData2}`, false);
-            }, () => {
-                overCallback();
-            });
+            },
+                overCallback
+            );
         });
     }
 

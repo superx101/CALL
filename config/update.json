@@ -113,5 +113,65 @@
             "path": "./plugins/CALL/version",
             "value": "1.0.1"
         }
+    ],
+    "1.0.2": [
+        {
+            "type": "delete",
+            "path": "./plugins/CALL/version"
+        },
+        {
+            "type": "create",
+            "path": "./plugins/CALL/version",
+            "value": "1.0.2"
+        }
+    ],
+    "1.0.3": [
+        {
+            "type": "delete",
+            "path": "./plugins/CALL/version"
+        },
+        {
+            "type": "create",
+            "path": "./plugins/CALL/version",
+            "value": "1.0.3"
+        },
+        {
+            "type":"patch",
+            "path":"./plugins/CALL/config/configs.json",
+            "patch":[
+                {
+                    "op": "add",
+                    "path": "/default/displayProgressBar",
+                    "value": true
+                },
+                {
+                    "op": "add",
+                    "path": "/default/traversalWaitTime",
+                    "value": 300
+                },
+                {
+                    "op": "add",
+                    "path": "/default/fillWaitTime",
+                    "value": 20
+                },
+                                {
+                    "op": "add",
+                    "path": "/default/outputCmd",
+                    "value": false
+                }
+            ]
+        },
+        {
+            "type": "patch_plus",
+            "path": "./plugins/CALL/data/settings.json",
+            "patch": [
+                {
+                    "op": "add",
+                    "path": "/player/*",
+                    "name": "displayProgressBar",
+                    "value": true
+                }
+            ]
+        }
     ]
 }

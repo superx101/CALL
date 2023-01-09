@@ -10,6 +10,7 @@ export interface Settings {
     areaTextShow: boolean,
     displayArea: boolean,
     displayPos: any,
+    displayProgressBar: boolean;
     loadChuckTip: boolean,
     items: {
         onUseItemOn: any,

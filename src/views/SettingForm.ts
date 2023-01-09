@@ -174,6 +174,7 @@ export default class SettingForm extends Form {
             ["barReplace", this.settings.barReplace - 1, barArr_select],
             ["barReplaced", this.settings.barReplaced - 1, barArr_select],
             ["loadChuckTip", this.settings.loadChuckTip],
+            ["displayProgressBar", this.settings.displayProgressBar],
             ["saveArea", this.settings.saveArea],
             ["saveUndo", this.settings.saveUndo],
             ["saveCopy", this.settings.saveCopy]
@@ -183,9 +184,10 @@ export default class SettingForm extends Form {
             .addStepSlider("填充方块 从( )号物品栏选择", barArr, setArr[0][1])
             .addStepSlider("被替换方块 从( )号物品栏选择", barArr, setArr[1][1])
             .addSwitch("加载新区块时提示", setArr[2][1])
-            .addSwitch("退出后保存选区", setArr[3][1])
-            .addSwitch("退出后保存撤销", setArr[4][1])
-            .addSwitch("退出后保存复制", setArr[5][1])
+            .addSwitch("显示进度条", setArr[3][1])
+            .addSwitch("退出后保存选区", setArr[4][1])
+            .addSwitch("退出后保存撤销", setArr[5][1])
+            .addSwitch("退出后保存复制", setArr[6][1])
 
         this.player.sendForm(form, (pl, data) => {
             if (data == null) {

@@ -20,8 +20,8 @@ export default class ShapeManager {
     public static registerPackage(version: number[], pkgName: string, name: string, shapeNames: string[], introduction: string, shapeImages: string[] = [], icon: string = "") {
         if (ShapeManager.pkgs[pkgName] == null || Config.get(Config.GLOBAL, "debugMod")) {
             //填充shapeImages
-            if(shapeImages.length < shapeNames.length) {
-                for(let i = 0, l = shapeNames.length - shapeImages.length; i < l; i++) {
+            if (shapeImages.length < shapeNames.length) {
+                for (let i = 0, l = shapeNames.length - shapeImages.length; i < l; i++) {
                     shapeImages.push("");
                 }
             }
@@ -52,8 +52,8 @@ export default class ShapeManager {
     }
 
     public static arrayToNBTs(arr: Blocks, pos: Pos) {
-        let xSize: number, ySize: number, zSize:number;
-        let xMin:number, yMin:number, zMin:number;
+        let xSize: number, ySize: number, zSize: number;
+        let xMin: number, yMin: number, zMin: number;
         //size表示最大坐标
         try {
             xSize = arr[0].x;
@@ -224,11 +224,11 @@ export default class ShapeManager {
                 //undo保存
                 StructureManager.undoSave(player, playerData, [res.st], () => {
                     //生成
-                    StructureManager.traversal(player, playerData, res.areas, 0, 0, (x: number, z: number) => {
+                    StructureManager.traversal(player, playerData, res.areas, "生成中", 15, (x: number, z: number) => {
                         if (res.nbts != null) {
                             mc.setStructure(res.nbts[x][z], mc.newIntPos(res.areas[x][z].start.x, res.areas[x][z].start.y, res.areas[x][z].start.z, res.areas[x][z].start.dimid));
                         }
-                        return true;
+                        return Promise.resolve(true);
                     }, () => {
                         player.refreshChunks();
                         player.sendText(StrFactory.cmdSuccess("成功形成形状"));
