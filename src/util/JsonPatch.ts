@@ -32,7 +32,7 @@ export default class JsonPatch {
         let current = obj;
 
         for (const part of pathParts) {
-          current = current[part]
+            current = current[part]
         }
         return current;
     }
@@ -52,7 +52,7 @@ export default class JsonPatch {
         }
     }
 
-    private static patchInsert(obj: any, path: any, to: string, value: any): any {
+    private static getPaths(obj: any, path: any): string[] {
         if (path.startsWith('/')) {
             path = path.substring(1);
         }
@@ -98,7 +98,21 @@ export default class JsonPatch {
             paths.push(path);
         }
 
-        paths.forEach((directory: string) => {
+        return paths;
+    }
+
+    private static patchPlusAdd(obj: any, path: any, name: any, value: any): any {
+        JsonPatch.getPaths(obj, path).forEach((directory: string) => {
+            let json = JsonPatch.getData(obj, directory);
+            json[`${name}`] = value;
+            JsonPatch.setData(obj, directory, json);
+        });
+
+        return obj;
+    }
+
+    private static patchPlusInsert(obj: any, path: any, to: string, value: any): any {
+        JsonPatch.getPaths(obj, path).forEach((directory: string) => {
             //获取数据
             const data = JsonPatch.getData(obj, directory);
             JsonPatch.setData(obj, directory, value);//替换
@@ -112,7 +126,9 @@ export default class JsonPatch {
         function selectFuc(patch: any, obj: any): any {
             switch (patch.op) {
                 case "insert":
-                    return JsonPatch.patchInsert(obj, patch.path, patch.to, patch.value);
+                    return JsonPatch.patchPlusInsert(obj, patch.path, patch.to, patch.value);
+                case "add":
+                    return JsonPatch.patchPlusAdd(obj, patch.path, patch.name, patch.value);
             }
         }
 
