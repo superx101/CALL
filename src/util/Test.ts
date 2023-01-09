@@ -1,7 +1,7 @@
 export default class Test {
-    public static log() {
+    public static log(...arr: any) {
         let str = "";
-        Array.from(arguments).forEach(v=>{
+        arr.forEach((v: any)=>{
             if(typeof(v) == "string") {
                 str += v + " ";
             }
@@ -9,5 +9,6 @@ export default class Test {
                 str += JSON.stringify(v) + " ";
             }
         })
+        logger.info(str);
     }
 }

@@ -1,3 +1,5 @@
+import Area3D from "../model/Area3D"
+
 export interface Settings {
     enable: boolean,
     barReplace: number,
@@ -17,4 +19,4 @@ export interface Settings {
     [x: string]: any
 }
 
-export type Areas = Array<Array<any>>
+export type Areas = Array<Array<Area3D>>
