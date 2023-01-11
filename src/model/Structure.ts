@@ -1,4 +1,4 @@
-import Constant from "../common/Constant";
+import Constant from "../type/Constant";
 import Area3D from "./Area3D";
 import Pos3D from "./Pos3D";
 
@@ -16,6 +16,10 @@ export default class Structure {
         let lens = this.area.getLens();
         this.xSize = Math.ceil(lens[0] / Constant.STRUCTURE.MAX_LENGTH);
         this.zSize = Math.ceil(lens[2] / Constant.STRUCTURE.MAX_LENGTH);
+    }
+
+    public static fromStructure(st: Structure): Structure {
+        return new Structure(st.area, st.name, st.isPublic);
     }
 
     public getAreas(): Array<Array<Area3D>> {

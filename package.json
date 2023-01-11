@@ -23,6 +23,7 @@
   "dependencies": {
     "acorn": "^8.8.1",
     "axios": "^1.2.1",
+    "cli-progress": "^3.11.2",
     "escodegen": "^2.0.0",
     "estraverse": "^5.3.0",
     "fast-json-patch": "^3.1.1",
@@ -30,9 +31,10 @@
     "unzipper": "^0.10.11"
   },
   "devDependencies": {
-    "@types/node": "^18.11.17",
+    "@types/cli-progress": "^3.11.0",
     "@types/escodegen": "^0.0.7",
     "@types/estraverse": "^5.1.2",
+    "@types/node": "^18.11.17",
     "@types/unzipper": "^0.10.5"
   }
 }

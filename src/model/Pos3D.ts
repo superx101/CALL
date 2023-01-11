@@ -43,6 +43,10 @@ export default class Pos3D {
         let v = matrix.mul(new Vector3D(this.x, this.z, 1)) as Vector3D;
         return new Pos3D(v.arr[0], this.y, v.arr[1], this.dimid);
     }
+    
+    public toArray() {
+        return [this.x, this.y, this.z, this.dimid]
+    }
 
     public toString() {
         return `(${this.x},${this.y},${this.z})`;

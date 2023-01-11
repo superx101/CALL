@@ -10,4 +10,6 @@
 /package-lock.json
 /output/**
 /CALL/data/nbt
+/CALL/export/*
+/CALL/import/*
 /CALL/build/shape/**/*.js

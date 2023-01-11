@@ -136,6 +136,14 @@
             "value": "1.1.0"
         },
         {
+            "type": "mkDir",
+            "path": "./plugins/CALL/import"
+        },
+        {
+            "type": "mkDir",
+            "path": "./plugins/CALL/export"
+        },
+        {
             "type":"patch",
             "path":"./plugins/CALL/config/configs.json",
             "patch":[

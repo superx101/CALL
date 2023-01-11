@@ -1,4 +1,4 @@
-import Constant from "../common/Constant";
+import Constant from "../type/Constant";
 import Area3D from "../model/Area3D";
 import PlayerData from "../model/PlayerData";
 import Pos3D from "../model/Pos3D";

@@ -1,4 +1,4 @@
-import Constant from "../common/Constant";
+import Constant from "../type/Constant";
 import Players from "../common/Players";
 
 export default  class PlayerManager {

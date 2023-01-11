@@ -10,3 +10,9 @@ export enum Listener {
     UseItemOn = "onUseItemOn",
     StartDestroyBlock = "onStartDestroyBlock"
 }
+
+export enum FileMode {
+    ReadMode = 0,
+    WriteMode = 1,
+    AppendMode = 2
+}

@@ -11,8 +11,10 @@ import BasicTranslOperation from "./src/operation/BasicTranslOperation";
 import BlockEditerOperation from "./src/operation/BlockEditerOperation";
 import ChunkOperation from "./src/operation/ChunkOperation";
 import EnableOperation from "./src/operation/EnableOperation";
+import ExportOperation from "./src/operation/ExportOperation";
 import FillOperation from "./src/operation/FillOperation";
 import HelpOperation from "./src/operation/HelpOperation";
+import ImportOperation from "./src/operation/ImportOperation";
 import MenuOperation from "./src/operation/MenuOperation";
 import PermissionOperation from "./src/operation/PermissionOperation";
 import ReloadOperation from "./src/operation/ReloadOperation";
@@ -171,6 +173,12 @@ function command_playerCallback(ori: CommandOrigin, output: CommandOutput, res: 
         case "add":
         case "reload":
         case "r":
+        case "update":
+        case "u":
+        case "import":
+        case "im":
+        case "export":
+        case "ex":
             throw new Error("该指令为后台指令");
     }
 }
@@ -199,6 +207,14 @@ function command_consoleCallback(output: CommandOutput, res: any) {
         case "u":
             UpdateOperation.start(output);
             break;
+        case "import":
+        case "im":
+            ImportOperation.start(res, output);
+            break;
+        case "export":
+        case "ex":
+            ExportOperation.start(res, output);
+            break;
         default:
             throw new Error("当前指令格式错误或为非控制台指令");
     }
@@ -217,6 +233,7 @@ function command() {
     cmd.mandatory("item", ParamType.Item, "", "item_man");
     cmd.mandatory("intPos", ParamType.BlockPos, "", "intPos_man");
     cmd.mandatory("nbt", ParamType.JsonValue, "", "nbt_man");
+    cmd.mandatory("xuid", ParamType.String, "", "xuid_man");
     cmd.optional("TileData", ParamType.Int, "", "tileData_opt");
     cmd.optional("IntPos", ParamType.BlockPos, "", "intPos_opt");
     cmd.optional("AxisPos", ParamType.BlockPos, "", "axisPos_opt");
@@ -423,6 +440,20 @@ function command() {
     cmd.mandatory("action", ParamType.Enum, "update", "update_man");
     cmd.overload(["update_man"]);
 
+    //import
+    cmd.setEnum("import", ["import", "im"]);
+    cmd.mandatory("action", ParamType.Enum,  "import", "import_man");
+    cmd.mandatory("file", ParamType.String,  "", "file_man");
+    cmd.optional("includeEntity", ParamType.Bool,  "", "includeEntity_opt");
+    cmd.overload(["import_man", "file_man", "playerName_man", "includeEntity_opt", "name_opt"]);
+
+    //export
+    cmd.setEnum("export", ["export", "ex"]);
+    cmd.setEnum("fileType", ["mcstructure"])
+    cmd.mandatory("action", ParamType.Enum,  "export", "export_man");
+    cmd.mandatory("type", ParamType.Enum,  "fileType", "fileType_man");
+    cmd.overload(["export_man", "fileType_man", "id_man", "includeEntity_opt", "name_opt"]);
+
     // cmd.setEnum("brush", ["brush", "br"]);
     // cmd.setEnum("texture", ["texture", "te"]);
     // cmd.mandatory("action", ParamType.Enum, "brush");
@@ -447,6 +478,7 @@ function command() {
                 output.error(StrFactory.cmdErr(ex.message));
             }
             if (Config.get(Config.GLOBAL, "debugMod")) {
+                logger.error(ex.stack)
                 throw ex;
             }
         }

@@ -1,5 +1,5 @@
 import Config from "../common/Config";
-import Constant from "../common/Constant";
+import Constant from "../type/Constant";
 import Enums from "../type/Enums";
 import AreaDisplayerManager from "../manager/AreaDisplayerManager";
 import Area3D from "../model/Area3D";

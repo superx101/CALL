@@ -36,9 +36,12 @@ export default class Config {
     public static CONFIG = CONFIG;
     public static DATAPATH = DATAROOT;
     public static BIN = ROOT + "/bin";
+    public static DATA = DATA;
     public static BUILD = DATAROOT + '/build';
     public static PLUGINS = DATAROOT + '/plugins';
     public static TEMP = DATAROOT + '/temp';
+    public static IMPORT = DATAROOT + '/import';
+    public static EXPORT = DATAROOT + '/export';
     public static UPDATE = CONFIG +  '/update.json';
     public static TEMPLATES = ROOT + '/templates'
     public static URL = new JsonConfigFile(URL);

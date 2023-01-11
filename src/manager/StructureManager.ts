@@ -7,7 +7,7 @@ import Structure from "../model/Structure";
 import { Areas } from "../type/Data";
 import StrFactory from "../util/StrFactory";
 import NBTManager from "./NBTManager";
-import { Complex } from "../type/Structure";
+import { Complex, Data } from "../type/Structure";
 import { Matrix3D, Transform3 } from "../util/SimpleMatrix";
 
 export default class StructureManager {
@@ -80,6 +80,10 @@ export default class StructureManager {
         return data;
     }
 
+    public static setData(xuid: string, data: Data) {
+        return Config.set(Config.STRUCTURES, `private.${xuid}`, data);
+    }
+
     public static publicForEach(callback: Function) {
         let pu = Config.get(Config.STRUCTURES, "public")
         let keys = Object.keys(pu);
@@ -137,7 +141,7 @@ export default class StructureManager {
                 }
                 //显示进度条
                 if (playerData.settings.displayProgressBar) {
-                    player.setBossBar(barUid, StrFactory.cmdMsg(title), (x * mz + z + 1) * 100 / total , color);
+                    player.setBossBar(barUid, StrFactory.cmdMsg(title), (x * mz + z + 1) * 100 / total, color);
                 }
                 await waiter();//等待
             }
@@ -148,23 +152,28 @@ export default class StructureManager {
         playerData.forbidCmd = false;
         overCallback();
 
-        return ;
+        return;
     }
 
     public static getId(): number {
         return StructureManager.uid++;
     }
 
-    public static async save(player: Player, playerData: PlayerData, structure: Structure, index: number, total: number, overCallback: (structid: string, data: any) => void) {
-        let data = StructureManager.getData(player.xuid);
-        let areas = structure.getAreas();
-        //@ts-ignore
-        let structid = "c" + data.pid + system.getTimeStr()
+    public static generateSid(xuid: string): string {
+        return "c" + StructureManager.getData(xuid).pid + system.getTimeStr()
             .replaceAll(" ", "")
             .replaceAll("-", "")
             .replaceAll(":", "")
             .substring(2)
             + ("000" + StructureManager.getId().toString(16)).slice(-3);
+    }
+
+    public static async save(player: Player, playerData: PlayerData, structure: Structure, index: number, total: number, overCallback: (structid: string, data: any) => void) {
+        let data = StructureManager.getData(player.xuid);
+        let areas = structure.getAreas();
+
+        let structid = StructureManager.generateSid(player.xuid);
+
         //保存所有分结构
         await StructureManager.traversal(player, playerData, areas, `保存中 ${index + 1}/${total}`, 1, (x: number, z: number) => {
             let saveid;
@@ -225,9 +234,9 @@ export default class StructureManager {
             return Promise.resolve(NBTManager.load(player, saveid, new Pos3D(start.x + tx, start.y, start.z + tz, start.dimid), mirror, degreeNum));
         }, () => {
             overCallback();
-        }, (x: number, z: number) => {}, Config.get(Config.GLOBAL, "traversalWaitTime"));
+        }, (x: number, z: number) => { }, Config.get(Config.GLOBAL, "traversalWaitTime"));
 
-        return ;
+        return;
     }
 
     public static delete(player: Player, sid: string, st: Structure) {
@@ -247,6 +256,29 @@ export default class StructureManager {
             }
             Config.set(Config.STRUCTURES, `public`, pu);
         }
+    }
+
+    public static getAllNBT(st: Structure, sid: string): NbtCompound[][] {
+        const arr: NbtCompound[][] = [];
+
+        let tempArr: NbtCompound[] = [];
+        let bnbt;
+        for (let x = 0; x < st.xSize; x++) {
+            tempArr = [];
+            for (let z = 0; z < st.zSize; z++) {
+                bnbt = new File(NBTManager.PATH + `/${sid + "_" + x + "_" + z}.mcstructure`, 0, true)
+                    .readAllSync();
+                //@ts-ignore
+                tempArr.push(NBT.parseBinaryNBT(bnbt));
+            }
+            arr.push(tempArr);
+        }
+
+        return arr;
+    }
+
+    public static getPrivate(): any {
+        return Config.get(Config.STRUCTURES, `private`);
     }
 
     public static getPrivateArr(player: Player) {
@@ -292,7 +324,7 @@ export default class StructureManager {
     private static async otherSave(player: Player, playerData: PlayerData, structArr: Array<Structure>, overCallback: (complex: Complex) => void) {
         //保存结构
         let complex: Complex = {};
-        for(let i = 0; i < structArr.length; i++) {
+        for (let i = 0; i < structArr.length; i++) {
             const st = structArr[i];
             st.name = "system_save";
             await StructureManager.save(player, playerData, st, i, structArr.length, (structid: string) => {
@@ -311,7 +343,7 @@ export default class StructureManager {
         let list = Config.get(Config.STRUCTURES, `private.${player.xuid}.${mod}List`);
         let complex = list.pop();
         const keys = Object.keys(complex);
-        for(let i = 0; i < keys.length; i++) {
+        for (let i = 0; i < keys.length; i++) {
             const sid = keys[i];
             const st = complex[sid];
             await StructureManager.load(player, playerData, st, sid, st.area.start, i, keys.length, "none", "0_degrees", false, true, false, 100, "", () => {
@@ -414,7 +446,7 @@ export default class StructureManager {
     public static async paste(player: Player, playerData: PlayerData, pos: Pos3D, data: any, overCallback: () => void) {
         let complex = data.copy;
         const keys = Object.keys(complex);
-        for(let i = 0; i < keys.length; i++) {
+        for (let i = 0; i < keys.length; i++) {
             const sid = keys[i];
             await StructureManager.load(player, playerData, complex[sid], sid, pos, i, keys.length, "none", "0_degrees", false, true, false, 100, "", () => {
                 if (i == keys.length - 1) {

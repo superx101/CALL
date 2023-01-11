@@ -1,7 +1,7 @@
 import { Areas } from "../type/Data";
 import PlayerData from "../model/PlayerData";
 import StructureManager from "./StructureManager";
-import Constant from "../common/Constant";
+import Constant from "../type/Constant";
 import Config from "../common/Config";
 import Area3D from "../model/Area3D";
 import Structure from "../model/Structure";

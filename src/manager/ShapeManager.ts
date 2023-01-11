@@ -1,5 +1,5 @@
 import Config from "../common/Config";
-import Constant from "../common/Constant";
+import Constant from "../type/Constant";
 import Players from "../common/Players";
 import Area3D from "../model/Area3D";
 import Pos3D from "../model/Pos3D";

@@ -2,7 +2,8 @@ import Pos3D from "./Pos3D";
 import { Matrix3D, Vector3D } from "../util/SimpleMatrix";
 
 export default class Area3D {
-    constructor(public start:Pos3D, public end: Pos3D, normal: boolean = true) {
+    public isNormalize: boolean = false;
+    constructor(public start: Pos3D, public end: Pos3D, normal: boolean = true) {
         this.start = Pos3D.fromPos3D(start);
         this.end = Pos3D.fromPos3D(end);
 
@@ -11,7 +12,7 @@ export default class Area3D {
         }
     }
 
-    public static fromArea3D(area: Area3D = undefined, normal: boolean  = true) {
+    public static fromArea3D(area: Area3D = undefined, normal: boolean = true) {
         return new Area3D(area.start, area.end, normal);
     }
 
@@ -30,6 +31,7 @@ export default class Area3D {
     }
 
     public normalize() {
+        this.isNormalize = true;
         if (this.start.x > this.end.x) {
             let t = this.start.x;
             this.start.x = this.end.x;
@@ -56,6 +58,13 @@ export default class Area3D {
         this.end.z -= this.start.z;
         this.start.z = 0;
         return this;
+    }
+
+    public inArea(pos: Pos3D) {
+        if (!this.isNormalize) this.normalize();
+        return pos.x >= this.start.x && pos.x <= this.end.x
+            && pos.y >= this.start.y && pos.y <= this.end.y
+            && pos.z >= this.start.z && pos.z <= this.end.z;
     }
 
     public toString() {
