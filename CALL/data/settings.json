@@ -6,9 +6,11 @@
         "saveArea": false,
         "saveUndo": true,
         "saveCopy": false,
+        "saveEntity": true,
         "areaTextShow": true,
         "displayArea": true,
         "displayPos": null,
+        "displayProgressBar": true,
         "loadChuckTip": true,
         "items": {
             "onUseItemOn": {
@@ -26,6 +28,14 @@
                             "ca ar se ${block.pos.x} ${block.pos.y} ${block.pos.z}"
                         ],
                         "describe": "选区工具"
+                    }
+                },
+                "minecraft:shears": {
+                    "": {
+                        "cmds": [
+                            "ca ar cl"
+                        ],
+                        "describe": "清除选区工具"
                     }
                 },
                 "minecraft:stick": {
