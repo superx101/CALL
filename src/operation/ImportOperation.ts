@@ -36,7 +36,7 @@ export default class ImportOperation {
         });
 
         //去除实体
-        if (res.includeEntity != null && !res.includeEntity) {
+        if (res.includeEntity == null || !res.includeEntity) {
             let structure = comp.getData("structure") as NbtCompound;
             structure.setTag("entities", new NbtList());
             comp.setTag("structure", structure);
