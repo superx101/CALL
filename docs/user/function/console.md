@@ -9,6 +9,30 @@
 #### 指令
 > /call \<reload | r :enum\>
 
+## 导出结构 `export`
+#### 指令
+从玩家保存的结构中导出，导出到：`CALL/export` 文件夹
+> /call \<export | ex :enum\> \<mcstructure :enum\> \<id :string\> \[includeEntity :boolean\] \[name :string\]
+- `mcstructure`：选择导出的格式为 .mcstructure
+- `id`：结构id, 可使用 /call list 查看所有结构的id
+- `includeEntity`：是否包含实体，默认为false
+- `name`：导出的文件名，默认为id  
+
+指令示例：ca export mcstructure c0001230111205510003 true test  
+表示导出id为c0001230111205510003的结构，包含实体，且文件名为：test.mcstructure
+
+## 导入结构 `import`
+从 `CALL/import` 文件夹下选择文件导入为结构，导入到某个玩家的保存中
+#### 指令
+> /call \<import | im :enum\> \<fileName :string\> \<playerName :string\> \[includeEntity :boolean\] \[name :string\]
+- `fileName`：需要导入文件的文件名，请包含后缀。例：test.mcstructure
+- `playerName`：玩家名，需要输入一位使用过CALL的玩家
+- `includeEntity`：是否包含实体，默认为false
+- `name`：导入结构的结构名，默认为当前时间 
+
+指令示例：ca import test.mcstructure steve true a  
+表示从 CALL/import/test.mcstructure 导入结构给玩家steve，且保留实体，结构名为a
+
 ## 检查更新 `update`
 查询插件最近版本，若存在则自动更新
 #### 指令

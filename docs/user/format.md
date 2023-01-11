@@ -14,6 +14,7 @@
 > | int | 整数 | 0 |
 > | float | 浮点数 | 0.1 |
 > | string | 字符串 | "abc" |
+> | boolean | 布尔型 | true |
 > | enum | 枚举 | list |
 > | x y z | 三维坐标 | 0 1 2 |
 > | json | json对象 | {"x":0, "y":1} |

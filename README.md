@@ -56,6 +56,8 @@ CALL provides you [document](https://superx101.github.io/CALL/) with a detailed 
 - **Share and save**  
 - **Shortcut key**  
 - **Generate a shape**
+- **Import**
+- **Export**
 
 ## Shape
 The shapes of the current version are as follows:

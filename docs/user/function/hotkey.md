@@ -183,6 +183,7 @@
 - [设置选区a点](user/function/area?id=%e8%ae%be%e7%bd%ae%e9%80%89%e5%8c%baa%e7%82%b9)：**箭矢**`id: minecraft:arrow`
 - [设置选区b点](user/function/area?id=%e8%ae%be%e7%bd%ae%e9%80%89%e5%8c%bab%e7%82%b9)：**木棍**`id: minecraft:stick`
 - [轮流设定ab点](user/function/area?id=%e8%bd%ae%e6%b5%81%e8%ae%be%e5%ae%9aab%e7%82%b9)：**木斧**`id: minecraft:wooden_axe`
+- [取消选区](/user/function/area?id=%e6%b8%85%e9%99%a4%e9%80%89%e5%8c%ba)：**剪刀**`id:minecraft:shears`
 - [复制](user/function/other?id=%e5%a4%8d%e5%88%b6-copy)：**烈焰棒**`id: minecraft:blaze_rod`
 - [粘贴](user/function/other?id=%e7%b2%98%e8%b4%b4-paste)：**骨头**`id: minecraft:bone`
 - 编辑点击方块的属性：**绿宝石**`id: minecraft:wooden_emerald`

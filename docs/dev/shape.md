@@ -300,7 +300,7 @@ CALL为形状包提供的一个对象，该对象内包含一些形状包开发�
 
 [three.js库](https://github.com/mrdoob/three.js)的THREE对象
 
-!> CALL中只引入了极小一部分three.js代码，功能并不完全，`plugins/CALL/lib/three.js/src/Three.js` 中查看引入的类。如有需求，建议您在自己的形状包文件夹中引入更全的three.js
+!> CALL中只引入了极小一部分three.js代码，功能并不完全，`plugins/nodejs/call/lib/three.js/src/Three.js` 中查看引入的类。如有需求，建议您在自己的形状包文件夹中引入更全的three.js
 
 ### 获取三维向量
 `SHP.getVector3(x, y, z)`

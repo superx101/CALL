@@ -14,6 +14,9 @@
 例如指令:`/call area start ~ ~ ~`可简化为`/ca ar a`  
 &emsp;您也可以将指令绑定到**快捷键**，一键执行，更加方便
 
+- ___导入导出___  
+&emsp;支持在服务端从外部**导入**结构文件，并将保存的结构**导出**为结构文件 
+
 - ___多人协作___  
 &emsp;您可与其他玩家**共享**保存的结构
 
@@ -59,6 +62,8 @@
 - **[共享保存](user/function/other?id=%e7%bb%93%e6%9e%84%e5%85%ac%e5%bc%80-public)**
 - **[快捷键](user/function/hotkey)**
 - **[生成形状](user/function/shape)**
+- **[导入结构](/user/function/console?id=%e5%af%bc%e5%85%a5%e7%bb%93%e6%9e%84-import)**
+- **[导出结构](/user/function/console?id=%e5%af%bc%e5%87%ba%e7%bb%93%e6%9e%84-export)**
 
 ## 形状
 当前版本中自带的形状如下：
