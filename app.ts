@@ -470,16 +470,15 @@ function command() {
                 command_consoleCallback(output, res);
             }
         
-        } catch (ex) {
-            if(ex instanceof Warn) {
-                output.error(StrFactory.cmdWarn(ex.message));
+        } catch (e) {
+            if(e instanceof Warn) {
+                output.error(StrFactory.cmdWarn(e.message));
             }
             else {
-                output.error(StrFactory.cmdErr(ex.message));
+                output.error(StrFactory.cmdErr(e.message));
             }
             if (Config.get(Config.GLOBAL, "debugMod")) {
-                logger.error(ex.stack)
-                throw ex;
+                logger.error(e.message + "\nstack:" + e.stack);
             }
         }
     });
@@ -519,7 +518,7 @@ function listener() {
                     ToolOperation.onClick(ToolType.RIGHT, player, playerData, item, block, pos);
                 } catch (e) {
                     if (Config.get(Config.GLOBAL, "debugMod")) {
-                        throw e;
+                        logger.error(e.message + "\nstack:" + e.stack);
                     }
                     player.sendText(StrFactory.cmdErr(e.message))
                 }
@@ -536,7 +535,7 @@ function listener() {
                 ToolOperation.onClick(ToolType.LEFT, player, playerData, player.getHand(), block, block.pos);
             } catch (e) {
                 if (Config.get(Config.GLOBAL, "debugMod")) {
-                    throw e;
+                    logger.error(e.message + "\nstack:" + e.stack);
                 }
                 player.sendText(StrFactory.cmdErr(e.message))
             }

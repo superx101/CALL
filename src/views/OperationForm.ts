@@ -111,7 +111,7 @@ export default class OperationForm extends Form {
         }
 
         this.player.sendForm(form, (pl, data) => {
-            if(data == null) return ;
+            if(data == null) {this.sendForm(); return ;}
             let blockA = data[0].split(" ");
             switch (mode) {
                 case OperationForm.MODE.NULL:
@@ -139,7 +139,7 @@ export default class OperationForm extends Form {
             .addLabel("输入参数 (默认为当前坐标值)")
             .addInput("x y z", "整数(空格分割)", `${plPos.formatStr()}`)
         this.player.sendForm(form, (pl, data) => {
-            if (data == null) return;
+            if (data == null) {this.sendForm(); return ;}
             let x, y, z;
             try {
                 let arr = data[2].split(" ");
@@ -169,7 +169,7 @@ export default class OperationForm extends Form {
             .addLabel("输入堆叠次数, 负数则反向堆叠")
             .addInput("x y z", "正负整数(空格分割)", "0 0 0")
         this.player.sendForm(form, (pl, data) => {
-            if (data == null) return;
+            if (data == null) {this.sendForm(); return ;}
             let x, y, z;
             try {
                 let arr = data[1].split(" ");
@@ -192,7 +192,7 @@ export default class OperationForm extends Form {
             .addInput("x", "整数", `${plPos.x}`)
             .addInput("z", "整数", `${plPos.z}`);
         this.player.sendForm(form, (pl, data) => {
-            if (data == null) return;
+            if (data == null) {this.sendForm(); return ;}
             let x, y, z;
             try {
                 x = parseInt(data[2]);
@@ -214,7 +214,7 @@ export default class OperationForm extends Form {
             .addInput("x", "整数", `${plPos.x}`)
             .addInput("z", "整数", `${plPos.z}`);
         this.player.sendForm(form, (pl, data) => {
-            if (data == null) return;
+            if (data == null) {this.sendForm(); return ;}
             let x, y, z;
             try {
                 x = parseInt(data[2]);

@@ -52,7 +52,7 @@ export default class StructureForm extends Form {
         }
     }
 
-    private loadOpertionForm(stData: Data) {
+    private loadOpertionForm(stData: Data, callBack: ()=> void) {
         let plPos = Pos3D.fromPos(this.player.pos).calibration().floor();
         let degreeArr = ["0", "90", "180", "270"];
         let mirrorArr = ["无", "x", "z", "xz"];
@@ -66,7 +66,7 @@ export default class StructureForm extends Form {
             .addLabel("注：镜像旋转同时存在时，先镜像再旋转")
 
         this.player.sendForm(form, (pl, data) => {
-            if (data == null) return;
+            if (data == null) {callBack(); return ;}
             let x, y, z;
             try {
                 let arr = data[1].split(" ");
@@ -95,7 +95,7 @@ export default class StructureForm extends Form {
                 this.sendForm();
             }
             else if (i != null) {
-                this.loadOpertionForm(list[i - 1]);
+                this.loadOpertionForm(list[i - 1], ()=>{this.publicForm()});
             }
         });
     }
@@ -115,7 +115,7 @@ export default class StructureForm extends Form {
                     this.myForm();
                     break;
                 case 1:
-                    this.loadOpertionForm(data);
+                    this.loadOpertionForm(data, ()=>{this.my_structureForm(data)});
                     break;
                 case 2:
                     Players.silenceCmd(pl, `ca de ${data.id}`);
