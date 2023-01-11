@@ -84,10 +84,11 @@ export default class StructureForm extends Form {
             .setTitle("公开的结构")
             .addButton("返回上一级")
 
-        let list = StructureOperation.getSaveList(1, this.player);
-        list.forEach((d: Data) => {
-            form.addButton(`名称: ${d.name} 作者: ${data.xuid2name(d.author)}\nid: ${d.id}`);
-        });
+        let list = StructureOperation.getSaveList(1, this.player) as Array<Data>;
+        //倒序加入
+        for (let i = list.length - 1; i >= 0; i--) {
+            form.addButton(`名称: ${list[i].name} 作者: ${data.xuid2name(list[i].author)}\nid: ${list[i].id}`);
+        }
 
         this.player.sendForm(form, (pl, i) => {
             if (i == 0) {
@@ -138,10 +139,11 @@ export default class StructureForm extends Form {
             .setTitle("我的结构")
             .addButton("返回上一级")
 
-        let list = StructureOperation.getSaveList(0, this.player);
-        list.forEach((data: Data) => {
-            form.addButton(`${data.name}\nid: ${data.id}`);
-        });
+        let list = StructureOperation.getSaveList(0, this.player) as Array<Data>;
+        //倒序加入
+        for (let i = list.length - 1; i >= 0; i--) {
+            form.addButton(`${list[i].name}\nid: ${list[i].id}`);
+        }
 
         this.player.sendForm(form, (pl, i) => {
             if (i == 0) {

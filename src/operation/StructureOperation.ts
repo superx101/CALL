@@ -261,7 +261,7 @@ export default class StructureOperation {
         return StructureManager.getData(xuid).redoList.length;
     }
 
-    public static getSaveList(mod: number, player: Player) {
+    public static getSaveList(mod: number, player: Player): [] {
         if (mod == 0) {
             return StructureManager.getPrivateArr(player);
         }

@@ -281,7 +281,7 @@ export default class StructureManager {
         return Config.get(Config.STRUCTURES, `private`);
     }
 
-    public static getPrivateArr(player: Player) {
+    public static getPrivateArr(player: Player): [] {
         let arr: any = [];
         let saveList = Config.get(Config.STRUCTURES, `private.${player.xuid}.saveList`);
         Object.keys(saveList).forEach((structid) => {
@@ -290,7 +290,7 @@ export default class StructureManager {
         return arr;
     }
 
-    public static getPublicArr() {
+    public static getPublicArr(): [] {
         let arr: any = [];
         StructureManager.publicForEach((id: string, key: string) => {
             let st = Config.get(Config.STRUCTURES, `private.${key}.saveList.${id}`);
