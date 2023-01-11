@@ -180,7 +180,7 @@
                             "cmds": [
                                 "ca ar cl"
                             ],
-                            "describe": "清除选区工具"
+                            "describe": "取消选区工具"
                         }
                     }
                 }
