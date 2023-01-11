@@ -144,9 +144,9 @@
             "path": "./plugins/CALL/export"
         },
         {
-            "type":"patch",
-            "path":"./plugins/CALL/config/configs.json",
-            "patch":[
+            "type": "patch",
+            "path": "./plugins/CALL/config/configs.json",
+            "patch": [
                 {
                     "op": "add",
                     "path": "/traversalWaitTime",
@@ -157,7 +157,7 @@
                     "path": "/fillWaitTime",
                     "value": 20
                 },
-                                {
+                {
                     "op": "add",
                     "path": "/outputCmd",
                     "value": false
@@ -171,6 +171,18 @@
                     "op": "add",
                     "path": "/default/saveEntity",
                     "value": true
+                },
+                {
+                    "op": "add",
+                    "path": "/default/onUseItemOn/minecraft:shears",
+                    "value": {
+                        "": {
+                            "cmds": [
+                                "ca ar cl"
+                            ],
+                            "describe": "清除选区工具"
+                        }
+                    }
                 }
             ]
         },
