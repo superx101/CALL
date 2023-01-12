@@ -155,7 +155,7 @@
                 {
                     "op": "add",
                     "path": "/fillWaitTime",
-                    "value": 20
+                    "value": 40
                 },
                 {
                     "op": "add",
