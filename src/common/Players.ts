@@ -60,13 +60,33 @@ export default class Players {
             player.sendText(StrFactory.cmdErr(res.output));
         }
         //debug
-        if(Config.get(Config.GLOBAL, "debugMod", false)) {
+        if (Config.get(Config.GLOBAL, "debugMod", false)) {
             logger.debug(cmd);
             logger.debug(res);
         }
-        if(Config.get(Config.GLOBAL, "outputCmd", false)) {
+        if (Config.get(Config.GLOBAL, "outputCmd", false)) {
             logger.info(cmd);
         }
         return res;
+    }
+
+    public static async tpAsync(player: Player, x: number, y: number, z: number, dimid: 0 | 1 | 2, waitTime = 0): Promise<boolean> {
+        let max = 15;
+        return new Promise(resolve => {
+            let id = setInterval(() => {
+                if (player.teleport(x, y, z, dimid)) {
+                    resolve(true);
+                    clearInterval(id);
+                }
+                else {
+                    if (max <= 0) {
+                        resolve(false);
+                        clearInterval(id);
+                        return;
+                    }
+                    --max;
+                }
+            }, 50)
+        })
     }
 }

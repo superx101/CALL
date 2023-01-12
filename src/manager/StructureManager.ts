@@ -124,6 +124,8 @@ export default class StructureManager {
         const mz = areas[0].length;
         const barUid = Math.floor(Math.random() * 1000);//进度条id
         const total = mx * mz;//进度条总数
+        //进度条置0
+        player.setBossBar(barUid, StrFactory.cmdMsg(title), 0, color);
 
         let res: boolean;
         for (let x = 0; x < mx; x++) {
