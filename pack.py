@@ -45,7 +45,7 @@ with open('./nodejs/call/package.json', encoding="utf-8") as f:
 
 #CALL-x.x.x.zip
 zip_file = zipfile.ZipFile('./output/CALL-' + version + '.zip', 'w')
-zip_file.writestr('安装说明.txt', '[安装]\n初次安装时需将CALL和CALL.llplugin放入plugins目录。\n\n[手动更新]\n手动更新安装时只需将CALL.llplugin放入plugins目录, 且更新替换CALL/plugin/下的形状包即可。\n\n[自动更新]\n可在配置中开启自动检查更新, 或在后台输入/call u 检查并自动更新\n\n[无法安装解决办法]\n当出现 “为插件 call 执行 "npm install"...” 时进度条一直不动, 说明当前网络环境无法下载依赖, 需要手动下载依赖包并安装')
+zip_file.writestr('安装说明.txt', '[安装]\n初次安装时需将CALL和CALL.llplugin放入plugins目录。\n\n[手动更新]\n手动更新安装时只需将CALL.llplugin放入plugins目录, 且更新替换CALL/plugin/下的形状包即可。\n\n[自动更新]\n可在配置中开启自动检查更新, 或在后台输入/call u 检查并自动更新\n\n[无法安装解决办法]\n当出现 “为插件 call 执行 "npm install"...” 时进度条一直不动, 说明当前网络环境无法下载依赖, 需要手动下载依赖包并安装, 下载地址: https://gitee.com/superx101/CALL/releases/download/' + version + '/' + version + '依赖包.zip')
 # zip CALL/
 for root, dirs, files in os.walk('output/temp/CALL'):
     for file in files:
@@ -61,7 +61,7 @@ zip_file.write('output/temp/CALL.llplugin', "CALL.llplugin", compress_type=zipfi
 zip_file.close()
 
 #dependencies
-with zipfile.ZipFile('output/依赖包(非特殊情况不用下载).zip', 'w') as zip:
+with zipfile.ZipFile('output/' + version + '依赖包.zip', 'w') as zip:
     for root, dirs, files in os.walk('node_modules/'):
         for file in files:
             file_path = os.path.join(root, file)
