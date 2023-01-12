@@ -10,6 +10,8 @@ import path = require('path');
 
 const shapeFilePath = 'CALL/plugins/shape'
 const pluginFileName = 'CALL.llplugin';
+const packageLockPath = Config.ROOT + '/package-lock.json';
+const node_modulesPath = Config.ROOT + '/node_modules';
 const URL = Config.get(Config.URL, "update");
 class Urls {
     constructor(public check: string, public download?: string) { }
@@ -35,7 +37,7 @@ export default class UpdateManager {
                 }
             })
             .on("close", () => {
-                return new Promise(()=>{})
+                return new Promise(() => { })
             })
     }
 
@@ -44,12 +46,22 @@ export default class UpdateManager {
         logger.warn('安装过程中请勿重启服务器或插件');
         logger.warn(`开始安装中.... 此过程大概需要1至5分钟`);
 
+        //删除package-lock.json
+        if (File.exists(packageLockPath)) {
+            File.delete(packageLockPath);
+        }
+        //删除node_modules
+        if (File.exists(node_modulesPath)) {
+            File.delete(node_modulesPath);
+        }
+
         //解压
         fs.createReadStream(file)
             .pipe(unzipper.ParseOne(new RegExp(pluginFileName)))
             .pipe(unzipper.Extract({ path: Config.ROOT }))
             .on("close", async () => {
                 await UpdateManager.installShapePackage(file);
+
                 logger.info(`安装完成, 已成功更新插件`);
                 //重载
                 ReloadOperation.start("自动更新完成, 已重新加载插件");
