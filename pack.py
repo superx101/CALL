@@ -54,7 +54,9 @@ for root, dirs, files in os.walk('output/temp/CALL'):
         arc_name = os.path.relpath(file_path, 'output/temp')
         zip_file.write(file_path, arc_name)
 
-zip_file.writestr(zipfile.ZipInfo('CALL/temp/'), '')#创建空文件夹temp
+emptyPaths = ["temp", "import", "export"]
+for i in emptyPaths:
+    zip_file.writestr(zipfile.ZipInfo('CALL/' + i + "/"), '')#创建空文件夹temp
 zip_file.write('output/temp/CALL.llplugin', "CALL.llplugin", compress_type=zipfile.ZIP_DEFLATED)
 zip_file.close()
 
