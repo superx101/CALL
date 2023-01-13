@@ -231,27 +231,6 @@
                     "op": "add",
                     "path": "/default/textureSelectorMode",
                     "value": false
-                }
-            ]
-        },
-        {
-            "type": "patch_plus",
-            "path": "./plugins/CALL/data/settings.json",
-            "patch": [
-                {
-                    "op": "add",
-                    "path": "/player/*",
-                    "name": "texture",
-                    "value": {
-                        "a": null,
-                        "b": null
-                    }
-                },
-                {
-                    "op": "add",
-                    "path": "/player/*",
-                    "name": "textureSelectorMode",
-                    "value": false
                 },
                 {
                     "op": "add",
@@ -276,6 +255,27 @@
                             "describe": "材质b选择工具"
                         }
                     }
+                }
+            ]
+        },
+        {
+            "type": "patch_plus",
+            "path": "./plugins/CALL/data/settings.json",
+            "patch": [
+                {
+                    "op": "add",
+                    "path": "/player/*",
+                    "name": "texture",
+                    "value": {
+                        "a": null,
+                        "b": null
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/player/*",
+                    "name": "textureSelectorMode",
+                    "value": false
                 }
             ]
         }
