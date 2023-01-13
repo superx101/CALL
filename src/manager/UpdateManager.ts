@@ -163,7 +163,10 @@ export default class UpdateManager {
         if (Config.DATA_VERSION == null) {
             logger.warn("未检测到数据标识, 尝试自动更新数据");
             Config.closeAll();
-            JsonPatch.runArray(JSON.parse(File.readFrom(Config.UPDATE))['1.0.0']);
+            const updateJson = JSON.parse(File.readFrom(Config.UPDATE));
+            for (const key of Object.keys(updateJson)) {
+                JsonPatch.runArray(updateJson[key]);
+            }
             logger.info("更新完成");
             Config.openAll();
         }
@@ -171,8 +174,8 @@ export default class UpdateManager {
         else if (Config.DATA_VERSION.compare(Config.PLUGIN_VERSION) == Compare.LESSER) {
             //更新
             logger.info("检测到版本更新, 正在更新数据");
-            let updateJson = JSON.parse(File.readFrom(Config.UPDATE));
             Config.closeAll();
+            const updateJson = JSON.parse(File.readFrom(Config.UPDATE));
             for (const key of Object.keys(updateJson)) {
                 const v = Version.fromString(key);
                 //v > DATA_VERSIONN && v <= PLUGIN_VERSION

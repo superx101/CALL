@@ -1,4 +1,5 @@
 import * as jsonpath from 'fast-json-patch'
+import * as fs from "fs"
 
 export default class JsonPatch {
     public static delete = 'delete'
@@ -17,7 +18,16 @@ export default class JsonPatch {
 
     private static patchFuc(path: string, patch: any) {
         const jsonString = File.readFrom(path).replace(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/gm, '$1');
-        return File.writeTo(path, JSON.stringify(jsonpath.applyPatch(JSON.parse(jsonString), patch).newDocument, null, 2));
+        const data = JSON.stringify(jsonpath.applyPatch(JSON.parse(jsonString), patch).newDocument, null, 2);
+
+        try {
+            fs.writeFileSync(path, data);
+            return true;
+        }
+        catch(ex) {
+            logger.error(`文件${path}写入失败, 请手动写入：\n${data}`);
+            return false;
+        }
     }
 
     /**
@@ -32,7 +42,7 @@ export default class JsonPatch {
         let current = obj;
 
         for (const part of pathParts) {
-            current = current[part]
+            current = current[part];
         }
         return current;
     }
@@ -142,11 +152,29 @@ export default class JsonPatch {
             obj = selectFuc(patch, obj);
         }
 
-        return File.writeTo(path, JSON.stringify(obj, null, 2));
+        const data = JSON.stringify(obj, null, 2);
+        try {
+            fs.writeFileSync(path, data);
+            return true;
+        }
+        catch(ex) {
+            logger.error(`文件${path}写入失败, 请手动写入：\n${data}`);
+            return false;
+        }
     }
 
     private static mkDirFuc(path: string) {
-        return File.createDir(path);
+        if(fs.existsSync(path)) {
+            return true;
+        }
+        try {
+            fs.mkdirSync(path);
+            return true;
+        }
+        catch(e) {
+            logger.error("创建文件" + path + "失败, 请手动创建")
+            return false; 
+        }
     }
 
     public static runArray(arr: Array<any>) {
