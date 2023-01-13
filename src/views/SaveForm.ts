@@ -2,6 +2,7 @@ import Players from "../common/Players";
 import AreaOperation from "../operation/AreaOperation";
 import StrFactory from "../util/StrFactory";
 import Form from "./Form";
+import Menu from "./Menu";
 
 export default class SaveForm extends Form {
     constructor(form: Form) {
@@ -24,7 +25,7 @@ export default class SaveForm extends Form {
 
         this.player.sendForm(form, (pl, data) => {
             if (data == null) {
-                this.sendForm(null);
+                new Menu(this.player, this.playerData).sendForm();
                 return;
             }
             Players.silenceCmd(pl, `ca sa "${data[0]}"`);
