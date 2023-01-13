@@ -10,9 +10,20 @@ export interface Settings {
     saveEntity: boolean,
     areaTextShow: boolean,
     displayArea: boolean,
-    displayPos: any,
     displayProgressBar: boolean;
     loadChuckTip: boolean,
+    textureSelectorMode: boolean,
+    displayPos: any,
+    texture: {
+        a: {
+            type: string,
+            tileData: number,
+        },
+        b: {
+            type: string,
+            tileData: number,
+        },
+    },
     items: {
         onUseItemOn: any,
         onStartDestroyBlock: any

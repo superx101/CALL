@@ -21,6 +21,7 @@ import ReloadOperation from "./src/operation/ReloadOperation";
 import SettingsOperation from "./src/operation/SettingsOperation";
 import ShapeOperation from "./src/operation/ShapeOperation";
 import StructureOperation from "./src/operation/StructureOperation";
+import TextureOperation from "./src/operation/TextureOperation";
 import ToolOperation from "./src/operation/ToolOperation";
 import UpdateOperation from "./src/operation/UpdateOperation";
 import ShapeLoader from "./src/plugin/ShapeLoader";
@@ -113,6 +114,10 @@ function command_playerCallback(ori: CommandOrigin, output: CommandOutput, res: 
         case "shape":
         case "sh":
             ShapeOperation.start(player, output, playerData, res);
+            break;
+        case "texture":
+        case "te":
+            TextureOperation.start(player, output, playerData, res);
             break;
         case "block":
         case "bl":
@@ -372,6 +377,13 @@ function command() {
     cmd.mandatory("enum_1", ParamType.Enum, "menu", "menu_man");
     cmd.overload(["block_enum_man", "intPos_man", "nbt_man", "blockEntity_man"]);
     cmd.overload(["block_enum_man", "intPos_man", "menu_man"]);
+
+    //texture
+    cmd.setEnum("texture", ["texture", "te"]);
+    cmd.setEnum("ab", ["a", "b"]);
+    cmd.mandatory("action", ParamType.Enum, "texture", "texture_man");
+    cmd.mandatory("enum_1", ParamType.Enum, "ab", "ab_man");
+    cmd.overload(["texture_man", "ab_man", "intPos_man"]);
 
     //shape
     cmd.setEnum("shape", ["shape", "sh"]);

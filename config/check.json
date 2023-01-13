@@ -99,6 +99,9 @@
         },
         "default.loadChuckTip": {
             "type": "boolean"
+        },
+        "default.textureSelectorMode": {
+            "type": "boolean"
         }
     }
 }

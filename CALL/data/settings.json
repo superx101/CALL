@@ -9,9 +9,14 @@
         "saveEntity": true,
         "areaTextShow": true,
         "displayArea": true,
-        "displayPos": null,
         "displayProgressBar": true,
         "loadChuckTip": true,
+        "textureSelectorMode": false,
+        "displayPos": null,
+        "texture": {
+            "a": null,
+            "b": null
+        },
         "items": {
             "onUseItemOn": {
                 "minecraft:clock": {
@@ -54,6 +59,14 @@
                         "describe": "A点选区工具"
                     }
                 },
+                "minecraft:trident": {
+                    "": {
+                        "cmds": [
+                            "ca te a ${block.pos.x} ${block.pos.y} ${block.pos.z}"
+                        ],
+                        "describe": "材质a选择工具"
+                    }
+                },
                 "minecraft:blaze_rod": {
                     "": {
                         "cmds": [
@@ -87,7 +100,16 @@
                     }
                 }
             },
-            "onStartDestroyBlock": {}
+            "onStartDestroyBlock": {
+                "minecraft:trident": {
+                    "": {
+                        "cmds": [
+                            "ca te b ${block.pos.x} ${block.pos.y} ${block.pos.z}"
+                        ],
+                        "describe": "材质b选择工具"
+                    }
+                }
+            }
         },
         "area": {
             "start": {

@@ -179,7 +179,8 @@ export default class SettingForm extends Form {
             ["saveArea", this.settings.saveArea],
             ["saveUndo", this.settings.saveUndo],
             ["saveCopy", this.settings.saveCopy],
-            ["saveEntity", this.settings.saveEntity]
+            ["saveEntity", this.settings.saveEntity],
+            ["textureSelectorMode", this.settings.textureSelectorMode]
         ];
         let form = mc.newCustomForm()
             .setTitle("其他设置")
@@ -191,6 +192,7 @@ export default class SettingForm extends Form {
             .addSwitch("退出后保存撤销", setArr[5][1])
             .addSwitch("退出后保存复制", setArr[6][1])
             .addSwitch("结构中保存实体", setArr[7][1])
+            .addSwitch("启用材质选择器模式", setArr[8][1])
 
         this.player.sendForm(form, (pl, data) => {
             if (data == null) {

@@ -204,5 +204,56 @@
                 }
             ]
         }
+    ],
+    "1.1.1": [
+        {
+            "type": "delete",
+            "path": "./plugins/CALL/version"
+        },
+        {
+            "type": "create",
+            "path": "./plugins/CALL/version",
+            "value": "1.1.1"
+        },
+        {
+            "type": "patch",
+            "path": "./plugins/CALL/config/configs.json",
+            "patch": [
+                {
+                    "op": "add",
+                    "path": "/default/texture",
+                    "value": {
+                        "a": null,
+                        "b": null
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/default/textureSelectorMode",
+                    "value": false
+                }
+            ]
+        },
+        {
+            "type": "patch_plus",
+            "path": "./plugins/CALL/data/settings.json",
+            "patch": [
+                {
+                    "op": "add",
+                    "path": "/player/*",
+                    "name": "texture",
+                    "value": {
+                        "a": null,
+                        "b": null
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/player/*",
+                    "name": "textureSelectorMode",
+                    "value": false
+                }
+            ]
+        }
     ]
 }
