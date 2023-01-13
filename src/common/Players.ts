@@ -5,6 +5,7 @@ import PermissionOperation from "../operation/PermissionOperation";
 import { PermissionsType } from "../type/Config";
 import StrFactory from "../util/StrFactory";
 import Config from "./Config";
+import * as os from "os"
 
 export default class Players {
     public static dataMap = new Map<string, PlayerData>();
@@ -39,11 +40,20 @@ export default class Players {
     }
 
     public static silenceCmd(player: Player, cmd: string) {
-        if (!Config.get(Config.GLOBAL, "outputCmd", false)) {
-            player.runcmd(cmd);
+        player.runcmd(cmd);
+        if (!Config.get(Config.GLOBAL, "outputCmd", true)) {
             //控制台清除输出 (密集输出时删除错误)
             process.stdout.write('\x1B[1A');
-            process.stdout.clearLine(1);
+            switch (os.platform()) {
+                case "win32":
+                    process.stdout.write('\x1b[K');
+                    break;
+                case "darwin":
+                case "linux":
+                    process.stdout.write('\x20');
+                default:
+                    break;
+            }
         }
     }
 
