@@ -252,6 +252,30 @@
                     "path": "/player/*",
                     "name": "textureSelectorMode",
                     "value": false
+                },
+                {
+                    "op": "add",
+                    "path": "/default/items/onUseItemOn/minecraft:trident",
+                    "value": {
+                        "": {
+                            "cmds": [
+                                "ca te a ${block.pos.x} ${block.pos.y} ${block.pos.z}"
+                            ],
+                            "describe": "材质a选择工具"
+                        }
+                    }
+                },
+                {
+                    "op": "add",
+                    "path": "/default/items/onStartDestroyBlock/minecraft:trident",
+                    "value": {
+                        "": {
+                            "cmds": [
+                                "ca te b ${block.pos.x} ${block.pos.y} ${block.pos.z}"
+                            ],
+                            "describe": "材质b选择工具"
+                        }
+                    }
                 }
             ]
         }
