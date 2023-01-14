@@ -112,12 +112,24 @@ export default class OperationForm extends Form {
         //是否开启材质选择模式
         if (this.playerData.settings.textureSelectorMode) {
             //无选择默认为空气
-            const typeA = this.playerData.settings.texture.a.type == null ? "air" : this.playerData.settings.texture.a.type;
-            const tileDataA = this.playerData.settings.texture.a.tileData == null ? 0 : this.playerData.settings.texture.a.tileData;
-            const typeB = this.playerData.settings.texture.b.type == null ? "air" : this.playerData.settings.texture.b.type;
-            const tileDataB = this.playerData.settings.texture.b.tileData == null ? 0 : this.playerData.settings.texture.b.tileData;
-
-            log(typeA, ",", typeB)
+            let typeA: string, tileDataA: number;
+            let typeB: string, tileDataB: number;
+            if(this.playerData.settings.texture.a != null) {
+                typeA = this.playerData.settings.texture.a.type;
+                tileDataA = this.playerData.settings.texture.a.tileData;
+            }
+            else {
+                typeA = "air";
+                tileDataA = 0;
+            }
+            if(this.playerData.settings.texture.b != null) {
+                typeB = this.playerData.settings.texture.b.type;
+                tileDataB = this.playerData.settings.texture.b.tileData;
+            }
+            else {
+                typeB = "air";
+                tileDataB = 0;
+            }
             // 直接执行
             run(typeA, tileDataA, typeB, tileDataB);
         }
