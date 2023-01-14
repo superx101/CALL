@@ -97,16 +97,16 @@ export default class SettingForm extends Form {
 
         this.player.sendForm(form, (pl, id) => {
             switch (id) {
+                case undefined:
+                    break;
                 case 0:
                     this.hotkeyKindForm();
                     break;
                 case 1:
                     this.hotkeyForm([], 0, type);
                     break;
-                case 2:
-                    this.hotkeyForm(list[id - 2], 1, type);
-                    break;
                 default:
+                    this.hotkeyForm(list[id - 2], 1, type);
                     break;
             }
         });
