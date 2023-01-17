@@ -1,5 +1,6 @@
 import { Compare } from "../type/Common";
 import Version from "../util/Version";
+
 const ROOT = './plugins/nodejs/call';
 const DATAROOT = './plugins/CALL'
 const CONFIG = ROOT + "/config"
@@ -31,31 +32,33 @@ function getDataVersion(): Version {
 }
 
 export default class Config {
-    public static ISOLDVERSION = SERVER_VERSION.compare(Version.fromArr([1, 19, 50])) == Compare.LESSER ? true : false; 
-    public static ROOT = ROOT;
-    public static CONFIG = CONFIG;
-    public static DATAPATH = DATAROOT;
-    public static BIN = ROOT + "/bin";
-    public static DATA = DATA;
-    public static BUILD = DATAROOT + '/build';
-    public static PLUGINS = DATAROOT + '/plugins';
-    public static TEMP = DATAROOT + '/temp';
-    public static IMPORT = DATAROOT + '/import';
-    public static EXPORT = DATAROOT + '/export';
-    public static UPDATE = CONFIG +  '/update.json';
-    public static TEMPLATES = ROOT + '/templates'
+    public static readonly ISOLDVERSION = SERVER_VERSION.compare(Version.fromArr([1, 19, 50])) == Compare.LESSER ? true : false; 
+    public static readonly ROOT = ROOT;
+    public static readonly CONFIG = CONFIG;
+    public static readonly LANG = CONFIG + '/lang';
+    public static readonly DATAPATH = DATAROOT;
+    public static readonly  BIN = ROOT + "/bin";
+    public static readonly DATA = DATA;
+    public static readonly BUILD = DATAROOT + '/build';
+    public static readonly PLUGINS = DATAROOT + '/plugins';
+    public static readonly TEMP = DATAROOT + '/temp';
+    public static readonly IMPORT = DATAROOT + '/import';
+    public static readonly EXPORT = DATAROOT + '/export';
+    public static readonly UPDATE = CONFIG +  '/update.json';
+    public static readonly TEMPLATES = ROOT + '/templates'
     public static URL = new JsonConfigFile(URL);
     public static GLOBAL = new JsonConfigFile(GLOBAL);
     public static PERMISSIONS = new JsonConfigFile(PERMISSIONS);
     public static PLAYERS_SETTINGS = new JsonConfigFile(PLAYERS_SETTINGS);
     public static STRUCTURES = new JsonConfigFile(STRUCTURES);
     public static CHECK = new JsonConfigFile(CHECK);
-    public static ITEM_TEXTURES = new Set<string>(JSON.parse(File.readFrom(CONFIG + "/item_texture.json")));
-    public static BLOCKS_TYPE = new Set<string>(JSON.parse(File.readFrom(CONFIG + "/blocks.json")))
-    public static LL_MINVERSION = Version.fromArr([2, 8, 1]);
-    public static SERVER_VERSION = SERVER_VERSION;
-    public static PLUGIN_VERSION = getVersion();
-    public static DATA_VERSION = getDataVersion();
+    public static ITEM_TEXTURES = new JsonConfigFile(CONFIG + "/item_texture.json");
+    public static readonly ITEM_ICONS =  new Set<string>(JSON.parse(File.readFrom(CONFIG + "/icons.json")));
+    public static readonly BLOCKS_TYPE = new Set<string>(JSON.parse(File.readFrom(CONFIG + "/blocks.json")));
+    public static readonly LL_MINVERSION = Version.fromArr([2, 8, 1]);
+    public static readonly SERVER_VERSION = SERVER_VERSION;
+    public static readonly PLUGIN_VERSION = getVersion();
+    public static readonly DATA_VERSION = getDataVersion();
 
     public static get(config: JsonConfigFile, str: string, def?: any): any {
         let strArr = str.split(".");

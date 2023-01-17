@@ -90,8 +90,8 @@ export default class SettingForm extends Form {
         list.forEach((v: any) => {
             const type = v[0].replace("minecraft:", "");
             form.addButton(
-                `${StrFactory.color(Format.Black, v[0])}\n名称: ${StrFactory.color(Format.DarkGreen, v[1])} 描述: ${StrFactory.color(Format.DarkPurple, v[2])}`,
-                Config.ITEM_TEXTURES.has(type) ? `textures/items/${type}` : ""
+                `${StrFactory.item_t(this.player.langCode, type)} ${StrFactory.color(Format.Black, v[0])}\n名称: ${StrFactory.color(Format.DarkGreen, v[1])} 描述: ${StrFactory.color(Format.DarkPurple, v[2])}`,
+                Config.ITEM_ICONS.has(type) ? `textures/items/${type}` : Config.get(Config.ITEM_TEXTURES, type, "")
             );
         });
 
