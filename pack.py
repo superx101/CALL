@@ -63,6 +63,8 @@ zip_file.close()
 #dependencies
 with zipfile.ZipFile('output/' + version + '依赖包.zip', 'w') as zip:
     for root, dirs, files in os.walk('node_modules/'):
+        if "@types" in dirs:
+            dirs.remove("@types")
         for file in files:
             file_path = os.path.join(root, file)
             arcname = os.path.join('node_modules', os.path.relpath(file_path, 'node_modules/'))
