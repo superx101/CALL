@@ -8,10 +8,10 @@ import AreaOperation from "./AreaOperation";
 
 
 export default class FillOperation {
-    public static fill(player: Player, output: CommandOutput, playerData: PlayerData, res: { block: string; TileData: number; FillMode: string; }) {
+    public static fill(player: Player, output: CommandOutput, playerData: PlayerData, res: { block: LLSE_Block; TileData: number; FillMode: string; }) {
         //检查参数
         AreaOperation.hasArea(playerData);
-        let blockType = FillOperation.getTypeFromBlock(res.block);
+        let blockType = res.block.type;
         let tileData = res.TileData;
         if (tileData == null) {
             tileData = 0;
@@ -55,10 +55,10 @@ export default class FillOperation {
         });
     }
 
-    public static replace(player: Player, output: CommandOutput, playerData: PlayerData, res: { tileData2: number; block: string; block2: string; tileData: number; }) {
+    public static replace(player: Player, output: CommandOutput, playerData: PlayerData, res: { tileData2: number; block: LLSE_Block; block2: LLSE_Block; tileData: number; }) {
         let tileData2 = res.tileData2;
-        let blockType1 = FillOperation.getTypeFromBlock(res.block);
-        let blockType2 = FillOperation.getTypeFromBlock(res.block2);
+        let blockType1 = res.block.type;
+        let blockType2 = res.block2.type;
         if (tileData2 == null) {
             tileData2 = 0;
         }
@@ -68,14 +68,5 @@ export default class FillOperation {
             StructureManager.tp(player, playerData);
             player.sendText(StrFactory.cmdSuccess(`已填充区域: ${Area3D.fromArea3D(playerData.settings.area)}`));
         });
-    }
-
-    public static getTypeFromBlock(str: string) {
-        if (!Config.BLOCKS_TYPE.has(StrFactory.item(str))) {
-            throw new Error(`当前名称不能被识别为方块, 请重试`);
-        }
-        else {
-            return str;
-        }
     }
 }

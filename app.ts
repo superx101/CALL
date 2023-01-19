@@ -233,7 +233,7 @@ function command() {
     cmd.mandatory("id", ParamType.String, "id", "id_man");
     cmd.mandatory("tileData", ParamType.Int, "", "tileData_man");
     cmd.mandatory("index", ParamType.Int, "", "index_man");
-    cmd.mandatory("block", ParamType.String, "", "block_man");//String暂时用于过渡
+    cmd.mandatory("block", ParamType.Block, "", "block_man");
     cmd.mandatory("key", ParamType.String, "", "key_man");
     cmd.mandatory("item", ParamType.Item, "", "item_man");
     cmd.mandatory("intPos", ParamType.BlockPos, "", "intPos_man");
@@ -296,7 +296,7 @@ function command() {
     //replace
     cmd.setEnum("replace", ["replace", "re"]);
     cmd.mandatory("action", ParamType.Enum, "replace", "replace_man", 1);
-    cmd.mandatory("block2", ParamType.String, "", "block2_man");//String暂时用于过渡
+    cmd.mandatory("block2", ParamType.Block, "", "block2_man");
     cmd.optional("tileData2", ParamType.Int, "", "tileData2_opt");
     cmd.overload(["replace_man", "block_man", "tileData_man", "block2_man", "tileData2_opt"])
 
