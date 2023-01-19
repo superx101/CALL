@@ -5,6 +5,7 @@ import Pos3D from "../model/Pos3D";
 import { Warn } from "../type/Error";
 import StrFactory from "../util/StrFactory";
 import StructureManager from "./StructureManager";
+import Enums from "../type/Enums";
 
 export default class AreaDisplayerManager {
     static posMap = new Map();
@@ -148,5 +149,16 @@ export default class AreaDisplayerManager {
         let player = mc.getPlayer(playerData.xuid);
         AreaDisplayerManager.undo(playerData.displayPos, player, playerData);
         AreaDisplayerManager.posMap.delete(playerData.displayPos);
+    }
+
+    public static areaTextTip(player: Player, playerData: PlayerData) {
+        if(playerData.settings.areaTextShow && playerData.hasSetArea && playerData.settings.enable) {
+            const area = Area3D.fromArea3D(playerData.settings.area);
+            const lens = area.getLens();
+            const str0 = `选区: ${playerData.settings.area.start}->${playerData.settings.area.end}`;
+            const str1 = `长度: ${Format.Red}${lens[0]} ${Format.Green}${lens[1]} ${Format.Aqua}${lens[2]}`;
+            const space = (str0.length - str1.length + 3) / 2;
+            player.sendText(`${str0}\n${Array.from({length: space}, ()=>' ').join('') + str1}`, Enums.msg.TIP);
+        }
     }
 }

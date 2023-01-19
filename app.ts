@@ -4,8 +4,8 @@
 import Activity from "./src/activity/Activity";
 import Config from "./src/common/Config";
 import Players from "./src/common/Players";
+import AreaDisplayerManager from "./src/manager/AreaDisplayerManager";
 import UpdateManager from "./src/manager/UpdateManager";
-import Area3D from "./src/model/Area3D";
 import AreaOperation from "./src/operation/AreaOperation";
 import BasicTranslOperation from "./src/operation/BasicTranslOperation";
 import BlockEditerOperation from "./src/operation/BlockEditerOperation";
@@ -26,7 +26,6 @@ import ToolOperation from "./src/operation/ToolOperation";
 import UpdateOperation from "./src/operation/UpdateOperation";
 import ShapeLoader from "./src/plugin/ShapeLoader";
 import { Listener } from "./src/type/Common";
-import Enums from "./src/type/Enums";
 import { Warn } from "./src/type/Error";
 import { Pos } from "./src/type/Pos";
 import { ToolType } from "./src/type/Tool";
@@ -566,10 +565,7 @@ function clock() {
             playerData = singleMap[1];
             player = mc.getPlayer(xuid);
             //选区提示
-            if (playerData.settings.areaTextShow && playerData.hasSetArea && playerData.settings.enable) {
-                let area = Area3D.fromArea3D(playerData.settings.area);
-                player.sendText(`当前选区: ${playerData.settings.area.start}->${playerData.settings.area.end}\n长度: ${area.getLensStr()}`, Enums.msg.TIP);
-            }
+            AreaDisplayerManager.areaTextTip(player, playerData);
         }
     }, 300);
 
