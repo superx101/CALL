@@ -95,7 +95,8 @@ export default class StructureForm extends Form {
                 this.sendForm();
             }
             else if (i != null) {
-                this.loadOpertionForm(list[i - 1], ()=>{this.publicForm()});
+                //倒序访问
+                this.loadOpertionForm(list[list.length - i], ()=>{this.publicForm()});
             }
         });
     }
@@ -150,7 +151,8 @@ export default class StructureForm extends Form {
                 this.sendForm();
             }
             else if (i != null) {
-                this.my_structureForm(list[i - 1]);
+                //倒序访问
+                this.my_structureForm(list[list.length - i]);
             }
         });
     }
