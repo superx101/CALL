@@ -578,7 +578,7 @@ function clock() {
 
 function checkVersion() {
     if (!ll.requireVersion(Config.LL_MINVERSION.major, Config.LL_MINVERSION.minor, Config.LL_MINVERSION.revision)) {
-        logger.warn(`当前ll版本为${ll.major}.${ll.minor}.${ll.revision}, 小于CALL发布时的ll版本${Config.LL_MINVERSION.toString()}, 若出现部分功能失效请更新ll(LiteLoader)`)
+        logger.warn(`当前ll版本为${ll.major}.${ll.minor}.${ll.revision}, 小于当前CALL支持的LL最小版本${Config.LL_MINVERSION.toString()}, 若出现部分功能失效请更新ll(LiteLoader)`)
     }
     if (Config.ISOLDVERSION) {
         logger.warn(`当前BDS版本为:${Config.SERVER_VERSION.toString()}, CALL-0.2.0后主要适配1.19.50即以上版本, 已不做旧版兼容, 若使用中出现问题请安装CALL-0.1.2`);

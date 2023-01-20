@@ -54,7 +54,7 @@ export default class Config {
     public static CHECK = new JsonConfigFile(CHECK);
     public static ITEM_TEXTURES = new JsonConfigFile(CONFIG + "/item_texture.json");
     public static readonly ITEM_ICONS =  new Set<string>(JSON.parse(File.readFrom(CONFIG + "/icons.json")));
-    public static readonly LL_MINVERSION = Version.fromArr([2, 8, 1]);
+    public static readonly LL_MINVERSION = Version.fromArr([2, 9, 2]);
     public static readonly SERVER_VERSION = SERVER_VERSION;
     public static readonly PLUGIN_VERSION = getVersion();
     public static readonly DATA_VERSION = getDataVersion();
