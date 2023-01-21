@@ -43,18 +43,20 @@ with open('./nodejs/call/package.json', encoding="utf-8") as f:
     data = json.load(f)
     version = data["version"]
 
+emptyPaths = ["temp", "import", "export"]
+
 #CALL-x.x.x.zip
 zip_file = zipfile.ZipFile('./output/CALL-' + version + '.zip', 'w')
 zip_file.writestr('安装更新注意事项(必读).txt', '[安装]\n初次安装时需将CALL和CALL.llplugin放入plugins目录。\n\n[手动更新]\n手动更新安装时只需将CALL.llplugin放入plugins目录, 且更新替换CALL/plugin/下的形状包即可。\n\n[自动更新]\n可在配置中开启自动检查更新, 或在后台输入/call u 检查并自动更新。\n\n[更新后报错加载插件失败]\n该情况说明依赖不全, 请在后台输入 ll load "./plugins/nodejs/call/bin/CALL_Dependencise.js" 检查并更新依赖\n\n[无法安装解决办法]\n当出现 “为插件 call 执行 "npm install"...” 时进度条一直不动, 说明当前网络环境无法下载依赖, 需要手动下载依赖包并安装, 下载地址: https://gitee.com/superx101/CALL/releases/download/' + version + '/' + version + '依赖包.zip')
 # zip CALL/
 for root, dirs, files in os.walk('output/temp/CALL'):
+    dirs[:] = [d for d in dirs if d not in emptyPaths]
     for file in files:
         file_path = os.path.join(root, file)
         # 计算文件在压缩包中的路径
         arc_name = os.path.relpath(file_path, 'output/temp')
         zip_file.write(file_path, arc_name)
 
-emptyPaths = ["temp", "import", "export"]
 for i in emptyPaths:
     zip_file.writestr(zipfile.ZipInfo('CALL/' + i + "/"), '')#创建空文件夹temp
 zip_file.write('output/temp/CALL.llplugin', "CALL.llplugin", compress_type=zipfile.ZIP_DEFLATED)

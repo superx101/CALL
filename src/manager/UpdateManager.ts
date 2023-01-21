@@ -7,7 +7,8 @@ import * as fs from 'fs';
 import ReloadOperation from '../operation/ReloadOperation';
 import JsonPatch from '../util/JsonPatch';
 import path = require('path');
-import { execFile } from 'child_process';
+import { execFileSync } from 'child_process';
+import * as fse from 'fs-extra'
 
 const shapeFilePath = 'CALL/plugins/shape'
 const pluginFileName = 'CALL.llplugin';
@@ -43,13 +44,13 @@ export default class UpdateManager {
             })
     }
 
-    private static unzipByUnzipper(file: string, closeCallback: ()=>Promise<void>) {
+    private static unzipByUnzipper(file: string, closeCallback: () => Promise<void>) {
+        logger.warn('安装过程中请勿重启服务器或插件');
+        logger.info(`开始安装中.... 此过程大概需要1至5分钟`);
         fs.createReadStream(file)
             .pipe(unzipper.ParseOne(new RegExp(pluginFileName)))
             .pipe(unzipper.Extract({ path: Config.ROOT }))
             .on("close", () => {
-                logger.warn('安装过程中请勿重启服务器或插件');
-                logger.warn(`开始安装中.... 此过程大概需要1至5分钟`);
                 closeCallback();
             })
             .on("error", (e: Error) => {
@@ -57,23 +58,21 @@ export default class UpdateManager {
             })
     }
 
-    private static unzipBy7z(file: string, closeCallback: ()=>Promise<void>) {
+    private static unzipBy7z(file: string, closeCallback: () => Promise<void>) {
         const p = path.parse(file);
-        execFile(unzip7zPath, ['x', file, '-o' + Config.TEMP + p.name], (error0: any, stdout0: any, stderr0: any) => {
-            if(!error0) {
-                execFile(unzip7zPath, ['x', `${p.dir}/${p.name}/${pluginFileName}`, '-o' + Config.ROOT], (error1: any, stdout1: any, stderr1: any) => {
-                    if(!error1) {
-                        closeCallback();
-                    }
-                    else {
-                        logger.warn("安装失败:" + stdout1);
-                    }
-                });
-            }
-            else {
-                logger.warn("安装失败:" + stdout0);
-            }
-        });
+        const tempDir = `${Config.TEMP}/${p.name}`;
+        const tempFile = `${tempDir}/${pluginFileName}`;
+        logger.info(`开始安装中....`);
+
+        if(fs.existsSync(tempDir)) {
+            fse.removeSync(tempDir);
+        }
+        execFileSync(unzip7zPath, ['x', file, '-o' + tempDir]);
+
+        fse.removeSync(Config.ROOT);
+        execFileSync(unzip7zPath, ['x', tempFile, '-o' + Config.ROOT]);
+
+        closeCallback();
     }
 
     //安装
@@ -85,26 +84,31 @@ export default class UpdateManager {
             //重载
             ReloadOperation.start("自动更新完成, 已重新加载插件");
 
-            return ;
+            return;
         }
 
-        //删除package-lock.json
-        if (File.exists(packageLockPath)) {
-            File.delete(packageLockPath);
-        }
-        //删除node_modules
-        if (File.exists(node_modulesPath)) {
-            File.delete(node_modulesPath);
-        }
+        try {
+            //删除package-lock.json
+            if (File.exists(packageLockPath)) {
+                File.delete(packageLockPath);
+            }
+            //删除node_modules
+            if (File.exists(node_modulesPath)) {
+                File.delete(node_modulesPath);
+            }
 
-        //解压
-        if(fs.existsSync(unzip7zPath)) {
-            //存在7za.exe 使用7z解压
-            UpdateManager.unzipBy7z(file, onClose);
+            //解压
+            if (fs.existsSync(unzip7zPath)) {
+                //存在7za.exe 使用7z解压
+                UpdateManager.unzipBy7z(file, onClose);
+            }
+            else {
+                //不存在 使用unzipper解压
+                UpdateManager.unzipByUnzipper(file, onClose);
+            }
         }
-        else {
-            //不存在 使用unzipper解压
-            UpdateManager.unzipByUnzipper(file, onClose);
+        catch (e) {
+            logger.error("安装失败:" + e.message);
         }
     }
 
