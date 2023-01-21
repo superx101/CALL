@@ -27,7 +27,7 @@ export default class ImportManager {
         let data;
 
         if (!File.exists(`${Config.IMPORT}/${file.base}`))
-            throw new Error(`找不到需要导入的文件: ${path.join(process.cwd(), Config.EXPORT)}/${file.base} \n请将确保文件名是否正确, 且文件位于CALL/import内`);
+            throw new Error(`找不到需要导入的文件: ${path.join(process.cwd(), Config.IMPORT)}/${file.base} \n请将确保文件名是否正确, 且文件位于CALL/import内`);
 
         switch (file.ext.substring(1)) {
             case Type.MCSTRUCTURE:
@@ -59,7 +59,10 @@ export default class ImportManager {
             entities: preComp.getData("structure").getData("entities") as NbtList,
             structure_world_origin: preObj.structure_world_origin
         }
-        let arr: StructureNBT[][] = new Array(mx).fill(new Array<StructureNBT>(mz))
+        let arr: StructureNBT[][] = new Array(mx);
+        for(let x = 0; x < mx; x++) {
+            arr[x] = new Array<StructureNBT>(mz);
+        }
 
         //遍历区域组
         let current = 0;

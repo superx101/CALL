@@ -9,7 +9,7 @@ export default class Structure {
     public xSize: number;
     public zSize: number;
 
-    constructor(area: Area3D, name = "", isPublic = false) {
+    constructor(area: Area3D, name = system.getTimeStr(), isPublic = false) {
         this.area = Area3D.fromArea3D(area);
         this.name = name;
         this.isPublic = isPublic;
