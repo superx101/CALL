@@ -7,11 +7,13 @@ import * as fs from 'fs';
 import ReloadOperation from '../operation/ReloadOperation';
 import JsonPatch from '../util/JsonPatch';
 import path = require('path');
+import { execFile } from 'child_process';
 
 const shapeFilePath = 'CALL/plugins/shape'
 const pluginFileName = 'CALL.llplugin';
 const packageLockPath = Config.ROOT + '/package-lock.json';
 const node_modulesPath = Config.ROOT + '/node_modules';
+const unzip7zPath = './plugins/LiteLoader/7z/7za.exe';
 const URL = Config.get(Config.URL, "update");
 class Urls {
     constructor(public check: string, public download?: string) { }
@@ -20,7 +22,7 @@ class Urls {
 export default class UpdateManager {
 
     //安装形状包
-    static async installShapePackage(file: string) {
+    private static async installShapePackage(file: string) {
         fs.createReadStream(file)
             .pipe(unzipper.Parse())
             .on('entry', entry => {
@@ -41,10 +43,50 @@ export default class UpdateManager {
             })
     }
 
+    private static unzipByUnzipper(file: string, closeCallback: ()=>Promise<void>) {
+        fs.createReadStream(file)
+            .pipe(unzipper.ParseOne(new RegExp(pluginFileName)))
+            .pipe(unzipper.Extract({ path: Config.ROOT }))
+            .on("close", () => {
+                logger.warn('安装过程中请勿重启服务器或插件');
+                logger.warn(`开始安装中.... 此过程大概需要1至5分钟`);
+                closeCallback();
+            })
+            .on("error", (e: Error) => {
+                logger.warn("安装失败:" + e.message);
+            })
+    }
+
+    private static unzipBy7z(file: string, closeCallback: ()=>Promise<void>) {
+        const p = path.parse(file);
+        execFile(unzip7zPath, ['x', file, '-o' + Config.TEMP + p.name], (error0: any, stdout0: any, stderr0: any) => {
+            if(!error0) {
+                execFile(unzip7zPath, ['x', `${p.dir}/${p.name}/${pluginFileName}`, '-o' + Config.ROOT], (error1: any, stdout1: any, stderr1: any) => {
+                    if(!error1) {
+                        closeCallback();
+                    }
+                    else {
+                        logger.warn("安装失败:" + stdout1);
+                    }
+                });
+            }
+            else {
+                logger.warn("安装失败:" + stdout0);
+            }
+        });
+    }
+
     //安装
     private static async install(file: string) {
-        logger.warn('安装过程中请勿重启服务器或插件');
-        logger.warn(`开始安装中.... 此过程大概需要1至5分钟`);
+        async function onClose() {
+            await UpdateManager.installShapePackage(file);
+
+            logger.info(`安装完成, 已成功更新插件`);
+            //重载
+            ReloadOperation.start("自动更新完成, 已重新加载插件");
+
+            return ;
+        }
 
         //删除package-lock.json
         if (File.exists(packageLockPath)) {
@@ -56,19 +98,14 @@ export default class UpdateManager {
         }
 
         //解压
-        fs.createReadStream(file)
-            .pipe(unzipper.ParseOne(new RegExp(pluginFileName)))
-            .pipe(unzipper.Extract({ path: Config.ROOT }))
-            .on("close", async () => {
-                await UpdateManager.installShapePackage(file);
-
-                logger.info(`安装完成, 已成功更新插件`);
-                //重载
-                ReloadOperation.start("自动更新完成, 已重新加载插件");
-            })
-            .on("error", (e: Error) => {
-                logger.warn("安装失败:" + e.message);
-            })
+        if(fs.existsSync(unzip7zPath)) {
+            //存在7za.exe 使用7z解压
+            UpdateManager.unzipBy7z(file, onClose);
+        }
+        else {
+            //不存在 使用unzipper解压
+            UpdateManager.unzipByUnzipper(file, onClose);
+        }
     }
 
     //下载
