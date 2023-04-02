@@ -9,6 +9,7 @@ import Players from "../common/Players";
 import Pos3D from "../model/Pos3D";
 import StrFactory from "../util/StrFactory";
 import { resolve } from "path";
+import BlockType from "../model/BlockType";
 
 export default class FillManager {
     public static async ergod(player: Player, playerData: PlayerData, areas: Areas, index: number, total: number, cmdCallback: (yBottom: number, yTop: number, area: Area3D) => boolean, overCallback: (warn: number) => void) {
@@ -61,12 +62,12 @@ export default class FillManager {
         return;
     }
 
-    public static soildFill(player: Player, playerData: PlayerData, targetArea: Area3D, blockName1: string, tileData1: number, blockName2: string, tileData2: number | "", mod: string, overCallback: () => void) {
+    public static soildFill(player: Player, playerData: PlayerData, targetArea: Area3D, blockTypeA: BlockType, blockTypeB: BlockType, mod: string, overCallback: () => void) {
         let st = new Structure(Area3D.fromArea3D(targetArea));
         StructureManager.undoSave(player, playerData, [st], () => {
             FillManager.ergod(player, playerData, st.getAreas(), 0, 1,
                 (yBottom: number, yTop: number, area: Area3D) => {
-                    return Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} ${blockName1} ${tileData1} ${mod} ${blockName2} ${tileData2}`, false).success;
+                    return Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} ${blockTypeA.toString()} ${mod} ${blockTypeB.toString()}`, false).success;
                 },
                 (warn: number) => {
                     if (warn != 0) player.sendText(StrFactory.cmdWarn(`警告: 检测到 ${warn} 次填充失败\n原因: 填充区域与被填充区域相同, 或填充执行失败\n前者可忽略。若为后者, 可在配置文件中增加等待时间(fillWaitTime)来避免错误`))
@@ -77,7 +78,7 @@ export default class FillManager {
         });
     }
 
-    public static fillOutside(player: Player, playerData: PlayerData, tArea: Area3D, blockName1: string, tileData1: number, isHollow: boolean, overCallback: Function) {
+    public static fillOutside(player: Player, playerData: PlayerData, tArea: Area3D, blockTypeA: BlockType, isHollow: boolean, overCallback: Function) {
         let sts: Array<Structure> = [];
         let a = Area3D.fromArea3D(tArea);
         sts.push(new Structure(new Area3D(new Pos3D(a.start.x, a.start.y, a.start.z, a.start.dimid), new Pos3D(a.start.x, a.end.y, a.end.z, a.start.dimid))));
@@ -100,10 +101,10 @@ export default class FillManager {
             for (let i = 0; i < sts.length; i++) {
                 await FillManager.ergod(player, playerData, sts[i].getAreas(), i, sts.length, (yBottom: number, yTop: number, area: Area3D) => {
                     if (i == 6) {
-                        return Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} air 0`, false).success;
+                        return Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} air`, false).success;
                     }
                     else {
-                        return Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} ${blockName1} ${tileData1}`, false).success;
+                        return Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} ${blockTypeA.toString()}`, false).success;
                     }
                 }, (w: number) => {
                     warn += w;

@@ -9,6 +9,7 @@ import StrFactory from "../util/StrFactory";
 import NBTManager from "./NBTManager";
 import { Complex, Data } from "../type/Structure";
 import { Matrix3D, Transform3 } from "../util/SimpleMatrix";
+import { FileMode } from "../type/Common";
 
 export default class StructureManager {
     public static STRUCT_OPN_MOD = {
@@ -268,7 +269,8 @@ export default class StructureManager {
         for (let x = 0; x < st.xSize; x++) {
             tempArr = [];
             for (let z = 0; z < st.zSize; z++) {
-                bnbt = new File(NBTManager.PATH + `/${sid + "_" + x + "_" + z}.mcstructure`, 0, true)
+                //@ts-ignore
+                bnbt = new File(NBTManager.PATH + `/${sid + "_" + x + "_" + z}.mcstructure`, FileMode.ReadMode, true)
                     .readAllSync();
                 //@ts-ignore
                 tempArr.push(NBT.parseBinaryNBT(bnbt));

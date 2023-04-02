@@ -27,7 +27,7 @@ export default class BasicTranslOperation {
             });
             //清空原位置
             FillManager.ergod(player, playerData, st1.getAreas(), 0, 1, (yBottom: number, yTop: number, area: Area3D) => {
-                return Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} air 0`, false).success;
+                return Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} air`, false).success;
             }, (warn: number) => {
                 if (warn != 0) player.sendText(StrFactory.cmdWarn(`警告: 检测到 ${warn} 次填充失败\n原因: 填充区域与被填充区域相同, 或填充执行失败\n前者可忽略。若为后者, 可在配置文件中增加等待时间(fillWaitTime)来避免错误`))
 
