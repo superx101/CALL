@@ -1,5 +1,6 @@
 import Config from "../common/Config";
 import PlayerData from "../model/PlayerData";
+import { FileMode } from "../type/Common";
 import StrFactory from "../util/StrFactory";
 import ShapeOperation from "./ShapeOperation";
 
@@ -9,7 +10,8 @@ export default class HelpOperation {
     }
 
     public static readFile() {
-        let file = new File(Config.CONFIG + "/help.json", 0, false);
+        //@ts-ignore
+        let file = new File(Config.CONFIG + "/help.json", FileMode.ReadMode, false);
         let help = JSON.parse(file.readAllSync() as string);
         let pkgs = ShapeOperation.getPkgs();
         Object.keys(pkgs).forEach(pkgName => {

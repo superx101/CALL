@@ -2,13 +2,13 @@
 对选区的直接操作，需要选择一个选区，不然无法执行
 ## 填充 `fill`
 CALL中的填充与原版填充相同，填充分为：实心、空心，空心（保留内部），但CALL的填充不限制方块总数。  
-若使用菜单填充，则CALL从您的物品栏自动选择方块材质与特殊值
+若使用菜单填充，则CALL从您的物品栏自动选择方块材质与状态值
 #### 指令
 
-> /call \<fill | fi :enum\> \<block :block\> \[tileData :int\] [hollow | outline | null | ho | ou | nu :enum] 
+> /call \<fill | fi :enum\> \<block :block\> \[states :string\] [hollow | outline | null | ho | ou | nu :enum] 
 
 - `block`：要填充的方块名称
-- `tileData`：要填充的方块特殊值，缺省则为0
+- `states`：要填充的方块状态值，缺省则为空
 - `hollow | outline | null | ho | ou | nu`：缺省则为null  
 &emsp;&emsp;`hollow | ho`：空心  
 &emsp;&emsp;`outline | ou`：空心（保留内部）  
@@ -24,12 +24,12 @@ CALL中的填充与原版填充相同，填充分为：实心、空心，空心�
 指令一种方块替换选区内另一种方块
 #### 指令
 
-> /call \<replace | re :enum\> \<blockA :block\>  \<tileDataA :int\> \<blockB :block\> \<tileDataB :int\>
+> /call \<replace | re :enum\> \<blockA :block\>  \<statesA :string\> \<blockB :block\> \<statesB :string\>
 
 - `blockA`：方块种类  
-- `tileDataA`：方块特殊值  
+- `statesA`：方块状态值  
 - `blockB`：被替换的方块种类  
-- `tileDataB`：被替换的方块特殊值  
+- `statesB`：被替换的方块状态值  
 
 ## 平移 `move`
 将整个选区内容平移到另一点指定的区域，但选区位置不变，还是为未平移之前的选区  

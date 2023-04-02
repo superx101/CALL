@@ -151,7 +151,8 @@ export default class ExportManager {
     }
 
     public static writeFile(text: string | ByteBuffer, name: string, type: string, isBinary: boolean): boolean {
-        let file = new File(`${Config.EXPORT}/${name}.${type}`, FileMode.WriteMode as number, isBinary);
+        // @ts-ignore
+        let file = new File(`${Config.EXPORT}/${name}.${type}`, FileMode.WriteMode, isBinary);
         let res = file.writeSync(text);
         file.close();
         return res;

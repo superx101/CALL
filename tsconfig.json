@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "nodejs/CALL",
+    "outDir": "nodejs/call",
     "rootDir": "./",
     "target": "ES6",
     "lib": ["ES2021"],
@@ -13,8 +13,5 @@
     "src/**/*",
     "bin/**/*",
     "app.ts"
-  ],
-  "exclude": [
-    "nodejs/CALL"
   ]
 }

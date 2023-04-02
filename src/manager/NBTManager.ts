@@ -14,21 +14,24 @@ export default class NBTManager {
         let start = mc.newIntPos(area.start.x, area.start.y, area.start.z, area.start.dimid);
         let end = mc.newIntPos(area.end.x, area.end.y, area.end.z, area.end.dimid);
         let comp = mc.getStructure(start, end, ignoreBlocks, ignoreEntities);
-        let file = new File(NBTManager.PATH + `/${saveid}.mcstructure`, FileMode.WriteMode as number, true);
+        //@ts-ignore
+        let file = new File(NBTManager.PATH + `/${saveid}.mcstructure`, FileMode.WriteMode, true);
         file.write(comp.toBinaryNBT(), () => {
             file.close();
         });
     }
 
     public static saveFromNBT(saveid: string, comp: NbtCompound): boolean {
-        let file = new File(NBTManager.PATH + `/${saveid}.mcstructure`, FileMode.WriteMode as number, true);
+        //@ts-ignore
+        let file = new File(NBTManager.PATH + `/${saveid}.mcstructure`, FileMode.WriteMode, true);
         let res = file.writeSync(comp.toBinaryNBT());
         file.close();
         return res;
     }
 
     public static load(player: Player, saveid: string, pos: Pos3D, mirror = "None", rataion = 0) {
-        let file = new File(NBTManager.PATH + `/${saveid}.mcstructure`, FileMode.ReadMode as number, true);
+        //@ts-ignore
+        let file = new File(NBTManager.PATH + `/${saveid}.mcstructure`, FileMode.ReadMode, true);
         let bnbt = file.readAllSync();
         //@ts-ignore
         let nbtObj = NBT.parseBinaryNBT(bnbt);

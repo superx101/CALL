@@ -1,5 +1,6 @@
 import Players from "../common/Players";
 import Area3D from "../model/Area3D";
+import BlockType from "../model/BlockType";
 import Pos3D from "../model/Pos3D";
 import AreaOperation from "../operation/AreaOperation";
 import StrFactory from "../util/StrFactory";
@@ -92,19 +93,19 @@ export default class OperationForm extends Form {
     private fillForm(mode: number) {
         const player = this.player;
 
-        function run(typeA: string, tileDataA: number, typeB: string, tileDataB: number) {
+        function run(blockTypeA: BlockType, blockTypeB: BlockType) {
             switch (mode) {
                 case OperationForm.MODE.NULL:
-                    Players.silenceCmd(player, `ca fi ${typeA} ${tileDataA} nu`);
+                    Players.silenceCmd(player, `ca fi ${blockTypeA.toFormatString()} nu`);
                     break;
                 case OperationForm.MODE.HOLLOW:
-                    Players.silenceCmd(player, `ca fi ${typeA} ${tileDataA} ho`);
+                    Players.silenceCmd(player, `ca fi ${blockTypeA.toFormatString()} ho`);
                     break;
                 case OperationForm.MODE.OUTLINE:
-                    Players.silenceCmd(player, `ca fi ${typeA} ${tileDataA} ou`);
+                    Players.silenceCmd(player, `ca fi ${blockTypeA.toFormatString()}" ou`);
                     break;
                 case OperationForm.MODE.REPLACE:
-                    Players.silenceCmd(player, `ca re ${typeA} ${tileDataA} ${typeB} ${tileDataB}`);
+                    Players.silenceCmd(player, `ca re ${blockTypeA.toFormatString()} ${blockTypeB.toFormatString()}`);
                     break;
             }
         }
@@ -112,26 +113,18 @@ export default class OperationForm extends Form {
         //是否开启材质选择模式
         if (this.playerData.settings.textureSelectorMode) {
             //无选择默认为空气
-            let typeA: string, tileDataA: number;
-            let typeB: string, tileDataB: number;
+            let typeA: string, statesA: string;
+            let typeB: string, statesB: string;
             if(this.playerData.settings.texture.a != null) {
                 typeA = this.playerData.settings.texture.a.type;
-                tileDataA = this.playerData.settings.texture.a.tileData;
-            }
-            else {
-                typeA = "air";
-                tileDataA = 0;
+                statesA = this.playerData.settings.texture.a.states;
             }
             if(this.playerData.settings.texture.b != null) {
                 typeB = this.playerData.settings.texture.b.type;
-                tileDataB = this.playerData.settings.texture.b.tileData;
-            }
-            else {
-                typeB = "air";
-                tileDataB = 0;
+                statesB = this.playerData.settings.texture.b.states;
             }
             // 直接执行
-            run(typeA, tileDataA, typeB, tileDataB);
+            run(new BlockType(typeA, statesA), new BlockType(typeB, statesB));
         }
         else {
             let con = this.player.getInventory();
@@ -139,29 +132,23 @@ export default class OperationForm extends Form {
             let ib = this.settings.barReplaced;
             let showA = ia + 1;
             let showB = ib + 1;
-            let itemA: any = con.getItem(ia);
-            let itemB: any = con.getItem(ib);
-            if (itemA.isNull() || !itemA.isBlock) {
-                itemA = { type: "minecraft:air", aux: 0 };
-            }
-            if (itemB.isNull() || !itemB.isBlock) {
-                itemB = { type: "minecraft:air", aux: 0 };
-            }
+            let blockTypeA = BlockType.generateFromItem(con.getItem(ia))
+            let blockTypeB = BlockType.generateFromItem(con.getItem(ib))
 
             let form = mc.newCustomForm()
                 .setTitle("方块材质")
-                .addInput(`方块材质与特殊值\n  默认从物品栏第[${showA}]号选择方块`, "空格分割", `${itemA.type} ${itemA.aux}`)
+                .addInput(`方块材质与状态值\n  默认从物品栏第[${showA}]号选择方块`, "空格分割", `${blockTypeA.toString()}`)
             if (mode == OperationForm.MODE.REPLACE) {
-                form.addInput(`被替换方块材质与特殊值\n  默认从物品栏第[${showB}]号选择方块`, "空格分割", `${itemB.type} ${itemB.aux}`)
+                form.addInput(`被替换方块材质与状态值\n  默认从物品栏第[${showB}]号选择方块`, "空格分割", `${blockTypeB.toString()}`)
             }
             this.player.sendForm(form, (pl, data) => {
                 if (data == null) { this.sendForm(); return; }
                 let blockA = data[0].split(" ");
-                let blockB = ["air", 0];
+                let blockB = ["air", ""];
                 if (mode == OperationForm.MODE.REPLACE)
                     blockB = data[1].split(" ");
 
-                run(blockA[0], blockA[1], blockB[0] as string, blockB[1] as number);
+                run(new BlockType(blockA[0], blockA[1]), new BlockType(blockB[0] as string, blockB[1] as string));
             });
         }
     }

@@ -32,8 +32,8 @@ export default class ImportManager {
         switch (file.ext.substring(1)) {
             case Type.MCSTRUCTURE:
                 type = Type.MCSTRUCTURE;
-
-                let f = new File(`${Config.IMPORT}/${file.base}`, FileMode.ReadMode as number, true)
+                //@ts-ignore
+                let f = new File(`${Config.IMPORT}/${file.base}`, FileMode.ReadMode, true)
                 data = f.readAllSync();
                 f.close();
                 break;

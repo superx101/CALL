@@ -230,7 +230,7 @@ function command() {
     //public
     cmd.mandatory("player", ParamType.Player, "", "player_man");
     cmd.mandatory("id", ParamType.String, "id", "id_man");
-    cmd.mandatory("tileData", ParamType.Int, "", "tileData_man");
+    cmd.mandatory("states", ParamType.String, "", "states_man");
     cmd.mandatory("index", ParamType.Int, "", "index_man");
     cmd.mandatory("block", ParamType.Block, "", "block_man");
     cmd.mandatory("key", ParamType.String, "", "key_man");
@@ -238,7 +238,7 @@ function command() {
     cmd.mandatory("intPos", ParamType.BlockPos, "", "intPos_man");
     cmd.mandatory("nbt", ParamType.JsonValue, "", "nbt_man");
     cmd.mandatory("xuid", ParamType.String, "", "xuid_man");
-    cmd.optional("TileData", ParamType.Int, "", "tileData_opt");
+    cmd.optional("States", ParamType.String, "", "states_opt");
     cmd.optional("IntPos", ParamType.BlockPos, "", "intPos_opt");
     cmd.optional("AxisPos", ParamType.BlockPos, "", "axisPos_opt");
     cmd.optional("Name", ParamType.String, "", "name_opt");
@@ -285,7 +285,7 @@ function command() {
     cmd.setEnum("fillMode", ["hollow", "outline", "null", "ho", "ou", "nu"]);
     cmd.mandatory("action", ParamType.Enum, "fill", "fill_man", 1);
     cmd.optional("FillMode", ParamType.Enum, "fillMode", "fillMode_opt", 1);
-    cmd.overload(["fill_man", "block_man", "tileData_opt", "fillMode_opt"]);
+    cmd.overload(["fill_man", "block_man", "states_opt", "fillMode_opt"]);
 
     //clear
     cmd.setEnum("clear", ["clear", "cl"]);
@@ -296,8 +296,8 @@ function command() {
     cmd.setEnum("replace", ["replace", "re"]);
     cmd.mandatory("action", ParamType.Enum, "replace", "replace_man", 1);
     cmd.mandatory("block2", ParamType.Block, "", "block2_man");
-    cmd.optional("tileData2", ParamType.Int, "", "tileData2_opt");
-    cmd.overload(["replace_man", "block_man", "tileData_man", "block2_man", "tileData2_opt"])
+    cmd.optional("states2", ParamType.String, "", "states2_opt");
+    cmd.overload(["replace_man", "block_man", "states_man", "block2_man", "states2_opt"])
 
     //save
     cmd.setEnum("save", ["save", "sa"]);
@@ -521,7 +521,7 @@ function listener() {
             setTimeout(() => {
                 clickMap.set(player.xuid, false);
             }, 200);
-
+            
             //业务
             if (Players.hasPermission(player) && EnableOperation.isEnable(player)) {
                 let playerData = Players.getData(player.xuid);
@@ -578,10 +578,10 @@ function clock() {
 
 function checkVersion() {
     if (!ll.requireVersion(Config.LL_MINVERSION.major, Config.LL_MINVERSION.minor, Config.LL_MINVERSION.revision)) {
-        logger.warn(`当前ll版本为${ll.major}.${ll.minor}.${ll.revision}, 小于当前CALL支持的LL最小版本${Config.LL_MINVERSION.toString()}, 若出现部分功能失效请更新ll(LiteLoader)`)
+        logger.warn(`当前LL版本为${ll.major}.${ll.minor}.${ll.revision}, 小于当前CALL支持的LL最小版本${Config.LL_MINVERSION.toString()}, 若出现部分功能失效请更新LL(LiteLoaderBDS)`)
     }
     if (Config.ISOLDVERSION) {
-        logger.warn(`当前BDS版本为:${Config.SERVER_VERSION.toString()}, CALL-0.2.0后主要适配1.19.50即以上版本, 已不做旧版兼容, 若使用中出现问题请安装CALL-0.1.2`);
+        logger.warn(`当前BDS版本为:${Config.SERVER_VERSION.toString()}, CALL-1.1.5后主要适配1.19.70即以上版本, 已不与旧版兼容, 若使用中出现问题请安装旧版`);
     }
 }
 

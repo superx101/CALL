@@ -17,11 +17,11 @@ export interface Settings {
     texture: {
         a: {
             type: string,
-            tileData: number,
+            states: string,
         },
         b: {
             type: string,
-            tileData: number,
+            states: string,
         },
     },
     items: {
