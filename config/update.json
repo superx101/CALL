@@ -323,5 +323,16 @@
             "path": "./plugins/CALL/version",
             "value": "1.1.5"
         }
+    ],
+    "1.1.6": [
+        {
+            "type": "delete",
+            "path": "./plugins/CALL/version"
+        },
+        {
+            "type": "create",
+            "path": "./plugins/CALL/version",
+            "value": "1.1.6"
+        }
     ]
 }
