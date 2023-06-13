@@ -26,14 +26,16 @@ export default class Activity {
 
     public static onDestroy(player: Player) {
         let playerData = Players.getData(player.xuid);
-        playerData.saveAll();
-        Players.dataMap.delete(player.xuid);
-        if (!playerData.settings.saveUndo) {
-            StructureManager.clearUndoList(player);
-            StructureManager.clearRedoList(player);
-        }
-        if (!playerData.settings.saveCopy) {
-            StructureManager.clearCopy(player);
+        if(playerData != null) {
+            playerData.saveAll();
+            Players.dataMap.delete(player.xuid);
+            if (!playerData.settings.saveUndo) {
+                StructureManager.clearUndoList(player);
+                StructureManager.clearRedoList(player);
+            }
+            if (!playerData.settings.saveCopy) {
+                StructureManager.clearCopy(player);
+            }
         }
     }
 }
