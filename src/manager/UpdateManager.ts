@@ -178,6 +178,11 @@ export default class UpdateManager {
             } else {
                 throw new Error("请求失败, 请检查网络");
             }
+        }).catch((reason) => {
+            //debug
+            if (Config.get(Config.GLOBAL, "debugMod", false)) {
+                logger.warn(`检查更新失败,请重试: ` + reason);
+            }
         });
     }
 
