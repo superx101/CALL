@@ -1,10 +1,10 @@
-import Translator from "./Translator";
+import Tr from "./Translator";
 
 const tag = "CALL-";
 
 export default class StrFactory {
     public static item_t(lang: string, key: string, ...args: any) {
-        return Translator.t(Translator.ITEM, lang, key + ".name", args);
+        return Tr._(lang, `item.${key}.name`, args);
     }
 
     public static isLegalName(str: string) {
