@@ -30,9 +30,6 @@
         "outputCmd": {
             "type": "boolean"
         },
-        "oldCommandType": {
-            "type": "boolean"
-        },
         "maxSaveStructure": {
             "type": "number",
             "min": 0,
