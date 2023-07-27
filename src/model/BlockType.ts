@@ -10,24 +10,30 @@ export default class BlockType {
         else this.states = states;
     }
 
-    private static nbtToStates(comp: NbtCompound): string {
-        let res: any = {};
+    public static nbtToStates(comp: NbtCompound): string {
         let keys = comp.getKeys();
+        let str = "";
 
-        if(keys.length == 0) return '';
+        if(keys.length == 0) return '[]';
 
         for(let key of keys) {
             let data = comp.getData(key);
+            str += `"${key}"=`;
             switch (comp.getTypeOf(key)) {
                 case NBT.Byte:
-                    res[key] = (data == 0 ? false : true);
+                    str += data ? 'true' : 'false';
+                    break;
+                case NBT.String:
+                    str += `"${data}"`;
                     break;
                 default:
-                    res[key] = data;
+                    str += data;
                     break;
-            } 
+            }
+            str += ',';
         }
-        return '[' + JSON.stringify(res).slice(1, -1) + ']';
+
+        return '[' + str.slice(0, -1) + ']';
     }
 
     public static generateFromBlock(block: LLSE_Block): BlockType {
