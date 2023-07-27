@@ -1,35 +1,35 @@
 //LiteLoaderScript Dev Helper
-/// <reference path="E:\Mincraft_File\bedrock\lib\HelperLib\src/index.d.ts"/> 
+/// <reference path="E:\\Mincraft_File\\bedrock\\lib\\HelperLib\\src/index.d.ts"/> 
 
-import Activity from "./src/activity/Activity";
-import Config from "./src/common/Config";
-import Players from "./src/common/Players";
-import AreaDisplayerManager from "./src/manager/AreaDisplayerManager";
-import UpdateManager from "./src/manager/UpdateManager";
-import AreaOperation from "./src/operation/AreaOperation";
-import BasicTranslOperation from "./src/operation/BasicTranslOperation";
-import BlockEditerOperation from "./src/operation/BlockEditerOperation";
-import ChunkOperation from "./src/operation/ChunkOperation";
-import EnableOperation from "./src/operation/EnableOperation";
-import ExportOperation from "./src/operation/ExportOperation";
-import FillOperation from "./src/operation/FillOperation";
-import HelpOperation from "./src/operation/HelpOperation";
-import ImportOperation from "./src/operation/ImportOperation";
-import MenuOperation from "./src/operation/MenuOperation";
-import PermissionOperation from "./src/operation/PermissionOperation";
-import ReloadOperation from "./src/operation/ReloadOperation";
-import SettingsOperation from "./src/operation/SettingsOperation";
-import ShapeOperation from "./src/operation/ShapeOperation";
-import StructureOperation from "./src/operation/StructureOperation";
-import TextureOperation from "./src/operation/TextureOperation";
-import ToolOperation from "./src/operation/ToolOperation";
-import UpdateOperation from "./src/operation/UpdateOperation";
-import ShapeLoader from "./src/plugin/ShapeLoader";
-import { Listener } from "./src/type/Common";
-import { Warn } from "./src/type/Error";
-import { Pos } from "./src/type/Pos";
-import { ToolType } from "./src/type/Tool";
-import StrFactory from "./src/util/StrFactory";
+import Activity from "./activity/Activity";
+import Config from "./common/Config";
+import Players from "./common/Players";
+import AreaDisplayerManager from "./manager/AreaDisplayerManager";
+import UpdateManager from "./manager/UpdateManager";
+import AreaOperation from "./operation/AreaOperation";
+import BasicTranslOperation from "./operation/BasicTranslOperation";
+import BlockEditerOperation from "./operation/BlockEditerOperation";
+import ChunkOperation from "./operation/ChunkOperation";
+import EnableOperation from "./operation/EnableOperation";
+import ExportOperation from "./operation/ExportOperation";
+import FillOperation from "./operation/FillOperation";
+import HelpOperation from "./operation/HelpOperation";
+import ImportOperation from "./operation/ImportOperation";
+import MenuOperation from "./operation/MenuOperation";
+import PermissionOperation from "./operation/PermissionOperation";
+import ReloadOperation from "./operation/ReloadOperation";
+import SettingsOperation from "./operation/SettingsOperation";
+import ShapeOperation from "./operation/ShapeOperation";
+import StructureOperation from "./operation/StructureOperation";
+import TextureOperation from "./operation/TextureOperation";
+import ToolOperation from "./operation/ToolOperation";
+import UpdateOperation from "./operation/UpdateOperation";
+import ShapeLoader from "./plugin/ShapeLoader";
+import { Listener } from "./type/Common";
+import { Warn } from "./type/Error";
+import { Pos } from "./type/Pos";
+import { ToolType } from "./type/Tool";
+import StrFactory from "./util/StrFactory";
 
 function displayLogo(show: boolean) {
     if (show) {
@@ -497,6 +497,7 @@ function command() {
 }
 
 function listener() {
+    log(11111)
     mc.listen(Listener.Join, (player) => {
         if (Players.hasPermission(player)) {
             Activity.onCreate(player);
@@ -515,6 +516,8 @@ function listener() {
 
     mc.listen(Listener.UseItemOn, (player, item, block, side, pos: Pos) => {
         // 防抖
+        log(2222)
+        log("xuid", player.xuid)
         const click = clickMap.get(player.xuid);
         if (!click) {
             clickMap.set(player.xuid, true);
@@ -631,7 +634,7 @@ function myDebug() {
     })
 }
 
-function main(debug: boolean) {
+export function main(debug: boolean) {
     if (Config.get(Config.GLOBAL, "enable")) {
         if (init()) {
             clock();
@@ -644,4 +647,3 @@ function main(debug: boolean) {
     }
 }
 
-main(false);
