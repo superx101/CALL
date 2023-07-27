@@ -1,6 +1,3 @@
-//LiteLoaderScript Dev Helper
-/// <reference path="E:\\Mincraft_File\\bedrock\\lib\\HelperLib\\src/index.d.ts"/> 
-
 import Activity from "./activity/Activity";
 import Config from "./common/Config";
 import Players from "./common/Players";
@@ -453,16 +450,16 @@ function command() {
 
     //import
     cmd.setEnum("import", ["import", "im"]);
-    cmd.mandatory("action", ParamType.Enum,  "import", "import_man");
-    cmd.mandatory("file", ParamType.String,  "", "file_man");
-    cmd.optional("includeEntity", ParamType.Bool,  "", "includeEntity_opt");
+    cmd.mandatory("action", ParamType.Enum, "import", "import_man");
+    cmd.mandatory("file", ParamType.String, "", "file_man");
+    cmd.optional("includeEntity", ParamType.Bool, "", "includeEntity_opt");
     cmd.overload(["import_man", "file_man", "playerName_man", "includeEntity_opt", "name_opt"]);
 
     //export
     cmd.setEnum("export", ["export", "ex"]);
     cmd.setEnum("fileType", ["mcstructure"])
-    cmd.mandatory("action", ParamType.Enum,  "export", "export_man");
-    cmd.mandatory("type", ParamType.Enum,  "fileType", "fileType_man");
+    cmd.mandatory("action", ParamType.Enum, "export", "export_man");
+    cmd.mandatory("type", ParamType.Enum, "fileType", "fileType_man");
     cmd.overload(["export_man", "fileType_man", "id_man", "includeEntity_opt", "name_opt"]);
 
     // cmd.setEnum("brush", ["brush", "br"]);
@@ -480,9 +477,9 @@ function command() {
             else if (ori.type == OriginType.Server) {
                 command_consoleCallback(output, res);
             }
-        
+
         } catch (e) {
-            if(e instanceof Warn) {
+            if (e instanceof Warn) {
                 output.error(StrFactory.cmdWarn(e.message));
             }
             else {
@@ -497,7 +494,6 @@ function command() {
 }
 
 function listener() {
-    log(11111)
     mc.listen(Listener.Join, (player) => {
         if (Players.hasPermission(player)) {
             Activity.onCreate(player);
@@ -516,15 +512,13 @@ function listener() {
 
     mc.listen(Listener.UseItemOn, (player, item, block, side, pos: Pos) => {
         // 防抖
-        log(2222)
-        log("xuid", player.xuid)
         const click = clickMap.get(player.xuid);
         if (!click) {
             clickMap.set(player.xuid, true);
             setTimeout(() => {
                 clickMap.set(player.xuid, false);
             }, 200);
-            
+
             //业务
             if (Players.hasPermission(player) && EnableOperation.isEnable(player)) {
                 let playerData = Players.getData(player.xuid);
@@ -620,30 +614,11 @@ function loadPlugins() {
     ShapeLoader.start();
 }
 
-function myDebug() {
-    let path = Config.ROOT + "/test";
-    //@ts-ignore
-    File.getFilesList(path).forEach(file => {
-        if (file.endsWith("js")) {
-            //@ts-ignore
-            let code = File.readFrom(`${path}/${file}`);
-            if (code != null) {
-                ll.eval(code);
-            }
-        }
-    })
-}
-
-export function main(debug: boolean) {
-    if (Config.get(Config.GLOBAL, "enable")) {
-        if (init()) {
-            clock();
-            displayLogo(Config.get(Config.GLOBAL, "displayLogo"));
-            loadPlugins();
-        }
-        if (debug) {
-            myDebug();
-        }
+export function main() {
+    if (Config.get(Config.GLOBAL, "enable") && init()) {
+        clock();
+        displayLogo(Config.get(Config.GLOBAL, "displayLogo"));
+        loadPlugins();
     }
 }
 
