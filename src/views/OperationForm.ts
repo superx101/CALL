@@ -102,7 +102,7 @@ export default class OperationForm extends Form {
                     Players.silenceCmd(player, `ca fi ${blockTypeA.toFormatString()} ho`);
                     break;
                 case OperationForm.MODE.OUTLINE:
-                    Players.silenceCmd(player, `ca fi ${blockTypeA.toFormatString()}" ou`);
+                    Players.silenceCmd(player, `ca fi ${blockTypeA.toFormatString()} ou`);
                     break;
                 case OperationForm.MODE.REPLACE:
                     Players.silenceCmd(player, `ca re ${blockTypeA.toFormatString()} ${blockTypeB.toFormatString()}`);
