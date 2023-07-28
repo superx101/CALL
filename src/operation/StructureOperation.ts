@@ -70,16 +70,16 @@ export default class StructureOperation {
         });
     }
 
-    public static load(player: Player, output: CommandOutput, playerData: PlayerData, res: { id: string; intPos: IntPos; Mirror: string; Degrees: string; IncludeEntities: boolean; IncludeBlocks: boolean; Waterlogged: boolean; Integrity: number; Seed: string; }) {
+    public static load(player: Player, output: CommandOutput, playerData: PlayerData, res: { id: string; IntPos: IntPos; Mirror: string; Degrees: string; IncludeEntities: boolean; IncludeBlocks: boolean; Waterlogged: boolean; Integrity: number; Seed: string; }) {
         let r = StructureOperation.findId(res.id, player);
         let st = Config.get(Config.STRUCTURES, `private.${r.xuid}.saveList.${r.structid}`);
         let structure = new Structure(st.area, st.name, st.isPublic);
         let pos: Pos3D;
-        if (res.intPos == null) {
+        if (res.IntPos == null) {
             pos = Pos3D.fromPos(player.pos).calibration().floor();
         }
         else {
-            pos = Pos3D.fromPos(res.intPos);
+            pos = Pos3D.fromPos(res.IntPos);
         }
         StructureOperation.checkTargetStruct(st.area, pos, player);
         let targetArea = Area3D.fromArea3D(st.area)
