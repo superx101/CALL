@@ -3,6 +3,7 @@ import ShapeManager from "../manager/ShapeManager";
 import PlayerData from "../model/PlayerData";
 import ShapeOperation from "../operation/ShapeOperation";
 import { data, pkgs } from "../type/Shape";
+import Tr from "../util/Translator";
 import Form from "./Form";
 import Menu from "./Menu";
 
@@ -20,7 +21,7 @@ export default class ShapeForm extends Form {
         let form = mc.newSimpleForm()
         .setTitle(`${data.name} ${pkgName}`)
         .setContent(data.introduction)
-        .addButton("返回上一级", "")
+        .addButton(Tr._(player.langCode, "dynamic.ShapeForm.shapeForm.s0"), "")
 
         data.shapeNames.forEach((name: string, i: number)=>{
             form.addButton(name, data.shapeImages[i]);
@@ -41,9 +42,9 @@ export default class ShapeForm extends Form {
 
     public override sendForm(opts: Array<number>) {
         let form = mc.newSimpleForm()
-            .setTitle("生成形状")
-            .setContent("选择形状包")
-            .addButton("返回上一级", "")
+            .setTitle(Tr._(this.player.langCode, "dynamic.ShapeForm.sendForm.s1"))
+            .setContent(Tr._(this.player.langCode, "dynamic.ShapeForm.sendForm.s2"))
+            .addButton(Tr._(this.player.langCode, "dynamic.ShapeForm.shapeForm.s0"), "")
 
         let datas = ShapeOperation.getPkgs();
         let ids = Object.keys(datas);

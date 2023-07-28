@@ -2,6 +2,7 @@ import Players from "../common/Players";
 import Pos3D from "../model/Pos3D";
 import StructureOperation from "../operation/StructureOperation";
 import StrFactory from "../util/StrFactory";
+import Tr from "../util/Translator";
 import Form from "./Form";
 import Menu from "./Menu";
 
@@ -36,10 +37,10 @@ export default class StructureForm extends Form {
 
     public override sendForm(opts: Array<number> = []) {
         let form = mc.newSimpleForm()
-            .setTitle("保存的结构")
-            .addButton("返回上一级", "")
-            .addButton("公开的结构", "textures/ui/backup_noline.png")
-            .addButton("我的结构", "textures/ui/icon_steve")
+            .setTitle(Tr._(this.player.langCode, "dynamic.StructureForm.sendForm.s0"))
+            .addButton(Tr._(this.player.langCode, "dynamic.StructureForm.sendForm.s1"), "")
+            .addButton(Tr._(this.player.langCode, "dynamic.StructureForm.sendForm.s2"), "textures/ui/backup_noline.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.StructureForm.sendForm.s3"), "textures/ui/icon_steve")
 
         if (opts.length > 0) {
             this.opt(opts);
@@ -55,15 +56,15 @@ export default class StructureForm extends Form {
     private loadOpertionForm(stData: Data, callBack: ()=> void) {
         let plPos = Pos3D.fromPos(this.player.pos).calibration().floor();
         let degreeArr = ["0", "90", "180", "270"];
-        let mirrorArr = ["无", "x", "z", "xz"];
+        let mirrorArr = [Tr._(this.player.langCode, "dynamic.StructureForm.loadOpertionForm.s4"), "x", "z", "xz"];
         let mirrorArr_select = ["none", "x", "z", "xz"];
         let form = mc.newCustomForm()
-            .setTitle(`加载结构 ${stData.name} (${data.xuid2name(stData.author)})`)
-            .addLabel("输入坐标 (默认为当前坐标值)")
-            .addInput("x y z", "整数(空格分割)", `${plPos.formatStr()}`)
-            .addStepSlider("旋转角度(顺时针)", degreeArr, 0)
-            .addStepSlider("镜像", mirrorArr, 0)
-            .addLabel("注：镜像旋转同时存在时，先镜像再旋转")
+            .setTitle(Tr._(this.player.langCode, "dynamic.StructureForm.loadOpertionForm.s5", stData.name, data.xuid2name(stData.author)))
+            .addLabel(Tr._(this.player.langCode, "dynamic.StructureForm.loadOpertionForm.s6"))
+            .addInput("x y z", Tr._(this.player.langCode, "dynamic.StructureForm.loadOpertionForm.s7"), `${plPos.formatStr()}`)
+            .addStepSlider(Tr._(this.player.langCode, "dynamic.StructureForm.loadOpertionForm.s8"), degreeArr, 0)
+            .addStepSlider(Tr._(this.player.langCode, "dynamic.StructureForm.loadOpertionForm.s9"), mirrorArr, 0)
+            .addLabel(Tr._(this.player.langCode, "dynamic.StructureForm.loadOpertionForm.s10"))
 
         this.player.sendForm(form, (pl, data) => {
             if (data == null) {callBack(); return ;}
@@ -81,13 +82,13 @@ export default class StructureForm extends Form {
 
     private publicForm() {
         let form = mc.newSimpleForm()
-            .setTitle("公开的结构")
-            .addButton("返回上一级")
+            .setTitle(Tr._(this.player.langCode, "dynamic.StructureForm.sendForm.s2"))
+            .addButton(Tr._(this.player.langCode, "dynamic.StructureForm.sendForm.s1"))
 
         let list = StructureOperation.getSaveList(1, this.player) as Array<Data>;
         //倒序加入
         for (let i = list.length - 1; i >= 0; i--) {
-            form.addButton(`名称: ${list[i].name} 作者: ${data.xuid2name(list[i].author)}\nid: ${list[i].id}`);
+            form.addButton(Tr._(this.player.langCode, "dynamic.StructureForm.publicForm.s13", list[i].name, data.xuid2name(list[i].author), list[i].id));
         }
 
         this.player.sendForm(form, (pl, i) => {
@@ -103,12 +104,12 @@ export default class StructureForm extends Form {
 
     private my_structureForm(data: Data) {
         let form = mc.newSimpleForm()
-            .setTitle(`结构: ${data.name}`)
+            .setTitle(Tr._(this.player.langCode, "dynamic.StructureForm.my_structureForm.s14", data.name))
             .setContent(`id: ${data.id}`)
-            .addButton("返回上一级", "")
-            .addButton("加载结构")
-            .addButton("删除结构")
-            .addButton(`${StrFactory.on_off(data.isPublic, '不公开', '公开')}此结构`);
+            .addButton(Tr._(this.player.langCode, "dynamic.StructureForm.sendForm.s1"), "")
+            .addButton(Tr._(this.player.langCode, "dynamic.StructureForm.my_structureForm.s16"))
+            .addButton(Tr._(this.player.langCode, "dynamic.StructureForm.my_structureForm.s17"))
+            .addButton(Tr._(this.player.langCode, "dynamic.StructureForm.my_structureForm.s18", StrFactory.on_off(data.isPublic, Tr._(this.player.langCode, 'word.unpublic'), Tr._(this.player.langCode,'word.public'))));
 
         this.player.sendForm(form, (pl, i) => {
             switch (i) {
@@ -137,8 +138,8 @@ export default class StructureForm extends Form {
 
     private myForm() {
         let form = mc.newSimpleForm()
-            .setTitle("我的结构")
-            .addButton("返回上一级")
+            .setTitle(Tr._(this.player.langCode, "dynamic.StructureForm.sendForm.s3"))
+            .addButton(Tr._(this.player.langCode, "dynamic.StructureForm.sendForm.s1"))
 
         let list = StructureOperation.getSaveList(0, this.player) as Array<Data>;
         //倒序加入

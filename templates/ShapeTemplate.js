@@ -15,7 +15,7 @@ const SHP = {
             this._state.cmd = true;
             return ll.export(f, EXPORTSAPCE, PKG + CMD);
         } else {
-            throw new Error("请勿重复调用: export_cmd");
+            throw new Error("Please do not repeat call: export_cmd");
         }
     },
     export_form: function (f) {
@@ -23,7 +23,7 @@ const SHP = {
             this._state.form = true;
             return ll.export(f, EXPORTSAPCE, PKG + FORM);
         } else {
-            throw new Error("请勿重复调用: export_form");
+            throw new Error("Please do not repeat call: export_form");
         }
     },
     export_tutorial: function (f) {
@@ -31,7 +31,7 @@ const SHP = {
             this._state.tutorial = true;
             return ll.export(f, EXPORTSAPCE, PKG + TUTORAIL);
         } else {
-            throw new Error("请勿重复调用: export_tutorial");
+            throw new Error("Please do not repeat call: export_tutorial");
         }
     },
     getVersion() {
@@ -59,7 +59,7 @@ const SHP = {
             this._state.register = true;
             this._registerPackage(VERSION ,PKG, name, shapeNames, introduction, shapeImages, icon);
         } else {
-            throw new Error("请勿重复调用: registerPackage");
+            throw new Error("Please do not repeat call: registerPackage");
         }
     },
     listForm: function (player) {
@@ -67,10 +67,10 @@ const SHP = {
     },
     Message: {
         warn: function (player, str, mode = 0) {
-            player.sendText(Format.Gold + `[${PKG}][警告] ` + str, mode);
+            player.sendText(Format.Gold + `[${PKG}][warn] ` + str, mode);
         },
         error: function (player, str, mode = 0) {
-            player.sendText(Format.Red + `[${PKG}][错误] ` + str, mode);
+            player.sendText(Format.Red + `[${PKG}][warn] ` + str, mode);
         },
         info: function (player, str, mode = 0) {
             player.sendText(Format.White + `[${PKG}] ` + str, mode);
@@ -125,6 +125,6 @@ const SHP = {
 }
 Object.keys(SHP).forEach(key => {if(key !== '_state') Object.freeze(SHP[key]); });
 CODE
-if(!SHP._state.cmd) throw new Error("CALL形状包 " + PKG + ": 未使用export_cmd导出指令处理函数");
-if(!SHP._state.form) throw new Error("CALL形状包 " + PKG + ": 未使用export_form导出表单函数");
-if(!SHP._state.tutorial) throw new Error("CALL形状包 " + PKG + ": 未使用export_tutorial导出教程函数");
+if(!SHP._state.cmd) throw new Error("CALL shapePackage " + PKG + ": function not used: export_cmd");
+if(!SHP._state.form) throw new Error("CALL shapePackage " + PKG + ": function not used: export_form");
+if(!SHP._state.tutorial) throw new Error("CALL shapePackage " + PKG + ": function not used: export_tutorial");

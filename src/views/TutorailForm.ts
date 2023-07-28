@@ -1,4 +1,5 @@
 import HelpOperation from "../operation/HelpOperation";
+import Tr from "../util/Translator";
 import Form from "./Form";
 import Menu from "./Menu";
 
@@ -22,11 +23,11 @@ export default class TutorailForm extends Form {
             title = trace[trace.length - 1];
         }
         else {
-            title = "基础教程"
+            title = Tr._(this.player.langCode, "dynamic.TutorailForm.dfsSendForm.s0")
         }
         let form = mc.newSimpleForm()
             .setTitle(title)
-            .addButton(TutorailForm.colorArr[color] + "返回上一级")
+            .addButton(TutorailForm.colorArr[color] + Tr._(this.player.langCode, "dynamic.TutorailForm.dfsSendForm.s1"))
         let arr: any = [];
         if (typeof (node) == "object") {
             Object.keys(node).forEach(v => {

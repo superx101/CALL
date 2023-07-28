@@ -85,7 +85,7 @@ export default class StrFactory {
     public static item(str: string) {
         let arr = str.toLowerCase().split(":");
         if (arr.length > 2) {
-            throw new Error("[StrFactory.item] 字符串格式错误");
+            throw new Error("[StrFactory.item] string formatting error");
         }
         else if (arr.length == 2) {
             return str;

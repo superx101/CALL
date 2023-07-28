@@ -2,6 +2,7 @@ import ShapeManager from "../manager/ShapeManager";
 import PlayerData from "../model/PlayerData";
 import Pos3D from "../model/Pos3D";
 import ShapeLoader from "../plugin/ShapeLoader";
+import Tr from "../util/Translator";
 
 export default class ShapeOperation {
     public static consoleStart(output: CommandOutput) {
@@ -40,7 +41,7 @@ export default class ShapeOperation {
         }
         catch (e) {
             if(ShapeManager.debugMod) {
-                colorLog("Red", `形状包:${pkgName}异常, 原因: ${e}`);
+                colorLog("Red", Tr._c("console.ShapeOperation.sendForm.error", pkgName, e));
             }
         }
     }
@@ -51,13 +52,13 @@ export default class ShapeOperation {
             let get = ll.import(ShapeLoader.EXPORTSAPCE, pkgName + ShapeLoader.TUTORAIL);
             let obj = get();
             if(Object.keys(obj).length == 0) {
-                throw new Error("export_tutorial返回对象为空");
+                throw new Error(Tr._c("console.ShapeOperation.getTutorial.error"));
             }
             return obj;
         }
         catch (e) {
             if(ShapeManager.debugMod) {
-                colorLog("red", `形状包:${pkgName}异常, 原因: ${e}`);
+                colorLog("red", Tr._c("console.ShapeOperation.sendForm.error1", pkgName, e));
             }
             return null;
         }
@@ -76,6 +77,6 @@ export default class ShapeOperation {
         ShapeManager.getList().forEach(pkg => {
             str += pkg + '\n';
         });
-        output.success("成功加载的形状包:\n" + str.substring(-1));
+        output.success(Tr._c("console.ShapeOperation.list.success", str.substring(-1)));
     }
 }

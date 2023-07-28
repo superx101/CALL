@@ -4,6 +4,7 @@ import BlockType from "../model/BlockType";
 import Pos3D from "../model/Pos3D";
 import AreaOperation from "../operation/AreaOperation";
 import StrFactory from "../util/StrFactory";
+import Tr from "../util/Translator";
 import Form from "./Form";
 import Menu from "./Menu";
 
@@ -62,22 +63,22 @@ export default class OperationForm extends Form {
             AreaOperation.hasArea(this.playerData);
         }
         catch (e) {
-            this.player.sendText(StrFactory.cmdErr("未选区, 无法操作"));
+            this.player.sendText(StrFactory.cmdErr(Tr._(this.player.langCode, "dynamic.OperationForm.sendForm.s0")));
             return;
         }
 
         let form = mc.newSimpleForm()
-            .setTitle("选区操作")
-            .addButton(`返回上一级`, "")
-            .addButton(`实心填充`, "textures/ui/pocket_button_hover.png")
-            .addButton(`空心填充`, "textures/ui/selected_hotbar_slot.png")
-            .addButton(`方体边界填充`, "textures/ui/light.png")
-            .addButton("清除", "textures/blocks/structure_air.png")
-            .addButton(`替换`, "textures/ui/FriendsDiversity.png")
-            .addButton("选区平移", "textures/ui/move.png")
-            .addButton("选区堆叠", "textures/ui/dressing_room_skins.png")
-            .addButton("选区镜像", "textures/ui/invisibility_effect.png")
-            .addButton("选区旋转", "textures/ui/refresh_light.png")
+            .setTitle(Tr._(this.player.langCode, "dynamic.OperationForm.sendForm.s1"))
+            .addButton(Tr._(this.player.langCode, "dynamic.OperationForm.sendForm.s2"), "")
+            .addButton(Tr._(this.player.langCode, "dynamic.OperationForm.sendForm.s3"), "textures/ui/pocket_button_hover.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.OperationForm.sendForm.s4"), "textures/ui/selected_hotbar_slot.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.OperationForm.sendForm.s5"), "textures/ui/light.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.OperationForm.sendForm.s6"), "textures/blocks/structure_air.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.OperationForm.sendForm.s7"), "textures/ui/FriendsDiversity.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.OperationForm.sendForm.s8"), "textures/ui/move.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.OperationForm.sendForm.s9"), "textures/ui/dressing_room_skins.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.OperationForm.sendForm.s10"), "textures/ui/invisibility_effect.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.OperationForm.sendForm.s11"), "textures/ui/refresh_light.png")
 
         if (opts.length > 0) {
             this.opt(opts);
@@ -136,10 +137,10 @@ export default class OperationForm extends Form {
             let blockTypeB = BlockType.generateFromItem(con.getItem(ib))
 
             let form = mc.newCustomForm()
-                .setTitle("方块材质")
-                .addInput(`方块材质与状态值\n  默认从物品栏第[${showA}]号选择方块`, "空格分割", `${blockTypeA.toString()}`)
+                .setTitle(Tr._(this.player.langCode, "dynamic.OperationForm.fillForm.s12"))
+                .addInput(Tr._(this.player.langCode, "dynamic.OperationForm.fillForm.s13", showA), Tr._(this.player.langCode, "dynamic.OperationForm.fillForm.s14"), `${blockTypeA.toString()}`)
             if (mode == OperationForm.MODE.REPLACE) {
-                form.addInput(`被替换方块材质与状态值\n  默认从物品栏第[${showB}]号选择方块`, "空格分割", `${blockTypeB.toString()}`)
+                form.addInput(Tr._(this.player.langCode, "dynamic.OperationForm.fillForm.s15", showB), Tr._(this.player.langCode, "dynamic.OperationForm.fillForm.s14"), `${blockTypeB.toString()}`)
             }
             this.player.sendForm(form, (pl, data) => {
                 if (data == null) { this.sendForm(); return; }
@@ -156,10 +157,10 @@ export default class OperationForm extends Form {
     private moveForm() {
         let plPos = Pos3D.fromPos(this.player.pos).calibration().floor();
         let form = mc.newCustomForm()
-            .setTitle("平移")
-            .addDropdown("选择平移方式", ["输入坐标", "输入偏移量"], 0)
-            .addLabel("输入参数 (默认为当前坐标值)")
-            .addInput("x y z", "整数(空格分割)", `${plPos.formatStr()}`)
+            .setTitle(Tr._(this.player.langCode, "dynamic.OperationForm.moveForm.s17"))
+            .addDropdown(Tr._(this.player.langCode, "dynamic.OperationForm.moveForm.s18"), [Tr._(this.player.langCode, "dynamic.OperationForm.moveForm.s19"), Tr._(this.player.langCode, "dynamic.OperationForm.moveForm.s20")], 0)
+            .addLabel(Tr._(this.player.langCode, "dynamic.OperationForm.moveForm.s21"))
+            .addInput("x y z", Tr._(this.player.langCode, "dynamic.OperationForm.moveForm.s22"), `${plPos.formatStr()}`)
         this.player.sendForm(form, (pl, data) => {
             if (data == null) { this.sendForm(); return; }
             let x, y, z;
@@ -187,9 +188,9 @@ export default class OperationForm extends Form {
 
     private stackForm() {
         let form = mc.newCustomForm()
-            .setTitle("堆叠")
-            .addLabel("输入堆叠次数, 负数则反向堆叠")
-            .addInput("x y z", "正负整数(空格分割)", "0 0 0")
+            .setTitle(Tr._(this.player.langCode, "dynamic.OperationForm.stackForm.s23"))
+            .addLabel(Tr._(this.player.langCode, "dynamic.OperationForm.stackForm.s24"))
+            .addInput("x y z", Tr._(this.player.langCode, "dynamic.OperationForm.stackForm.s25"), "0 0 0")
         this.player.sendForm(form, (pl, data) => {
             if (data == null) { this.sendForm(); return; }
             let x, y, z;
@@ -208,11 +209,11 @@ export default class OperationForm extends Form {
         let plPos = Pos3D.fromPos(this.player.pos).calibration().floor();
         let arr = ["x", "z", "xz"];
         let form = mc.newCustomForm()
-            .setTitle("关于平面镜像")
-            .addStepSlider("选择平面方向", arr, 0)
-            .addLabel("输入平面坐标 (默认为当前坐标值)")
-            .addInput("x", "整数", `${plPos.x}`)
-            .addInput("z", "整数", `${plPos.z}`);
+            .setTitle(Tr._(this.player.langCode, "dynamic.OperationForm.mirrorForm.s26"))
+            .addStepSlider(Tr._(this.player.langCode, "dynamic.OperationForm.mirrorForm.s27"), arr, 0)
+            .addLabel(Tr._(this.player.langCode, "dynamic.OperationForm.mirrorForm.s28"))
+            .addInput("x", Tr._(this.player.langCode, "dynamic.OperationForm.mirrorForm.s29"), `${plPos.x}`)
+            .addInput("z", Tr._(this.player.langCode, "dynamic.OperationForm.mirrorForm.s29"), `${plPos.z}`);
         this.player.sendForm(form, (pl, data) => {
             if (data == null) { this.sendForm(); return; }
             let x, y, z;
@@ -230,11 +231,11 @@ export default class OperationForm extends Form {
         let plPos = Pos3D.fromPos(this.player.pos).calibration().floor();
         let arr = ["90", "180", "270"];
         let form = mc.newCustomForm()
-            .setTitle("绕点旋转")
-            .addStepSlider("旋转角度(顺时针)", arr, 0)
-            .addLabel("输入旋转轴轴点坐标 (默认为当前坐标值)")
-            .addInput("x", "整数", `${plPos.x}`)
-            .addInput("z", "整数", `${plPos.z}`);
+            .setTitle(Tr._(this.player.langCode, "dynamic.OperationForm.roteForm.s31"))
+            .addStepSlider(Tr._(this.player.langCode, "dynamic.OperationForm.roteForm.s32"), arr, 0)
+            .addLabel(Tr._(this.player.langCode, "dynamic.OperationForm.roteForm.s33"))
+            .addInput("x", Tr._(this.player.langCode, "dynamic.OperationForm.mirrorForm.s29"), `${plPos.x}`)
+            .addInput("z", Tr._(this.player.langCode, "dynamic.OperationForm.mirrorForm.s29"), `${plPos.z}`);
         this.player.sendForm(form, (pl, data) => {
             if (data == null) { this.sendForm(); return; }
             let x, y, z;

@@ -1,6 +1,7 @@
 import Players from "../common/Players";
 import AreaOperation from "../operation/AreaOperation";
 import StrFactory from "../util/StrFactory";
+import Tr from "../util/Translator";
 import Form from "./Form";
 import Menu from "./Menu";
 
@@ -15,13 +16,13 @@ export default class SaveForm extends Form {
             AreaOperation.hasArea(this.playerData);
         }
         catch (e) {
-            this.player.sendText(StrFactory.cmdErr("未选区, 无法操作"));
+            this.player.sendText(StrFactory.cmdErr(Tr._(this.player.langCode, "dynamic.SaveForm.sendForm.s0")));
             return;
         }
 
         let form = mc.newCustomForm()
-            .setTitle("保存")
-            .addInput("名称", "支持中文、字母、数字(可不输入)")
+            .setTitle(Tr._(this.player.langCode, "dynamic.SaveForm.sendForm.s1"))
+            .addInput(Tr._(this.player.langCode, "dynamic.SaveForm.sendForm.s2"), Tr._(this.player.langCode, "dynamic.SaveForm.sendForm.s3"))
 
         this.player.sendForm(form, (pl, data) => {
             if (data == null) {

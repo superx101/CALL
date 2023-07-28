@@ -3,6 +3,7 @@ import Players from "../common/Players";
 import PlayerData from "../model/PlayerData";
 import StructureOperation from "../operation/StructureOperation";
 import StrFactory from "../util/StrFactory";
+import Tr from "../util/Translator";
 import AreaForm from "./AreaForm";
 import BlockEditerForm from "./BlockEditerForm";
 import Form from "./Form";
@@ -24,20 +25,20 @@ export default class Menu extends Form {
         let redoSize = StructureOperation.getRedoSize(this.player.xuid);
         let canPaste = StructureOperation.canPaste(this.player.xuid);
         let form = mc.newSimpleForm()
-            .setTitle(`CALL快捷菜单 --${Config.PLUGIN_VERSION.toString()}`)
-            .addButton("选区", "textures/gui/newgui/buttons/new_checkbox/spaceHover.png")
-            .addButton(StrFactory.formEnable(undoSize > 0, `撤销 (${undoSize})`), "textures/ui/arrow_dark_left_stretch.png")
-            .addButton(StrFactory.formEnable(redoSize > 0, `恢复撤销 (${redoSize})`), "textures/ui/arrow.png")
-            .addButton("选区操作", "textures/items/iron_pickaxe.png")
-            .addButton("复制", "textures/ui/copy.png")
-            .addButton(StrFactory.formEnable(canPaste, "粘贴"), "textures/ui/paste.png")
-            .addButton("保存", "textures/ui/download_backup.png")
-            .addButton("保存的结构", "textures/ui/structure_block.png")
-            .addButton("生成形状", "textures/ui/worldsIcon.png")
-            .addButton("方块属性编辑", "textures/ui/book_edit_default.png")
-            .addButton("刷新区块", "textures/ui/refresh.png")
-            .addButton("设置", "textures/ui/settings_glyph_color_2x.png")
-            .addButton("基础教程", "textures/ui/sidebar_icons/my_content.png")
+            .setTitle(Tr._(this.player.langCode, "dynamic.Menu.sendForm.s0", Config.PLUGIN_VERSION.toString()))
+            .addButton(Tr._(this.player.langCode, "dynamic.Menu.sendForm.s1"), "textures/gui/newgui/buttons/new_checkbox/spaceHover.png")
+            .addButton(StrFactory.formEnable(undoSize > 0, Tr._(this.player.langCode, "dynamic.Menu.sendForm.s2", undoSize)), "textures/ui/arrow_dark_left_stretch.png")
+            .addButton(StrFactory.formEnable(redoSize > 0, Tr._(this.player.langCode, "dynamic.Menu.sendForm.s3", redoSize)), "textures/ui/arrow.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.Menu.sendForm.s4"), "textures/items/iron_pickaxe.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.Menu.sendForm.s5"), "textures/ui/copy.png")
+            .addButton(StrFactory.formEnable(canPaste, Tr._(this.player.langCode, "dynamic.Menu.sendForm.s6")), "textures/ui/paste.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.Menu.sendForm.s7"), "textures/ui/download_backup.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.Menu.sendForm.s8"), "textures/ui/structure_block.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.Menu.sendForm.s9"), "textures/ui/worldsIcon.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.Menu.sendForm.s10"), "textures/ui/book_edit_default.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.Menu.sendForm.s11"), "textures/ui/refresh.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.Menu.sendForm.s12"), "textures/ui/settings_glyph_color_2x.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.Menu.sendForm.s13"), "textures/ui/sidebar_icons/my_content.png")
 
         if (opts.length > 0) {
             this.opt(opts);

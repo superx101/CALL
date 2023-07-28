@@ -9,9 +9,11 @@ import { Complex, Data } from "../type/Structure";
 import StrFactory from "../util/StrFactory";
 import AreaOperation from "./AreaOperation";
 import { Pos } from "../type/Pos";
+import Tr from "../util/Translator";
 
 export default class StructureOperation {
-    public static findId(input: string, xuid: string) {
+    public static findId(input: string, player: Player) {
+        let xuid = player.xuid;
         let data = StructureManager.getData(xuid);
         let saveList = data.saveList;
         let structid;
@@ -29,21 +31,21 @@ export default class StructureOperation {
         }
         
         if (structid == null) {
-            throw new Error("无法找到结构, 请输入正确的结构id");
+            throw new Error(Tr._(player.langCode, "dynamic.StructureOperation.findId.s0"));
         }
         else {
             return { xuid, structid };
         }
     }
 
-    public static checkTargetStruct(area: Area3D, pos: Pos3D) {
+    public static checkTargetStruct(area: Area3D, pos: Pos3D, player: Player) {
         area = Area3D.fromArea3D(area);
         let lens = area.getLens();
         if (pos.y < Constant.SPACE.MIN_HIGHT) {
-            throw new Error("目标点y坐标不能小于" + Constant.SPACE.MIN_HIGHT);
+            throw new Error(Tr._(player.langCode, "dynamic.StructureOperation.checkTargetStruct.s1") + Constant.SPACE.MIN_HIGHT);
         }
         else if (pos.y + lens[1] > Constant.SPACE.MAX_HIGHT) {
-            throw new Error(`结构高度(${lens[1]}) + 目标点y坐标(${pos.y}) = ${pos.y + lens[1]} 超过世界限制 ${Constant.SPACE.MAX_HIGHT}`)
+            throw new Error(Tr._(player.langCode, "dynamic.StructureOperation.checkTargetStruct.s2", lens[1], pos.y, pos.y + lens[1], Constant.SPACE.MAX_HIGHT))
         }
     }
 
@@ -56,7 +58,7 @@ export default class StructureOperation {
         AreaOperation.hasArea(playerData);//throw
         let maxNum = Config.get(Config.GLOBAL, "maxSaveStructure")
         if (Object.keys(data.saveList).length >= maxNum) {
-            throw new Error(`当前保存的结构数已超过管理员设置的最大数量(${maxNum})`);
+            throw new Error(Tr._(player.langCode, "dynamic.StructureOperation.save.s3", maxNum));
         }
         let st = new Structure(playerData.settings.area, name);
         StructureManager.savePos(player, playerData);
@@ -64,12 +66,12 @@ export default class StructureOperation {
             data.saveList[`${structid}`] = st;
             Config.set(Config.STRUCTURES, `private.${player.xuid}`, data);
             StructureManager.tp(player, playerData);
-            player.sendText(StrFactory.cmdSuccess(`已保存区域 ${Area3D.fromArea3D(data.saveList[structid].area)}\n    -id: ${structid}\n    -名称: ${name}`));
+            player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.StructureOperation.save.s4", Area3D.fromArea3D(data.saveList[structid].area), structid, name)));
         });
     }
 
     public static load(player: Player, output: CommandOutput, playerData: PlayerData, res: { id: string; intPos: IntPos; Mirror: string; Degrees: string; IncludeEntities: boolean; IncludeBlocks: boolean; Waterlogged: boolean; Integrity: number; Seed: string; }) {
-        let r = StructureOperation.findId(res.id, player.xuid);
+        let r = StructureOperation.findId(res.id, player);
         let st = Config.get(Config.STRUCTURES, `private.${r.xuid}.saveList.${r.structid}`);
         let structure = new Structure(st.area, st.name, st.isPublic);
         let pos: Pos3D;
@@ -79,7 +81,7 @@ export default class StructureOperation {
         else {
             pos = Pos3D.fromPos(res.intPos);
         }
-        StructureOperation.checkTargetStruct(st.area, pos);
+        StructureOperation.checkTargetStruct(st.area, pos, player);
         let targetArea = Area3D.fromArea3D(st.area)
             .relative()
             .addBoth(pos.x, pos.y, pos.z);
@@ -88,7 +90,7 @@ export default class StructureOperation {
         StructureManager.undoSave(player, playerData, [new Structure(targetArea)], () => {
             StructureManager.load(player, playerData, structure, r.structid, pos, 0, 1, res.Mirror, res.Degrees, res.IncludeEntities, res.IncludeBlocks, res.Waterlogged, res.Integrity, res.Seed, () => {
                 StructureManager.tp(player, playerData);
-                player.sendText(StrFactory.cmdSuccess(`已加载结构 ${st.name} 到 ${pos}\n    -id: ${r.structid}\n    -加载目标: ${targetArea} `));
+                player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.StructureOperation.load.s5", st.name, pos, r.structid, targetArea)));
             });
         });
 
@@ -100,7 +102,7 @@ export default class StructureOperation {
         let sid = res.id;
         let st = saveList[sid];
         if (st == null) {
-            throw new Error("无法找到结构, 请检查结构id (不能删除他人结构)");
+            throw new Error(Tr._(player.langCode, "dynamic.StructureOperation.delete.s6"));
         }
         //删除 public
         if (st.isPublic) {
@@ -113,26 +115,26 @@ export default class StructureOperation {
         //删除 savelist
         delete saveList[sid];
         Config.set(Config.STRUCTURES, `private.${player.xuid}.saveList`, saveList);
-        output.success(StrFactory.cmdSuccess(`已删除结构 ${sid}\n  名称: ${tempSt.name}`));
+        output.success(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.StructureOperation.delete.s7", sid, tempSt.name)));
     }
 
     public static list(player: Player, output: CommandOutput, playerData: PlayerData) {
         let prArr = StructureManager.getPrivateArr(player);
         let puArr = StructureManager.getPublicArr();
-        let arr: Array<any> = [Format.White + Format.Bold + "公开结构§r", new Array(), Format.White + Format.Bold + "我的结构§r", new Array()];
+        let arr: Array<any> = [Format.White + Format.Bold + Tr._(player.langCode, "dynamic.StructureOperation.list.s8"), new Array(), Format.White + Format.Bold + Tr._(player.langCode, "dynamic.StructureOperation.list.s9"), new Array()];
         puArr.forEach((v: any) => {
-            arr[1].push(Format.Bold + Format.MinecoinGold + v.id + Format.Clear, [Format.Gray + `名称: §r§l${v.name}§r`, Format.Gray + `作者: ${data.xuid2name(v.author)}§r`]);
+            arr[1].push(Format.Bold + Format.MinecoinGold + v.id + Format.Clear, [Format.Gray + Tr._(player.langCode, "dynamic.StructureOperation.list.s10", v.name), Format.Gray + Tr._(player.langCode, "dynamic.StructureOperation.list.s11", data.xuid2name(v.author))]);
         });
         prArr.forEach((v: any) => {
-            arr[3].push(Format.Bold + Format.MinecoinGold + v.id + Format.Clear, [Format.Gray + `名称: §r§l${v.name}§r`]);
+            arr[3].push(Format.Bold + Format.MinecoinGold + v.id + Format.Clear, [Format.Gray + Tr._(player.langCode, "dynamic.StructureOperation.list.s10", v.name)]);
         });
-        player.sendText(StrFactory.cmdMsg("当前可用结构如下:\n") + StrFactory.catalog(arr));
+        player.sendText(StrFactory.cmdMsg(Tr._(player.langCode, "dynamic.StructureOperation.list.s13")) + StrFactory.catalog(arr));
     }
 
     public static public(player: Player, output: CommandOutput, playerData: PlayerData, res: { id: string; }) {
-        let r = StructureOperation.findId(res.id, player.xuid);
+        let r = StructureOperation.findId(res.id, player);
         if (r.xuid != player.xuid) {
-            throw new Error("无法修改他人结构可见范围");
+            throw new Error(Tr._(player.langCode, "dynamic.StructureOperation.public.s14"));
         }
         let st = Config.get(Config.STRUCTURES, `private.${r.xuid}.saveList.${r.structid}`);
         if (!st.isPublic) {
@@ -144,13 +146,13 @@ export default class StructureOperation {
             Config.set(Config.STRUCTURES, `public.${r.xuid}`, arr);
             Config.set(Config.STRUCTURES, `private.${r.xuid}.saveList.${r.structid}.isPublic`, true);
         }
-        output.success(StrFactory.cmdSuccess(`已公开 ${st.name}\n  id: ${r.structid}`));
+        output.success(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.StructureOperation.public.s15", st.name, r.structid)));
     }
 
     public static private(player: Player, output: CommandOutput, playerData: PlayerData, res: { id: string; }) {
-        let r = StructureOperation.findId(res.id, player.xuid);
+        let r = StructureOperation.findId(res.id, player);
         if (r.xuid != player.xuid) {
-            throw new Error("无法修改他人结构可见范围");
+            throw new Error(Tr._(player.langCode, "dynamic.StructureOperation.public.s14"));
         }
         let st = Config.get(Config.STRUCTURES, `private.${r.xuid}.saveList.${r.structid}`);
         if (st.isPublic) {
@@ -164,13 +166,13 @@ export default class StructureOperation {
             }
             Config.set(Config.STRUCTURES, `private.${r.xuid}.saveList.${r.structid}.isPublic`, false);
         }
-        output.success(StrFactory.cmdSuccess(`已隐藏(仅自己可见) ${st.name}\n  id: ${r.structid}`));
+        output.success(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.StructureOperation.private.s17", st.name, r.structid)));
     }
 
     public static undo(player: Player, output: CommandOutput, playerData: PlayerData) {
         let undoList = StructureManager.getData(player.xuid).undoList;
         if (undoList.length <= 0) {
-            throw new Error("无可撤销的操作");
+            throw new Error(Tr._(player.langCode, "dynamic.StructureOperation.undo.s18"));
         }
         let complex = undoList.pop();
         let structArr: Array<Structure> = [];
@@ -182,7 +184,7 @@ export default class StructureOperation {
         StructureManager.redoPush(player, playerData, structArr, () => {
             StructureManager.undoPop(player, playerData, () => {
                 StructureManager.tp(player, playerData);
-                player.sendText(StrFactory.cmdSuccess(`已撤销到上一步`));
+                player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.StructureOperation.redo.s23")));
             });
         });
     }
@@ -190,7 +192,7 @@ export default class StructureOperation {
     public static redo(player: Player, output: CommandOutput, playerData: PlayerData) {
         let redoList = StructureManager.getData(player.xuid).redoList;
         if (redoList.length <= 0) {
-            throw new Error("无可恢复的操作");
+            throw new Error(Tr._(player.langCode, "dynamic.StructureOperation.redo.s19"));
         }
         let complex = redoList.pop();
         let structArr: Array<Structure> = [];
@@ -202,7 +204,7 @@ export default class StructureOperation {
         StructureManager.undoPush(player, playerData, structArr, () => {
             StructureManager.redoPop(player, playerData, () => {
                 StructureManager.tp(player, playerData);
-                player.sendText(StrFactory.cmdSuccess(`已恢复一步撤销`));
+                player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.StructureOperation.redo.s24")));
             });
         });
 
@@ -223,7 +225,7 @@ export default class StructureOperation {
         StructureManager.copy(player, playerData, [st], dellast, lastComplex, (complex: Complex) => {
             //存储记录
             Config.set(Config.STRUCTURES, `private.${player.xuid}.copy`, complex);
-            player.sendText(StrFactory.cmdSuccess(`已复制结构: ${area}`));
+            player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.StructureOperation.copy.s20", area)));
         });
     }
 
@@ -231,7 +233,7 @@ export default class StructureOperation {
         let data = StructureManager.getData(player.xuid);
         let keys = Object.keys(data.copy);
         if (keys.length == 0) {
-            output.error("无复制结构, 无法粘贴");
+            output.error(Tr._(player.langCode, "dynamic.StructureOperation.paste.s21"));
             return;
         }
         let pos: Pos3D;
@@ -242,13 +244,13 @@ export default class StructureOperation {
             pos = Pos3D.fromPos(player.pos).calibration().floor();
         }
         keys.forEach((sid) => {
-            StructureOperation.checkTargetStruct(data.copy[sid].area, pos);
+            StructureOperation.checkTargetStruct(data.copy[sid].area, pos, player);
         })
         StructureManager.savePos(player, playerData);
         StructureManager.undoSave(player, playerData, StructureManager.getTargetStructs(data.copy, pos), () => {
             StructureManager.paste(player, playerData, pos, data, () => {
                 StructureManager.tp(player, playerData);
-                player.sendText(StrFactory.cmdSuccess(`已粘贴结构到: ${pos.floor()}`));
+                player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.StructureOperation.paste.s22", pos.floor())));
             });
         });
     }

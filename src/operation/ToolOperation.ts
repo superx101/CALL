@@ -8,6 +8,7 @@ import StrFactory from "../util/StrFactory";
 import * as acorn from "acorn";
 import * as escodegen from "escodegen";
 import * as estraverse from "estraverse";
+import Tr from "../util/Translator";
 
 type ToolVariable = {
     readonly pos: Pos3D;
@@ -47,10 +48,10 @@ export default class ToolOperation {
     }
 
     /*** private */
-    private static checkName(name: string) {
+    private static checkName(name: string, player: Player) {
         if (name !== "") {
             if (!/^[a-zA-Z0-9_\u4e00-\u9fa5]+$/.test(name)) {
-                throw new Error(`名称${name}不合法, 仅允许包含中英文、数字、下划线`);
+                throw new Error(Tr._(player.langCode, "dynamic.ToolOperation.checkName.s0", name));
             }
         }
     }
@@ -62,15 +63,15 @@ export default class ToolOperation {
         let nameArr: any[] = [];
         let tempArr: any[] = [];
         Object.keys(items).forEach(type => {
-            arr.push(`物品id: ${StrFactory.color(Format.Bold + Format.Gold, type)}`);
+            arr.push(Tr._(player.langCode, "dynamic.ToolOperation.getList.s1", StrFactory.color(Format.Bold + Format.Gold, type)));
             nameArr = [];
             Object.keys(items[type]).forEach((name, i, a) => {
-                nameArr.push(`物品名称: ${StrFactory.color(Format.Bold + Format.Gold, name)}, 描述: ${StrFactory.color(Format.Bold + Format.Gold, items[type][name].describe)}`);
+                nameArr.push(Tr._(player.langCode, "dynamic.ToolOperation.getList.s2", StrFactory.color(Format.Bold + Format.Gold, name), StrFactory.color(Format.Bold + Format.Gold, items[type][name].describe)));
                 tempArr = [];
                 items[type][name].cmds.forEach((cmd: string) => {
                     tempArr.push(StrFactory.color(Format.MinecoinGold, cmd));
                 })
-                nameArr.push([`绑定指令组:`, tempArr]);
+                nameArr.push([Tr._(player.langCode, "dynamic.ToolOperation.list.s10"), tempArr]);
             });
             arr.push(nameArr);
         });
@@ -90,7 +91,7 @@ export default class ToolOperation {
 
     public static restoreDefaults(player: Player, playerData: PlayerData) {
         playerData.settings.items = Config.get(Config.PLAYERS_SETTINGS, "default.items");
-        player.sendText(StrFactory.cmdSuccess("已恢复所有快捷键为默认设置"));
+        player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.ToolOperation.restoreDefaults.s3")));
     }
 
     public static cmdsTranslator(player: Player, itemArr: Item[], iA: number, iB: number, cmds: string[], block: Block, posFloat: FloatPos) {
@@ -154,10 +155,10 @@ export default class ToolOperation {
             name = "";
         }
         else {
-            ToolOperation.checkName(name);
+            ToolOperation.checkName(name, player);
         }
         if (item.isBlock) {
-            throw new Error("不能将方块设置为快捷键");
+            throw new Error(Tr._(player.langCode, "dynamic.ToolOperation.bind.s4"));
         }
         let items = ToolOperation.getItems(playerData, type);
         let cmds = cmd.split(";");
@@ -168,24 +169,24 @@ export default class ToolOperation {
         }
         let pos = Pos3D.fromPos(player.pos).calibration().add(0, 1, 0);
         mc.spawnItem(item, pos.x, pos.y, pos.z, pos.dimid);
-        output.success(StrFactory.cmdSuccess(`已绑定指令组: ${cmd} 到 物品(id: ${item.type}, 名称: ${name === "" ? "无名称" : name} 描述: ${describe})`));
+        output.success(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.ToolOperation.bind.s5", cmd, item.type, name === "" ? Tr._(player.langCode,"word.noName") : name, describe)));
     }
 
     public static unbind(player: Player, output: CommandOutput, playerData: PlayerData, item: Item, type: ToolType, name: string) {
         let items = ToolOperation.getItems(playerData, type);
         name = (name == null ? "" : name);
         if (items[item.type] == null || items[item.type][name] == null) {
-            throw new Error(`物品 (id: ${item.type} 名称: ${name === "" ? "无名称" : name}) 未找到绑定记录, 无法解绑, 请检查是否绑定或名称是否正确`);
+            throw new Error(Tr._(player.langCode, "dynamic.ToolOperation.unbind.s6", item.type, name === "" ? Tr._(player.langCode,"word.noName") : name));
         }
         delete items[item.type][name];
         if (Object.keys(items[item.type]).length == 0) {
             delete items[item.type];
         }
-        output.success(StrFactory.cmdSuccess(`已解绑物品(id: ${item.type} 名称: ${name === "" ? "无名称" : name})`));
+        output.success(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.ToolOperation.unbind.s7", item.type, name === "" ? Tr._(player.langCode,"word.noName") : name)));
     }
 
     public static list(player: Player, output: CommandOutput, playerData: PlayerData) {
-        output.success("快捷键列表-右键:\n" + StrFactory.catalog(ToolOperation.getList(player, playerData, ToolType.RIGHT)));
-        output.success("快捷键列表-左键:\n" + StrFactory.catalog(ToolOperation.getList(player, playerData, ToolType.LEFT)));
+        output.success(Tr._(player.langCode, "dynamic.ToolOperation.list.s8") + StrFactory.catalog(ToolOperation.getList(player, playerData, ToolType.RIGHT)));
+        output.success(Tr._(player.langCode, "dynamic.ToolOperation.list.s9") + StrFactory.catalog(ToolOperation.getList(player, playerData, ToolType.LEFT)));
     }
 }

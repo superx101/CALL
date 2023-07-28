@@ -1,6 +1,7 @@
 import Config from "../common/Config"
 import ShapeManager from "../manager/ShapeManager"
 import StrFactory from "../util/StrFactory"
+import Tr from "../util/Translator"
 import Version from "../util/Version"
 import ShapeForm from "../views/ShapeForm"
 
@@ -29,7 +30,7 @@ export default class ShapeLoader {
     private static parser(str: string): Plugin | null {
         try {
             if (/call\.[a-zA-Z0-9]+\.[a-zA-Z0-9]+\_\d+\.\d+\.\d+\.js/.test(str) == false) {
-                throw new Error("文件命名错误, 格式: [call.作者名.插件名_版本号.js] 作者名、插件名由英文+数字组成, 作者名建议为github用户名或其他不会重复的名称, 文件名示例: call.steve.example_0.1.0.js");
+                throw new Error(Tr._c("console.ShapeLoader.parser.s0"));
             }
             let arr = str.split("_");
             let version = Version.fromString(arr[1].slice(0, -3));
@@ -38,7 +39,7 @@ export default class ShapeLoader {
             return { version, name };
         }
         catch (e) {
-            colorLog("red", `形状包文件${str}读取失败, 原因: ` + e.message);
+            colorLog("red", Tr._c("console.ShapeLoader.parser.s1", str) + e.message);
         }
         return null;
     }
@@ -100,7 +101,7 @@ export default class ShapeLoader {
                 name = name.replaceAll(".", "_");
                 logger.info(`ll load "${buildPath}/${name}.js"`)
                 if (mc.runcmd(`ll load "${buildPath}/${name}.js"`)) {
-                    colorLog("green", `初始化形状包: ${plugin.name} 版本: ${plugin.version}`)
+                    colorLog("green", Tr._c("console.ShapeLoader.start.s2", plugin.name, plugin.version))
                 }
             });
         }, 1000)

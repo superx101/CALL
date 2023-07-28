@@ -52,7 +52,7 @@ export default class BasicTranslOperation {
         }
         let st1 = new Structure(playerData.settings.area);
         let st2 = StructureManager.getTargetStruct(st1, pos);
-        StructureOperation.checkTargetStruct(st1.area, pos);//检查移动后的区域是否超过限制
+        StructureOperation.checkTargetStruct(st1.area, pos, player);//检查移动后的区域是否超过限制
         BasicTranslOperation.sl(player, playerData, st1, st2, "none", "0_degrees", () => {
             player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.BasicTranslOperation.move.success",`${pos}`)));
         });
