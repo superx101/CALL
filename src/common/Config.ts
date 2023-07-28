@@ -32,7 +32,7 @@ function getDataVersion(): Version {
 }
 
 export default class Config {
-    public static readonly ISOLDVERSION = SERVER_VERSION.compare(Version.fromArr([1, 19, 70])) == Compare.LESSER ? true : false; 
+    public static readonly MINVERSION = Version.fromArr([1, 20, 10]);
     public static readonly ROOT = ROOT;
     public static readonly CONFIG = CONFIG;
     public static readonly LANG = CONFIG + '/lang';
@@ -127,12 +127,12 @@ export default class Config {
             Object.keys(check).forEach(k => {
                 let c = check[k];
                 let data = Config.get(Config.GLOBAL, k);
-                if(data == null) throw new Error(`配置文件中未找到 ${k}`)
-                if (c.type != "enum" && typeof (data) != c.type) throw new Error(`${k} 应为 ${c.type} 类型`);
+                if(data == null) throw new Error(`console.Config.check.notFind&&${k}`)
+                if (c.type != "enum" && typeof (data) != c.type) throw new Error(`@console.Config.check.type&&${k}&&${c.type}`);
                 switch (c.type) {
                     case "number":
-                        if (data < c.min) throw new Error(`${k} 小于最小值 ${c.min}`);
-                        if (data > c.max) throw new Error(`${k} 大于最大值 ${c.max}`);
+                        if (data < c.min) throw new Error(`console.Config.check.less&&${k}&&${c.min}`);
+                        if (data > c.max) throw new Error(`console.Config.check.greater&&${k}&&${c.max}`);
                         break;
                     case "enum":
                         let has = false;
@@ -141,12 +141,12 @@ export default class Config {
                                 has = true;
                             }
                         });
-                        if (!has) throw new Error(`${k} 应为 ${c.values} 其中之一`);
+                        if (!has) throw new Error(`@console.Config.check.enum, k, c.values@`);
                         break;
                 }
             });
         } catch (e) {
-            throw new Error(`CALL/config/configs文件配置失败: ` + e.message);
+            throw new Error(`@console.Config.check.configFail, "CALL/config/configs", e.message@`);
         }
     }
 

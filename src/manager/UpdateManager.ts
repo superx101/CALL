@@ -9,6 +9,7 @@ import JsonPatch from '../util/JsonPatch';
 import path = require('path');
 import { execFileSync } from 'child_process';
 import * as fse from 'fs-extra'
+import Tr from '../util/Translator';
 
 const shapeFilePath = 'CALL/plugins/shape'
 const pluginFileName = 'CALL.llplugin';
@@ -45,8 +46,8 @@ export default class UpdateManager {
     }
 
     private static unzipByUnzipper(file: string, closeCallback: () => Promise<void>) {
-        logger.warn('安装过程中请勿重启服务器或插件');
-        logger.info(`开始安装中.... 此过程大概需要1至5分钟`);
+        logger.warn(Tr._c("console.UpdateManager.unzipByUnzipper.warn"));
+        logger.info(Tr._c("console.UpdateManager.unzipByUnzipper.info"));
         fs.createReadStream(file)
             .pipe(unzipper.ParseOne(new RegExp(pluginFileName)))
             .pipe(unzipper.Extract({ path: Config.ROOT }))
@@ -54,7 +55,7 @@ export default class UpdateManager {
                 closeCallback();
             })
             .on("error", (e: Error) => {
-                logger.warn("安装失败:" + e.message);
+                logger.warn(Tr._c("console.UpdateManager.unzipByUnzipper.fail", e.message));
             })
     }
 
@@ -62,7 +63,7 @@ export default class UpdateManager {
         const p = path.parse(file);
         const tempDir = `${Config.TEMP}/${p.name}`;
         const tempFile = `${tempDir}/${pluginFileName}`;
-        logger.info(`开始安装中....`);
+        logger.info(Tr._c(`console.UpdateManager.unzipBy7z.installing`));
 
         if(fs.existsSync(tempDir)) {
             fse.removeSync(tempDir);
@@ -80,9 +81,9 @@ export default class UpdateManager {
         async function onClose() {
             await UpdateManager.installShapePackage(file);
 
-            logger.info(`安装完成, 已成功更新插件`);
+            logger.info(Tr._c("console.UpdateManager.install.success"));
             //重载
-            ReloadOperation.start("自动更新完成, 已重新加载插件");
+            ReloadOperation.start();
 
             return;
         }
@@ -108,7 +109,7 @@ export default class UpdateManager {
             }
         }
         catch (e) {
-            logger.error("安装失败:" + e.message);
+            logger.error(Tr._c("console.UpdateManager.install.fail", e.message));
         }
     }
 
@@ -125,7 +126,7 @@ export default class UpdateManager {
         }
         else {
             //下载最新版本
-            logger.info(`从${url}下载最新版中...`);
+            logger.info(Tr._c("console.UpdateManager.download.downloading", `${url}`));
             await axios({
                 url,
                 method: "GET",
@@ -134,7 +135,7 @@ export default class UpdateManager {
                 if (response.status == 200) {
                     response.data.pipe(fs.createWriteStream(file))
                         .on("finish", () => {
-                            logger.info("下载成功");
+                            logger.info(Tr._c("console.UpdateManager.download.success"));
                             UpdateManager.install(file);//安装
                         })
                         .on("error", (e: Error) => {
@@ -142,10 +143,10 @@ export default class UpdateManager {
                         });
                 }
                 else {
-                    logger.warn("服务器响应不成功, 请重试");
+                    logger.warn(Tr._c("console.UpdateManager.download.warn"));
                 }
             }).catch((reason) => {
-                logger.warn(`下载失败,请重试: ` + reason);
+                logger.warn(Tr._c("console.UpdateManager.download.fail", reason));
             });
         }
     }
@@ -153,14 +154,14 @@ export default class UpdateManager {
     //github版本检查
     private static checkFromGithub(urls: Urls, isAuto: boolean) {
         axios.get(urls.check).then((respone) => {
-            if (respone.status != 200) throw new Error("请求失败, 请检查网络");
+            if (respone.status != 200) throw new Error(Tr._c("console.UpdateManager.networkError"));
             //比较
             const data = respone.data;
             let v = Version.fromString(data.name);
             if (v.compare(Config.PLUGIN_VERSION) == Compare.GREATER) {
                 UpdateManager.download(isAuto, v, data.assets[0].browser_download_url);
             } else {
-                if (!isAuto) logger.info(`当前为最新版本: ${v.toString()}, 无需更新`);
+                if (!isAuto) logger.info(Tr._c("console.UpdateManager.lastVersion", v.toString()));
             }
         })
     }
@@ -173,15 +174,15 @@ export default class UpdateManager {
                 if (v.compare(Config.PLUGIN_VERSION) == Compare.GREATER) {
                     UpdateManager.download(isAuto, v, URL.minebbs.download);
                 } else {
-                    if (!isAuto) logger.info(`当前为最新版本: ${v.toString()}, 无需更新`);
+                    if (!isAuto) logger.info(Tr._c("console.UpdateManager.lastVersion", v.toString()));
                 }
             } else {
-                throw new Error("请求失败, 请检查网络");
+                throw new Error(Tr._c("console.UpdateManager.networkError"));
             }
         }).catch((reason) => {
             //debug
             if (Config.get(Config.GLOBAL, "debugMod", false)) {
-                logger.warn(`检查更新失败,请重试: ` + reason);
+                logger.warn(Tr._c("console.UpdateManager.error", reason));
             }
         });
     }
@@ -190,7 +191,7 @@ export default class UpdateManager {
         try {
             //网络获取最新版本
             const url = Config.get(Config.GLOBAL, "updateFrom");
-            if (!isAuto) logger.info("检查最新版本中");
+            if (!isAuto) logger.info(Tr._c("console.UpdateManager.updatePlugin.checking"));
             //判断url
             switch (url) {
                 case "github":
@@ -201,25 +202,25 @@ export default class UpdateManager {
                     break;
             }
         } catch (error) {
-            logger.error("更新失败：" + error.message);
+            logger.error(Tr._c("console.UpdateManager.error2"), error.message);
         }
     }
 
     public static updateData() {
         if (Config.DATA_VERSION == null) {
-            logger.warn("未检测到数据标识, 尝试自动更新数据");
+            logger.warn(Tr._c("console.UpdateManager.updateData.warn"));
             Config.closeAll();
             const updateJson = JSON.parse(File.readFrom(Config.UPDATE));
             for (const key of Object.keys(updateJson)) {
                 JsonPatch.runArray(updateJson[key]);
             }
-            logger.info("更新完成");
+            logger.info(Tr._c("console.UpdateManager.success"));
             Config.openAll();
         }
         //比较
         else if (Config.DATA_VERSION.compare(Config.PLUGIN_VERSION) == Compare.LESSER) {
             //更新
-            logger.info("检测到版本更新, 正在更新数据");
+            logger.info(Tr._c("console.UpdateManager.updateData.info"));
             Config.closeAll();
             const updateJson = JSON.parse(File.readFrom(Config.UPDATE));
             for (const key of Object.keys(updateJson)) {
@@ -229,7 +230,7 @@ export default class UpdateManager {
                     JsonPatch.runArray(updateJson[key]);
                 }
             }
-            logger.info("更新完成");
+            logger.info(Tr._c("console.UpdateManager.success"));
             Config.openAll();
         }
     }

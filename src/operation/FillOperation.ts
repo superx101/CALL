@@ -5,6 +5,7 @@ import Area3D from "../model/Area3D";
 import BlockType from "../model/BlockType";
 import PlayerData from "../model/PlayerData";
 import StrFactory from "../util/StrFactory";
+import Tr from "../util/Translator";
 import AreaOperation from "./AreaOperation";
 
 
@@ -20,7 +21,7 @@ export default class FillOperation {
                 StructureManager.savePos(player, playerData);
                 FillManager.soildFill(player, playerData, playerData.settings.area, blockType, new BlockType("", ""), "", () => {
                     StructureManager.tp(player, playerData);
-                    player.sendText(StrFactory.cmdSuccess(`已填充区域: ${Area3D.fromArea3D(playerData.settings.area)}`));
+                    player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.FillOperation.fill", `${Area3D.fromArea3D(playerData.settings.area)}`)));
                 });
                 break;
             case "hollow":
@@ -29,7 +30,7 @@ export default class FillOperation {
                 StructureManager.savePos(player, playerData);
                 FillManager.fillOutside(player, playerData, playerData.settings.area, blockType, true, () => {
                     StructureManager.tp(player, playerData);
-                    player.sendText(StrFactory.cmdSuccess(`已区域: ${Area3D.fromArea3D(playerData.settings.area)} 为空心(清空内部)`));
+                    player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.FillOperation.fill.hollow", `${Area3D.fromArea3D(playerData.settings.area)}`)));
                 });
                 break;
             case "outline":
@@ -37,7 +38,7 @@ export default class FillOperation {
                 StructureManager.savePos(player, playerData);
                 FillManager.fillOutside(player, playerData, playerData.settings.area, blockType, false, () => {
                     StructureManager.tp(player, playerData);
-                    player.sendText(StrFactory.cmdSuccess(`已区域: ${Area3D.fromArea3D(playerData.settings.area)} 为空心(保留内部)`));
+                    player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.FillOperation.fill.outline", `${Area3D.fromArea3D(playerData.settings.area)}`)));
                 });
                 break;
         }
@@ -48,7 +49,7 @@ export default class FillOperation {
         StructureManager.savePos(player, playerData);
         FillManager.soildFill(player, playerData, playerData.settings.area, new BlockType("air", ""), new BlockType("", ""), "", () => {
             StructureManager.tp(player, playerData);
-            player.sendText(StrFactory.cmdSuccess(`已清空区域: ${Area3D.fromArea3D(playerData.settings.area)}`));
+            player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.FillOperation.fill.clear", `${Area3D.fromArea3D(playerData.settings.area)}`)));
         });
     }
 
@@ -59,7 +60,7 @@ export default class FillOperation {
         StructureManager.savePos(player, playerData);
         FillManager.soildFill(player, playerData, playerData.settings.area, blockType1, blockType2, "replace", () => {
             StructureManager.tp(player, playerData);
-            player.sendText(StrFactory.cmdSuccess(`已填充区域: ${Area3D.fromArea3D(playerData.settings.area)}`));
+            player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.FillOperation.fill", `${Area3D.fromArea3D(playerData.settings.area)}`)));
         });
     }
 }

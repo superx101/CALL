@@ -12,6 +12,7 @@ import { Transform3, Vector3D } from "../util/SimpleMatrix";
 import StrFactory from "../util/StrFactory";
 import AreaOperation from "./AreaOperation";
 import StructureOperation from "./StructureOperation";
+import Tr from "../util/Translator";
 
 export default class BasicTranslOperation {
     /*** private */
@@ -29,7 +30,7 @@ export default class BasicTranslOperation {
             FillManager.ergod(player, playerData, st1.getAreas(), 0, 1, (yBottom: number, yTop: number, area: Area3D) => {
                 return Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} air`, false).success;
             }, (warn: number) => {
-                if (warn != 0) player.sendText(StrFactory.cmdWarn(`警告: 检测到 ${warn} 次填充失败\n原因: 填充区域与被填充区域相同, 或填充执行失败\n前者可忽略。若为后者, 可在配置文件中增加等待时间(fillWaitTime)来避免错误`))
+                if (warn != 0) player.sendText(StrFactory.cmdWarn(Tr._(player.langCode, "dynamic.FillManager.soildFill.warn")));
 
                 //粘贴
                 StructureManager.load(player, playerData, st1, st1id, st2.area.start, 0, 1, mirror, degrees, true, true, false, 100, "", () => {
@@ -53,7 +54,7 @@ export default class BasicTranslOperation {
         let st2 = StructureManager.getTargetStruct(st1, pos);
         StructureOperation.checkTargetStruct(st1.area, pos);//检查移动后的区域是否超过限制
         BasicTranslOperation.sl(player, playerData, st1, st2, "none", "0_degrees", () => {
-            player.sendText(StrFactory.cmdSuccess(`已将选区平移至 ${pos}`));
+            player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.BasicTranslOperation.move.success",`${pos}`)));
         });
     }
 
@@ -78,7 +79,7 @@ export default class BasicTranslOperation {
         let vb = trans.mul(new Vector3D(area.end.x, area.end.z, 1));
         st2 = new Structure(new Area3D(new Pos3D(va.arr[0], area.start.y, va.arr[1], area.start.dimid), new Pos3D(vb.arr[0], area.end.y, vb.arr[1], area.end.dimid)));
         BasicTranslOperation.sl(player, playerData, st1, st2, "none", res.degrees, () => {
-            player.sendText(StrFactory.cmdSuccess(`已将选区绕点: ${axisPos} 顺时针旋转 ${parseFloat(res.degrees)} 度`));
+            player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.BasicTranslOperation.rote.success", `${axisPos}`, `${parseFloat(res.degrees)}`)));
         });
     }
 
@@ -119,7 +120,7 @@ export default class BasicTranslOperation {
         let vb = trans.mul(new Vector3D(area.end.x, area.end.z, 1));
         st2 = new Structure(new Area3D(new Pos3D(va.arr[0], area.start.y, va.arr[1], area.start.dimid), new Pos3D(vb.arr[0], area.end.y, vb.arr[1], area.end.dimid)));
         BasicTranslOperation.sl(player, playerData, st1, st2, res.mirror, "0_degrees", () => {
-            player.sendText(StrFactory.cmdSuccess(`已将选区关于点 ${axisPos} 进行${res.mirror}轴对称`));
+            player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.BasicTranslOperation.mirror.success", `${axisPos}`, `${res.mirror}`)));
         });
     }
 
@@ -147,13 +148,13 @@ export default class BasicTranslOperation {
         if (ny >= 0) {
             let top = area.end.y + ny * lens[1];
             if (top > Constant.SPACE.MAX_HIGHT) {
-                throw new Error(`堆叠后最大高度${top} 不在世界范围内(${Constant.SPACE.MIN_HIGHT}-${Constant.SPACE.MIN_HIGHT}), 无法操作`);
+                throw new Error(`dynamic.BasicTranslOperation.stack.max&&${top}&&${Constant.SPACE.MIN_HIGHT}-${Constant.SPACE.MIN_HIGHT}`);
             }
         }
         else {
             let bottom = area.start.y - ny * lens[1];
             if (bottom < Constant.SPACE.MIN_HIGHT) {
-                throw new Error(`堆叠后最小高度${bottom} 不在世界范围内(${Constant.SPACE.MIN_HIGHT}-${Constant.SPACE.MIN_HIGHT}), 无法操作`);
+                throw new Error(`ynamic.BasicTranslOperation.stack.min&&${bottom}&&${Constant.SPACE.MIN_HIGHT}-${Constant.SPACE.MIN_HIGHT}`);
             }
         }
         let st = new Structure(area);
@@ -189,7 +190,7 @@ export default class BasicTranslOperation {
                     StructureManager.tp(player, playerData);
                     let d = (nx == 0 ? 0 : 1) + (ny == 0 ? 0 : 1) + (nz == 0 ? 0 : 1);
                     let nStr = StrFactory.replaceAll(`${ax != 0 ? ax : ""} ${ay != 0 ? ay : ""} ${az != 0 ? az : ""}`.trim(), " +", ",");
-                    player.sendText(StrFactory.cmdSuccess(`已将选区在${nx != 0 ? (nx >= 0 ? "+" : "-") + "x" : ""}${ny != 0 ? (ny >= 0 ? "+" : "-") + "y" : ""}${nz != 0 ? (nz >= 0 ? "+" : "-") + "z" : ""}方向上${d}维堆叠${nStr}次`));
+                    player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.BasicTranslOperation.stack.success" ,`${nx != 0 ? (nx >= 0 ? "+" : "-") + "x" : ""}${ny != 0 ? (ny >= 0 ? "+" : "-") + "y" : ""}${nz != 0 ? (nz >= 0 ? "+" : "-") + "z" : ""}`,`${d}`,`${nStr}`)));
                 });
             });
         });

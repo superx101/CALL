@@ -11,6 +11,7 @@ import StructureManager from "./StructureManager";
 import { Pos } from "../type/Pos";
 import PlayerData from "../model/PlayerData";
 import Version from "../util/Version";
+import Tr from "../util/Translator";
 
 export default class ShapeManager {
     public static pkgs: pkgs = {};
@@ -64,7 +65,7 @@ export default class ShapeManager {
             zMin = arr[0].z;
         }
         catch (e) {
-            throw new Error("返回的数组至少需要有一组数据:" + e);
+            throw new Error(`dynamic.ShapeManager.arrayToNBTs.moreData&&${e}`);
         }
         let map = new Map();
 
@@ -203,47 +204,47 @@ export default class ShapeManager {
 
     public static run(player: Player, playerData: PlayerData, pkgName: string, index: number, posInt: Pos3D, jsonStr: string) {
         if (ShapeManager.pkgs[pkgName] == null) {
-            throw new Error(`无法找到包路径为${pkgName}的形状包, 请检查拼写或是否装入该包`);
+            throw new Error(`dynamic.ShapeManager.run.cantFind&&${pkgName}`);
         }
         let len = ShapeManager.pkgs[pkgName].shapeNames.length;
         if (index >= len) {
-            throw new Error(`请输入正确的形状序号, 当前形状包内序号范围: 0~${len}`);
+            throw new Error(`dynamic.ShapeManager.run.wrongIndex&&${len-1}`);
         }
         try {
             //@ts-ignore
             let fuc = ll.import(ShapeLoader.EXPORTSAPCE, pkgName + ShapeLoader.CMD);
             let shape = fuc(player, index, posInt, JSON.parse(jsonStr));
-            player.sendText(StrFactory.cmdTip("正在生成形状"));
+            player.sendText(StrFactory.cmdTip(Tr._(player.langCode, "dynamic.ShapeManager.run.creating")));
 
             //生成nbt对象数组
             if (shape == null) {
-                throw new Error("export_cmd返回参数类型为空");
+                throw new Error("dynamic.ShapeManager.run.empty");
             }
             if (shape instanceof Object) {
                 let res = ShapeManager.arrayToNBTs(shape.arr, shape.pos);
                 //undo保存
                 StructureManager.undoSave(player, playerData, [res.st], () => {
                     //生成
-                    StructureManager.traversal(player, playerData, res.areas, "生成中", 15, (x: number, z: number) => {
+                    StructureManager.traversal(player, playerData, res.areas, Tr._(player.langCode, "dynamic.ShapeManager.run.creating1"), 15, (x: number, z: number) => {
                         if (res.nbts != null) {
                             mc.setStructure(res.nbts[x][z], mc.newIntPos(res.areas[x][z].start.x, res.areas[x][z].start.y, res.areas[x][z].start.z, res.areas[x][z].start.dimid));
                         }
                         return Promise.resolve(true);
                     }, () => {
                         player.refreshChunks();
-                        player.sendText(StrFactory.cmdSuccess("成功形成形状"));
+                        player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.ShapeManager.run.success")));
                     }, () => {
-                        player.sendText(StrFactory.cmdErr("生成形状失败"));
+                        player.sendText(StrFactory.cmdErr(Tr._(player.langCode, "dynamic.ShapeManager.run.fail")));
                     })
                 });
             }
             else {
-                throw new Error("export_cmd返回参数类型错误或返回失败, 应为对象: {pos: Array<Int>, arr: Array<Object>}");
+                throw new Error("dynamic.ShapeManager.run.error");
             }
         }
         catch (e) {
             if (ShapeManager.debugMod) {
-                throw new Error(`[${pkgName}][异常] ${e.message}\n${e.stack}`);
+                throw new Error(`[${pkgName}][error] ${e.message}\n${e.stack}`);
             }
         }
     }

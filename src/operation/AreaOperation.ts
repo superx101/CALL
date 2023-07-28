@@ -7,6 +7,7 @@ import PlayerData from "../model/PlayerData";
 import Pos3D from "../model/Pos3D";
 import StrFactory from "../util/StrFactory";
 import Players from "../common/Players";
+import Tr from "../util/Translator";
 
 export default class AreaOperation {
     public static start(player: Player, output: CommandOutput, playerData: PlayerData, res: any) {
@@ -27,7 +28,7 @@ export default class AreaOperation {
                         AreaOperation.setPosA(player, playerData, Pos3D.fromPos(block.pos));
                     }
                     else {
-                        throw new Error(`未能获取视线方块, 无法选点, 最大选择范围:${max}`);
+                        throw new Error(`dynamic.AreaOperation.start.viewError&&${max}`);
                     }
                 }
                 else {
@@ -47,7 +48,7 @@ export default class AreaOperation {
                         AreaOperation.setPosB(player, playerData, Pos3D.fromPos(block.pos));
                     }
                     else {
-                        throw new Error(`未能获取视线方块, 无法选点, 最大选择范围:${max}`);
+                        throw new Error(`dynamic.AreaOperation.start.viewError&&${max}`);
                     }
                 }
                 else {
@@ -57,18 +58,18 @@ export default class AreaOperation {
             case "clear":
             case "cl":
                 AreaOperation.clearArea(playerData);
-                output.success(StrFactory.cmdMsg("已清除选区"));
+                output.success(StrFactory.cmdMsg(Tr._(player.langCode, "dynamic.AreaOperation.start.clear")));
                 break;
             case "show":
             case "sh":
                 if (enum_2 == null || enum_2 == "on") {
                     playerData.settings.displayArea = true;
-                    output.success(StrFactory.cmdSuccess("已开启选区显示"));
+                    output.success(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.AreaOperation.start.showOn")));
                 }
                 else if (enum_2 == "off" || enum_2 == "of") {
                     playerData.settings.displayArea = false;
                     AreaOperation.hideArea(playerData);
-                    output.success(StrFactory.cmdSuccess("已关闭选区显示"));
+                    output.success(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.AreaOperation.start.showOff")));
                 }
                 break;
             case "se":
@@ -93,14 +94,14 @@ export default class AreaOperation {
                 let area = Area3D.fromArea3D(playerData.settings.area);
                 let lens = area.getLens();
                 if (lens[0] > Constant.AREA.MAX_LENGTH || lens[1] > Constant.AREA.MAX_HIGHT || lens[2] > Constant.AREA.MAX_LENGTH) {
-                    throw new Error(`区域超过上限: ${Constant.AREA.MAX_LENGTH} ${Constant.AREA.MAX_HIGHT} ${Constant.AREA.MAX_LENGTH}`);
+                    throw new Error(`dynamic.AreaOperation.hasSetArea.overRange&&${Constant.AREA.MAX_LENGTH} ${Constant.AREA.MAX_HIGHT} ${Constant.AREA.MAX_LENGTH}`);
                 }
                 playerData.hasSetArea = true;
                 return true;
             }
             else {
                 playerData.hasSetArea = false;
-                throw new Error("两点不在同一维度内");
+                throw new Error("dynamic.AreaOperation.hasSetArea.notsame");
             }
         }
         return false;
@@ -109,7 +110,7 @@ export default class AreaOperation {
     /***private */
     private static checkPos(pos: Pos3D) {
         if (pos.y < Constant.SPACE.MIN_HIGHT || pos.y > Constant.SPACE.MAX_HIGHT) {
-            throw new Error(`选点y坐标必须在 ${Constant.SPACE.MIN_HIGHT} 到 ${Constant.SPACE.MAX_HIGHT} 内`)
+            throw new Error(`&&.y&&${Constant.SPACE.MIN_HIGHT}&&${Constant.SPACE.MAX_HIGHT}`)
         }
     }
 
@@ -120,18 +121,18 @@ export default class AreaOperation {
             //检查area
             let lens = area.getLens();
             if (lens[0] > Constant.AREA.MAX_LENGTH || lens[2] > Constant.AREA.MAX_LENGTH) {
-                throw new Error(`选区不能大于 ${Constant.AREA.MAX_LENGTH} ${Constant.AREA.MAX_HIGHT} ${Constant.AREA.MAX_LENGTH}`);
+                throw new Error(`dynamic.AreaOperation.setPos.max&&${Constant.AREA.MAX_LENGTH} ${Constant.AREA.MAX_HIGHT} ${Constant.AREA.MAX_LENGTH}`);
             }
-            player.sendText(StrFactory.cmdTip(`已设置区域: ${playerData.settings.area.start}->${playerData.settings.area.end}\n长度: ${area.getLensStr()}`), Enums.msg.RAW);
+            player.sendText(StrFactory.cmdTip(Tr._(player.langCode, "dynamic.AreaOperation.setPos.setArea", `${playerData.settings.area.start}->${playerData.settings.area.end}`, area.getLensStr())), Enums.msg.RAW);
             AreaOperation.hideArea(playerData);
             AreaOperation.showArea(playerData);
         }
         else {
             if (num == 1) {
-                player.sendText(StrFactory.cmdTip(`已设置第1点: ${playerData.settings.area.start}`), Enums.msg.RAW);
+                player.sendText(StrFactory.cmdTip(Tr._(player.langCode, "dynamic.AreaOperation.setPos.a", `${playerData.settings.area.start}`)), Enums.msg.RAW);
             }
             else {
-                player.sendText(StrFactory.cmdTip(`已设置第2点: ${playerData.settings.area.end}`), Enums.msg.RAW);
+                player.sendText(StrFactory.cmdTip(Tr._(player.langCode, "dynamic.AreaOperation.setPos.b",`${playerData.settings.area.end}`)), Enums.msg.RAW);
             }
 
         }
@@ -171,7 +172,7 @@ export default class AreaOperation {
     /**throw Error */
     public static hasArea(playerData: PlayerData) {
         if (playerData.hasSetArea == null || !playerData.hasSetArea) {
-            throw new Error("未选择选区,无法操作");
+            throw new Error("dynamic.AreaOperation.hasArea.error");
         }
     }
 
@@ -185,7 +186,7 @@ export default class AreaOperation {
             return true;
         }
         else {
-            throw new Error("暂无选区无法显示");
+            throw new Error("dynamic.AreaOperation.showArea.noArea");
         }
     }
 

@@ -22,11 +22,12 @@ import TextureOperation from "./operation/TextureOperation";
 import ToolOperation from "./operation/ToolOperation";
 import UpdateOperation from "./operation/UpdateOperation";
 import ShapeLoader from "./plugin/ShapeLoader";
-import { Listener } from "./type/Common";
+import { Compare, Listener } from "./type/Common";
 import { Warn } from "./type/Error";
 import { Pos } from "./type/Pos";
 import { ToolType } from "./type/Tool";
 import StrFactory from "./util/StrFactory";
+import Tr from "./util/Translator";
 
 function displayLogo(show: boolean) {
     if (show) {
@@ -43,12 +44,12 @@ function displayLogo(show: boolean) {
 
 function command_playerCallback(ori: CommandOrigin, output: CommandOutput, res: any) {
     if (!Players.hasPermission(ori.player)) {
-        throw new Error("无CALL使用权限,无法执行指令");
+        throw new Error("dynamic.app.command_playerCallback.notHasPermission");
     }
     let playerData = Players.getData(ori.player.xuid);
     let player = ori.player;
     if (playerData.forbidCmd) {
-        throw new Error("无法执行指令, 请等待当前操作结束");
+        throw new Error("dynamic.app.command_playerCallback.wait");
     }
 
     switch (res.action) {
@@ -62,7 +63,7 @@ function command_playerCallback(ori: CommandOrigin, output: CommandOutput, res: 
     }
 
     if (!playerData.settings.enable) {
-        throw new Error("当前CALL处于关闭状态无法执行指令 (输入/call on开启)");
+        throw new Error("dynamic.app.command_playerCallback.close");
     }
 
     switch (res.action) {
@@ -180,7 +181,7 @@ function command_playerCallback(ori: CommandOrigin, output: CommandOutput, res: 
         case "im":
         case "export":
         case "ex":
-            throw new Error("该指令为后台指令");
+            throw new Error("dynamic.app.command_playerCallback.consoleCmd");
     }
 }
 
@@ -198,7 +199,7 @@ function command_consoleCallback(output: CommandOutput, res: any) {
             break;
         case "reload":
         case "r":
-            ReloadOperation.start("管理员已重载插件");
+            ReloadOperation.start();
             break;
         case "shape":
         case "sh":
@@ -217,14 +218,14 @@ function command_consoleCallback(output: CommandOutput, res: any) {
             ExportOperation.start(res, output);
             break;
         default:
-            throw new Error("当前指令格式错误或为非控制台指令");
+            throw new Error("dynamic.app.command_consoleCallback.cmdError");
     }
 
 }
 
 function command() {
-    let cmd = mc.newCommand("call", "建造助手CALL(Construct Assistant for LiteLoaderBDS)指令", PermType.Any, 0x80, "ca");
-    //public
+    let cmd = mc.newCommand("call", "@console.app.command.introduction@", PermType.Any, 0x80, "ca");
+    //public param
     cmd.mandatory("player", ParamType.Player, "", "player_man");
     cmd.mandatory("id", ParamType.String, "id", "id_man");
     cmd.mandatory("states", ParamType.String, "", "states_man");
@@ -468,25 +469,34 @@ function command() {
 
     cmd.setCallback((cmd, ori, output, res) => {
         try {
-            if (ori.type == OriginType.Player) {
-                command_playerCallback(ori, output, res);
-            }
-            else if (ori.type == OriginType.Block) {
-
-            }
-            else if (ori.type == OriginType.Server) {
-                command_consoleCallback(output, res);
+            switch (ori.type) {
+                case OriginType.Player:
+                    command_playerCallback(ori, output, res);
+                    break;
+                case OriginType.Server:
+                    command_consoleCallback(output, res);
+                default:
+                    break;
             }
 
         } catch (e) {
-            if (e instanceof Warn) {
-                output.error(StrFactory.cmdWarn(e.message));
+            const arr = e.message.split("&&") as string[];
+            let text;
+            switch(ori.type) {
+                case OriginType.Player:
+                    text = Tr._(ori.player.langCode, arr[0], ...arr.slice(1));
+                    break;
+                case OriginType.Server:
+                    text = Tr._c(arr[0], ...arr.slice(1));
             }
-            else {
-                output.error(StrFactory.cmdErr(e.message));
-            }
+
+            if (e instanceof Warn) 
+                output.error(StrFactory.cmdWarn(text));
+            else 
+                output.error(StrFactory.cmdErr(text));
+
             if (Config.get(Config.GLOBAL, "debugMod")) {
-                logger.error(e.message + "\nstack:" + e.stack);
+                logger.error("msg:", e.message, "\ntr:", text + "\nstack:" + e.stack);
             }
         }
     });
@@ -575,10 +585,11 @@ function clock() {
 
 function checkVersion() {
     if (!ll.requireVersion(Config.LL_MINVERSION.major, Config.LL_MINVERSION.minor, Config.LL_MINVERSION.revision)) {
-        logger.warn(`当前LL版本为${ll.major}.${ll.minor}.${ll.revision}, 小于当前CALL支持的LL最小版本${Config.LL_MINVERSION.toString()}, 若出现部分功能失效请更新LL(LiteLoaderBDS)`)
+        logger.warn('@console.app.checkVersion, ${ll.major}.${ll.minor}.${ll.revision}, ${Config.LL_MINVERSION.toString()}@')
     }
-    if (Config.ISOLDVERSION) {
-        logger.warn(`当前BDS版本为:${Config.SERVER_VERSION.toString()}, CALL-1.1.5后主要适配1.19.70即以上版本, 已不与旧版兼容, 若使用中出现问题请安装旧版`);
+    // min version
+    if (Config.SERVER_VERSION.compare(Config.MINVERSION) == Compare.LESSER) {
+        logger.warn('@console.app.oldVersion, Config.SERVER_VERSION.toString(), Config.MINVERSION.toString()@');
     }
 }
 
@@ -600,8 +611,8 @@ function init() {
 
         Activity.onServerCreate();
 
-        listener(); //监听器初始化
-        command();//指令初始化
+        listener(); //init listener
+        command();//register command
     }
     catch (e) {
         logger.error(e.message + "\nstack:" + e.stack);

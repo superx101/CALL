@@ -16,12 +16,12 @@ export default class Activity {
 
     public static onStart(player: Player) {
         let playerData = Players.getData(player.xuid);
-        AreaOperation.onStart(playerData);//area 恢复选区显示
+        AreaOperation.onStart(playerData);//Restore selection display
     }
 
     public static onStop(player: Player) {
         let playerData = Players.getData(player.xuid);
-        AreaOperation.onStop(playerData);//area 清除选区显示
+        AreaOperation.onStop(playerData);//clear selection display
     }
 
     public static onDestroy(player: Player) {

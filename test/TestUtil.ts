@@ -14,8 +14,8 @@ export default class TestUtil {
 
     public static equal(title: string, f: Function, value: any) {
         if(f() == value)
-            logger.info(`[Test] ${title} passed!`);
+            logger.info(`[Test] (passed) ${title}`);
         else
-            logger.error(`[Test] ${title} failed: expect=${value}, result=${f()}`);
+            logger.error(`[Test] (failed) ${title} :expect=${value}, result=${f()}`);
     }
 }

@@ -15,9 +15,9 @@ export default class ImportManager {
     public static findXuidByName(name: string): string {
         const xuid = data.name2xuid(name);
         if (xuid == null)
-            throw new Error(`名称输入错误, 无法从所有玩家中找到: ${name}`);
+            throw new Error(`console.ImportManager.findXuidByName.error&&${name}`);
         if (Object.keys(StructureManager.getPrivate()).indexOf(xuid) <= -1)
-            throw new Error(`玩家: ${name} 尚未被CALL记录, 请授予该玩家使用权限, 并让其使用CALL后再重试`);
+            throw new Error(`console.ImportManager.findXuidByName.error&&${name}`);
         return xuid;
     }
 
@@ -27,7 +27,7 @@ export default class ImportManager {
         let data;
 
         if (!File.exists(`${Config.IMPORT}/${file.base}`))
-            throw new Error(`找不到需要导入的文件: ${path.join(process.cwd(), Config.IMPORT)}/${file.base} \n请将确保文件名是否正确, 且文件位于CALL/import内`);
+            throw new Error(`console.ImportManager.readFile.notFind&&${path.join(process.cwd(), Config.IMPORT)}/${file.base}`);
 
         switch (file.ext.substring(1)) {
             case Type.MCSTRUCTURE:
@@ -38,9 +38,9 @@ export default class ImportManager {
                 f.close();
                 break;
             case "":
-                throw new Error(`无法确定文件格式, 请输入文件后缀名`)
+                throw new Error(`console.ImportManager.readFile.formatError`)
             default:
-                throw new Error(`暂不支持导入格式为 ${file.ext} 的文件`);
+                throw new Error(`console.ImportManager.readFile.notSupport&&${file.ext}`);
         }
 
         return { type, data };

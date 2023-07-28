@@ -27,7 +27,7 @@ export default class ExportManager {
         if (isFind)
             return Structure.fromStructure(st);
         else
-            throw new Error(`未在所有人的保存中找到id为 ${sid} 的结构`)
+            throw new Error(`dynamic.ExportManager.checkStructure.notFind&&${sid}`);
     }
 
     /**

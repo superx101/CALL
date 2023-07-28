@@ -16,26 +16,24 @@ function getListSet(p: string): Set<string> {
     return set;
 }
 
-export default class Translator {
-    public static readonly ITEM = "item";
+export default class Tr {
     public static readonly DEFAULTLANG = 'en_US';
 
-    public static _(lang: string, key: string, ...args: any): string {
+    public static _c(key: string, ...args: any): string {
+        return Tr._(Config.get(Config.GLOBAL, "consoleLanguage", Tr.DEFAULTLANG), key, args);
+    }
+
+    public static _(lang: string, key: string, ...args: any[]): string {
+        if (!langListSet.has(lang)) lang = Tr.DEFAULTLANG;
+
         let reader = readerMap.get(lang);
 
-        //if reader unload
+        //first load reader
         if (reader == null) {
-            if (langListSet.has(lang)) {
-                //.lang exist
-                reader = PropertiesReader(`${Config.LANG}/${lang}.lang`);
-                readerMap.set(lang, reader);
-            }
-            else {
-                //.lang not exist, use default (default file must exist)
-                return Translator._(Translator.DEFAULTLANG, key, args);
-            }
+            readerMap.set(lang, PropertiesReader(`${Config.LANG}/${lang}.lang`));
+            reader = readerMap.get(lang);
         }
 
-        return sprintf.sprintf(reader.get(key) as string, args);
+        return sprintf.sprintf(reader.get(key) as string, ...args);
     }
 }

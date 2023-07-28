@@ -8,6 +8,7 @@ import Area3D from "../model/Area3D";
 import Pos3D from "../model/Pos3D";
 import StructureManager from "../manager/StructureManager";
 import * as ProgressBar from "cli-progress"
+import Tr from "../util/Translator";
 
 export default class ImportOperation {
     public static start(res: { file: string, playerName: string, includeEntity?: boolean, Name?: string }, output: CommandOutput) {
@@ -32,7 +33,7 @@ export default class ImportOperation {
             format: '{title}: {bar} | {percentage}% | {value}/{total} | {duration_formatted}'
         }, ProgressBar.Presets.shades_classic);
         bar.start(size[0] * size[1] * size[2], 0, {
-            title: '转换结构中'
+            title: Tr._c("console.ImportOperation.start.importing")
         });
 
         //去除实体
@@ -51,12 +52,12 @@ export default class ImportOperation {
 
         //保存
         if (ImportManager.save(st, xuid, sid, comps)) {
-            output.success(StrFactory.cmdSuccess(`已从文件 ${res.file} 导入结构到玩家 ${res.playerName} 的保存中, 结构id: ${sid} 名称: ${st.name}`))
+            output.success(StrFactory.cmdSuccess(Tr._c("console.ImportOperation.start.success", res.file, res.playerName, sid, st.name)));
             const player = mc.getPlayer(xuid);
-            if(player != null) player.sendText(StrFactory.cmdTip(`接收到从服务端导入的结构, 已存入"我的结构"中, 结构id: ${sid} 名称: ${st.name}`));
+            if(player != null) player.sendText(StrFactory.cmdTip(Tr._(player.langCode, "dynamic.ImportOperation.start.success", sid, st.name)));
         }
         else {
-            throw new Error(`结构导入时保存失败`);
+            throw new Error(Tr._c("console.ImportOperation.start.fail"));
         }
     }
 }
