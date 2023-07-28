@@ -1,6 +1,6 @@
 /// <reference path="../Shape.d.ts"/> 
 /////////////////////////////////////////// common //////////////////////////////////////////////////
-//包围盒
+//Bounding box
 class Box {
     constructor(min = new SHP.THREE.Vector3(+ Infinity, + Infinity, + Infinity), max = new SHP.THREE.Vector3(- Infinity, - Infinity, - Infinity)) {
         this.min = min;
@@ -50,7 +50,7 @@ class Box {
     }
 }
 
-//方体
+//Cube
 class Cube {
     constructor(box) {
         this.arr = [];

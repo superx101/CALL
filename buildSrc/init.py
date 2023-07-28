@@ -1,4 +1,3 @@
-import compile as c
 import os
 import shutil
 
@@ -8,4 +7,4 @@ if os.path.exists("../CALL") == False:
 shutil.copytree('CALL', '../CALL', dirs_exist_ok=True)
 
 # run compile
-c.run()
+import compile as c
