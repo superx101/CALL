@@ -12,7 +12,7 @@ export default class AreaDisplayerManager {
     static posMap = new Map();
 
     /*** private */
-    private static add(pos: Pos3D, lens: number[], offset: number) {
+    private static add(pos: Pos3D, lens: number[], offset: number, player: Player) {
         try {
             //保存方块
             let data: { blockEntityNbt: NbtCompound, blockNbt: NbtCompound } = {
@@ -37,7 +37,7 @@ export default class AreaDisplayerManager {
             blockEntity.setNbt(entityNbt);
         }
         catch (e) {
-            throw new Error(`dynamic.AreaDisplayerManager.add.error&&${e.message}`);
+            throw new Error(Tr._(player.langCode, "dynamic.AreaDisplayerManager.add.error", `${e.message}`));
         }
     };
 
@@ -75,7 +75,7 @@ export default class AreaDisplayerManager {
         catch (e) { }
     };
 
-    public static set(area: Area3D) {
+    public static set(area: Area3D, player: Player) {
         let tempArea = Area3D.fromArea3D(area);
         let top = tempArea.end.y;
         let bottom = tempArea.start.y;
@@ -112,7 +112,7 @@ export default class AreaDisplayerManager {
             }
         }
         if (success) {
-            AreaDisplayerManager.add(tempPos, lens, offset);
+            AreaDisplayerManager.add(tempPos, lens, offset, player);
             return tempPos;
         }
         //超过最高高度限制，改为向下寻找
@@ -138,11 +138,11 @@ export default class AreaDisplayerManager {
             }
         }
         if (success) {
-            AreaDisplayerManager.add(tempPos, lens, offset);
+            AreaDisplayerManager.add(tempPos, lens, offset, player);
             return tempPos;
         }
         else {
-            throw new Error("dynamic.AreaDisplayerManager.set.cannotDisplay");
+            throw new Error(Tr._(player.langCode, "dynamic.AreaDisplayerManager.set.cannotDisplay"));
         }
     }
 
@@ -156,8 +156,8 @@ export default class AreaDisplayerManager {
         if(playerData.settings.areaTextShow && playerData.hasSetArea && playerData.settings.enable) {
             const area = Area3D.fromArea3D(playerData.settings.area);
             const lens = area.getLens();
-            const str0 = Tr._(player.langCode, `${playerData.settings.area.start}->${playerData.settings.area.end}`);
-            const str1 = Tr._(player.langCode,`${Format.Red}${lens[0]} ${Format.Green}${lens[1]} ${Format.Aqua}${lens[2]}`);
+            const str0 = Tr._(player.langCode, "dynamic.AreaDisplayerManager.areaTextTip.str0", `${playerData.settings.area.start}->${playerData.settings.area.end}`);
+            const str1 = Tr._(player.langCode, "dynamic.AreaDisplayerManager.areaTextTip.str1", `${Format.Red}${lens[0]} ${Format.Green}${lens[1]} ${Format.Aqua}${lens[2]}`);
             const space = (str0.length - str1.length + 3) / 2;
             player.sendText(`${str0}\n${Array.from({length: space}, ()=>' ').join('') + str1}`, Enums.msg.TIP);
         }

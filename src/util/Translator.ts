@@ -1,10 +1,9 @@
 import path = require("path");
-import Config from "../common/Config";
 import * as PropertiesReader from 'properties-reader';
 import * as sprintf from 'sprintf-js'
+import Config from "../common/Config";
 
 const langListSet: Set<string> = getListSet(Config.LANG);
-
 const readerMap: Map<string, PropertiesReader.Reader> = new Map();
 
 function getListSet(p: string): Set<string> {
@@ -20,7 +19,7 @@ export default class Tr {
     public static readonly DEFAULTLANG = 'en_US';
 
     public static _c(key: string, ...args: any): string {
-        return Tr._(Config.get(Config.GLOBAL, "consoleLanguage", Tr.DEFAULTLANG), key, args);
+        return Tr._(Config.get(Config.GLOBAL, "consoleLanguage", Tr.DEFAULTLANG), key, ...args);
     }
 
     public static _(lang: string, key: string, ...args: any[]): string {

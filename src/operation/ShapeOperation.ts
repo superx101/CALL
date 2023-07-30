@@ -46,24 +46,6 @@ export default class ShapeOperation {
         }
     }
 
-    public static getTutorial(pkgName: string) {
-        try {
-            //@ts-ignore
-            let get = ll.import(ShapeLoader.EXPORTSAPCE, pkgName + ShapeLoader.TUTORAIL);
-            let obj = get();
-            if(Object.keys(obj).length == 0) {
-                throw new Error(Tr._c("console.ShapeOperation.getTutorial.error"));
-            }
-            return obj;
-        }
-        catch (e) {
-            if(ShapeManager.debugMod) {
-                colorLog("red", Tr._c("console.ShapeOperation.sendForm.error1", pkgName, e));
-            }
-            return null;
-        }
-    }
-
     public static getList() {
         return ShapeManager.getList();
     }

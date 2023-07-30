@@ -148,13 +148,13 @@ export default class BasicTranslOperation {
         if (ny >= 0) {
             let top = area.end.y + ny * lens[1];
             if (top > Constant.SPACE.MAX_HIGHT) {
-                throw new Error(`dynamic.BasicTranslOperation.stack.max&&${top}&&${Constant.SPACE.MIN_HIGHT}-${Constant.SPACE.MIN_HIGHT}`);
+                throw new Error(Tr._(player.langCode, "dynamic.BasicTranslOperation.stack.max", `${top}`, `${Constant.SPACE.MIN_HIGHT}-${Constant.SPACE.MIN_HIGHT}`));
             }
         }
         else {
             let bottom = area.start.y - ny * lens[1];
             if (bottom < Constant.SPACE.MIN_HIGHT) {
-                throw new Error(`ynamic.BasicTranslOperation.stack.min&&${bottom}&&${Constant.SPACE.MIN_HIGHT}-${Constant.SPACE.MIN_HIGHT}`);
+                throw new Error(Tr._(player.langCode, "dynamic.BasicTranslOperation.stack.min", `${bottom}`, `${Constant.SPACE.MIN_HIGHT}-${Constant.SPACE.MIN_HIGHT}`));
             }
         }
         let st = new Structure(area);

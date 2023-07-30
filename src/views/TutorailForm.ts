@@ -11,7 +11,7 @@ export default class TutorailForm extends Form {
         return this;
     }
 
-    static colorArr = [Format.Red, Format.Gold, Format.Yellow, Format.Green, Format.Aqua, Format.LightPurple]
+    static colorArr = [Format.Gold, Format.Yellow, Format.Green, Format.Aqua, Format.LightPurple]
 
     private dfsSendForm(trace: any, color: number) {
         let node = this.obj;
@@ -20,7 +20,7 @@ export default class TutorailForm extends Form {
         });
         let title;
         if (trace.length > 0) {
-            title = trace[trace.length - 1];
+            title = Tr._(this.player.langCode, trace[trace.length - 1]);
         }
         else {
             title = Tr._(this.player.langCode, "dynamic.TutorailForm.dfsSendForm.s0")
@@ -32,11 +32,11 @@ export default class TutorailForm extends Form {
         if (typeof (node) == "object") {
             Object.keys(node).forEach(v => {
                 arr.push(v);
-                form.addButton(v);
+                form.addButton(Tr._(this.player.langCode, v));
             });
         }
         else if (typeof (node) == "string") {
-            form.setContent(node);
+            form.setContent(Tr._(this.player.langCode, node));
         }
 
         this.player.sendForm(form, (pl, id) => {

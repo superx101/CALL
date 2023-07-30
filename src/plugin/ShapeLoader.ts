@@ -1,6 +1,5 @@
 import Config from "../common/Config"
 import ShapeManager from "../manager/ShapeManager"
-import StrFactory from "../util/StrFactory"
 import Tr from "../util/Translator"
 import Version from "../util/Version"
 import ShapeForm from "../views/ShapeForm"
@@ -101,7 +100,7 @@ export default class ShapeLoader {
                 name = name.replaceAll(".", "_");
                 logger.info(`ll load "${buildPath}/${name}.js"`)
                 if (mc.runcmd(`ll load "${buildPath}/${name}.js"`)) {
-                    colorLog("green", Tr._c("console.ShapeLoader.start.s2", plugin.name, plugin.version))
+                    colorLog("green", Tr._c("console.ShapeLoader.start.s2", plugin.name, `${plugin.version}`))
                 }
             });
         }, 1000)

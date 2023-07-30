@@ -35,7 +35,7 @@ export default class ExportOperation {
                 break;
             default:
                 bar.stop();
-                throw new Error("console.ExportOperation.start.notFind");
+                throw new Error(Tr._c("console.ExportOperation.start.notFind"));
         }
         //写入文件
         if(ExportManager.writeFile(content, fileName, res.type, isBinary)) {

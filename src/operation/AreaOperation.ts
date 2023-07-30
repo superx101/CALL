@@ -28,7 +28,7 @@ export default class AreaOperation {
                         AreaOperation.setPosA(player, playerData, Pos3D.fromPos(block.pos));
                     }
                     else {
-                        throw new Error(`dynamic.AreaOperation.start.viewError&&${max}`);
+                        throw new Error(Tr._(player.langCode, "dynamic.AreaOperation.start.viewError", `${max}`));
                     }
                 }
                 else {
@@ -48,7 +48,7 @@ export default class AreaOperation {
                         AreaOperation.setPosB(player, playerData, Pos3D.fromPos(block.pos));
                     }
                     else {
-                        throw new Error(`dynamic.AreaOperation.start.viewError&&${max}`);
+                        throw new Error(Tr._(player.langCode, "dynamic.AreaOperation.start.viewError", `${max}`));
                     }
                 }
                 else {
@@ -94,23 +94,23 @@ export default class AreaOperation {
                 let area = Area3D.fromArea3D(playerData.settings.area);
                 let lens = area.getLens();
                 if (lens[0] > Constant.AREA.MAX_LENGTH || lens[1] > Constant.AREA.MAX_HIGHT || lens[2] > Constant.AREA.MAX_LENGTH) {
-                    throw new Error(`dynamic.AreaOperation.hasSetArea.overRange&&${Constant.AREA.MAX_LENGTH} ${Constant.AREA.MAX_HIGHT} ${Constant.AREA.MAX_LENGTH}`);
+                    throw new Error(Tr._(playerData.player.langCode, "dynamic.AreaOperation.hasSetArea.overRange", `${Constant.AREA.MAX_LENGTH} ${Constant.AREA.MAX_HIGHT} ${Constant.AREA.MAX_LENGTH}`));
                 }
                 playerData.hasSetArea = true;
                 return true;
             }
             else {
                 playerData.hasSetArea = false;
-                throw new Error("dynamic.AreaOperation.hasSetArea.notsame");
+                throw new Error(Tr._(playerData.player.langCode, "dynamic.AreaOperation.hasSetArea.notsame"));
             }
         }
         return false;
     }
 
     /***private */
-    private static checkPos(pos: Pos3D) {
+    private static checkPos(pos: Pos3D, player: Player) {
         if (pos.y < Constant.SPACE.MIN_HIGHT || pos.y > Constant.SPACE.MAX_HIGHT) {
-            throw new Error(`&&.y&&${Constant.SPACE.MIN_HIGHT}&&${Constant.SPACE.MAX_HIGHT}`)
+            throw new Error(Tr._(player.langCode, "dynamic.AreaOperation.checkPos.y", `${Constant.SPACE.MIN_HIGHT}`, `${Constant.SPACE.MAX_HIGHT}`))
         }
     }
 
@@ -121,7 +121,7 @@ export default class AreaOperation {
             //检查area
             let lens = area.getLens();
             if (lens[0] > Constant.AREA.MAX_LENGTH || lens[2] > Constant.AREA.MAX_LENGTH) {
-                throw new Error(`dynamic.AreaOperation.setPos.max&&${Constant.AREA.MAX_LENGTH} ${Constant.AREA.MAX_HIGHT} ${Constant.AREA.MAX_LENGTH}`);
+                throw new Error(Tr._(player.langCode, "dynamic.AreaOperation.setPos.max", `${Constant.AREA.MAX_LENGTH} ${Constant.AREA.MAX_HIGHT} ${Constant.AREA.MAX_LENGTH}`));
             }
             player.sendText(StrFactory.cmdTip(Tr._(player.langCode, "dynamic.AreaOperation.setPos.setArea", `${playerData.settings.area.start}->${playerData.settings.area.end}`, area.getLensStr())), Enums.msg.RAW);
             AreaOperation.hideArea(playerData);
@@ -139,13 +139,13 @@ export default class AreaOperation {
     }
 
     public static setPosA(player: Player, playerData: PlayerData, pos: Pos3D) {
-        AreaOperation.checkPos(pos);
+        AreaOperation.checkPos(pos, player);
         playerData.settings.area.start = Pos3D.fromPos3D(pos).floor();
         AreaOperation.setPos(player, playerData, 1);
     }
 
     public static setPosB(player: Player, playerData: PlayerData, pos: Pos3D) {
-        AreaOperation.checkPos(pos);
+        AreaOperation.checkPos(pos, player);
         playerData.settings.area.end = Pos3D.fromPos3D(pos).floor();
         AreaOperation.setPos(player, playerData, 2);
     }
@@ -172,7 +172,7 @@ export default class AreaOperation {
     /**throw Error */
     public static hasArea(playerData: PlayerData) {
         if (playerData.hasSetArea == null || !playerData.hasSetArea) {
-            throw new Error("dynamic.AreaOperation.hasArea.error");
+            throw new Error(Tr._(playerData.player.langCode, "dynamic.AreaOperation.hasArea.error"));
         }
     }
 
@@ -182,11 +182,11 @@ export default class AreaOperation {
         }
         if (AreaOperation.hasSetArea(playerData)) {
             //结构方块显示
-            playerData.displayPos = AreaDisplayerManager.set(playerData.settings.area);
+            playerData.displayPos = AreaDisplayerManager.set(playerData.settings.area, playerData.player);
             return true;
         }
         else {
-            throw new Error("dynamic.AreaOperation.showArea.noArea");
+            throw new Error(Tr._(playerData.player.langCode, "dynamic.AreaOperation.showArea.noArea"));
         }
     }
 

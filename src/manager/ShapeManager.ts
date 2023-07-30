@@ -52,7 +52,7 @@ export default class ShapeManager {
         }
     }
 
-    public static arrayToNBTs(arr: Blocks, pos: Pos) {
+    public static arrayToNBTs(arr: Blocks, pos: Pos, player: Player) {
         let xSize: number, ySize: number, zSize: number;
         let xMin: number, yMin: number, zMin: number;
         //size表示最大坐标
@@ -65,7 +65,7 @@ export default class ShapeManager {
             zMin = arr[0].z;
         }
         catch (e) {
-            throw new Error(`dynamic.ShapeManager.arrayToNBTs.moreData&&${e}`);
+            throw new Error(Tr._(player.langCode, "dynamic.ShapeManager.arrayToNBTs.moreData", `${e}`));
         }
         let map = new Map();
 
@@ -204,11 +204,11 @@ export default class ShapeManager {
 
     public static run(player: Player, playerData: PlayerData, pkgName: string, index: number, posInt: Pos3D, jsonStr: string) {
         if (ShapeManager.pkgs[pkgName] == null) {
-            throw new Error(`dynamic.ShapeManager.run.cantFind&&${pkgName}`);
+            throw new Error(Tr._(player.langCode, "ynamic.ShapeManager.run.cantFind", `${pkgName}`));
         }
         let len = ShapeManager.pkgs[pkgName].shapeNames.length;
         if (index >= len) {
-            throw new Error(`dynamic.ShapeManager.run.wrongIndex&&${len-1}`);
+            throw new Error(Tr._(player.langCode, "ynamic.ShapeManager.run.wrongIndex", `${len-1}`));
         }
         try {
             //@ts-ignore
@@ -218,10 +218,10 @@ export default class ShapeManager {
 
             //生成nbt对象数组
             if (shape == null) {
-                throw new Error("dynamic.ShapeManager.run.empty");
+                throw new Error(Tr._(player.langCode, "dynamic.ShapeManager.run.empty"));
             }
             if (shape instanceof Object) {
-                let res = ShapeManager.arrayToNBTs(shape.arr, shape.pos);
+                let res = ShapeManager.arrayToNBTs(shape.arr, shape.pos, player);
                 //undo保存
                 StructureManager.undoSave(player, playerData, [res.st], () => {
                     //生成
@@ -239,7 +239,7 @@ export default class ShapeManager {
                 });
             }
             else {
-                throw new Error("dynamic.ShapeManager.run.error");
+                throw new Error(Tr._(player.langCode, "dynamic.ShapeManager.run.error"));
             }
         }
         catch (e) {

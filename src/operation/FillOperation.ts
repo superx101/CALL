@@ -21,7 +21,7 @@ export default class FillOperation {
                 StructureManager.savePos(player, playerData);
                 FillManager.soildFill(player, playerData, playerData.settings.area, blockType, new BlockType("", ""), "", () => {
                     StructureManager.tp(player, playerData);
-                    player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.FillOperation.fill", `${Area3D.fromArea3D(playerData.settings.area)}`)));
+                    player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.FillOperation.fill.fill", `${Area3D.fromArea3D(playerData.settings.area)}`)));
                 });
                 break;
             case "hollow":
@@ -60,7 +60,7 @@ export default class FillOperation {
         StructureManager.savePos(player, playerData);
         FillManager.soildFill(player, playerData, playerData.settings.area, blockType1, blockType2, "replace", () => {
             StructureManager.tp(player, playerData);
-            player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.FillOperation.fill", `${Area3D.fromArea3D(playerData.settings.area)}`)));
+            player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.FillOperation.fill.replace", `${Area3D.fromArea3D(playerData.settings.area)}`)));
         });
     }
 }

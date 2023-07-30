@@ -184,7 +184,7 @@ export default class StructureOperation {
         StructureManager.redoPush(player, playerData, structArr, () => {
             StructureManager.undoPop(player, playerData, () => {
                 StructureManager.tp(player, playerData);
-                player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.StructureOperation.redo.s23")));
+                player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.StructureOperation.undo.s23")));
             });
         });
     }

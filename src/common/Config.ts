@@ -1,4 +1,3 @@
-import { Compare } from "../type/Common";
 import Version from "../util/Version";
 
 const ROOT = './plugins/nodejs/call';
@@ -37,7 +36,7 @@ export default class Config {
     public static readonly CONFIG = CONFIG;
     public static readonly LANG = CONFIG + '/lang';
     public static readonly DATAPATH = DATAROOT;
-    public static readonly  BIN = ROOT + "/bin";
+    public static readonly BIN = ROOT + "/bin";
     public static readonly DATA = DATA;
     public static readonly BUILD = DATAROOT + '/build';
     public static readonly PLUGINS = DATAROOT + '/plugins';
@@ -118,35 +117,6 @@ export default class Config {
         }
         catch (e) {
             throw e;
-        }
-    }
-
-    public static check() {
-        try {
-            let check = Config.get(Config.CHECK, "configs");
-            Object.keys(check).forEach(k => {
-                let c = check[k];
-                let data = Config.get(Config.GLOBAL, k);
-                if(data == null) throw new Error(`console.Config.check.notFind&&${k}`)
-                if (c.type != "enum" && typeof (data) != c.type) throw new Error(`@console.Config.check.type&&${k}&&${c.type}`);
-                switch (c.type) {
-                    case "number":
-                        if (data < c.min) throw new Error(`console.Config.check.less&&${k}&&${c.min}`);
-                        if (data > c.max) throw new Error(`console.Config.check.greater&&${k}&&${c.max}`);
-                        break;
-                    case "enum":
-                        let has = false;
-                        c.values.forEach((v: any) => {
-                            if (v == data) {
-                                has = true;
-                            }
-                        });
-                        if (!has) throw new Error(`@console.Config.check.enum, k, c.values@`);
-                        break;
-                }
-            });
-        } catch (e) {
-            throw new Error(`@console.Config.check.configFail, "CALL/config/configs", e.message@`);
         }
     }
 

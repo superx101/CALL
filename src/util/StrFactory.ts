@@ -118,10 +118,14 @@ export default class StrFactory {
             return Format.Bold + Format.DarkGreen + on + Format.Clear;
     }
 
+    public static Bold(str: string) {
+        return Format.Bold + str + Format.Clear;
+    }
+
     public static formEnable(bool: boolean, text: string) {
         if(bool)
             return text;
         else 
-            return Format.Bold + Format.Gray + text + Format.Clear;
+            return Format.DarkRed + text + Format.Clear;
     }
 }

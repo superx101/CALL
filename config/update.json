@@ -344,6 +344,17 @@
             "type": "create",
             "path": "./plugins/CALL/version",
             "value": "1.2.0"
+        },
+        {
+            "type": "patch_plus",
+            "path": "./plugins/CALL/config/configs.json",
+            "patch": [
+                {
+                    "op": "add",
+                    "path": "/consoleLanguage",
+                    "value": "zh_CN"
+                }
+            ]
         }
     ]
 }

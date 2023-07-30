@@ -20,7 +20,7 @@ export default class BlockEditerOperation {
     private static edit(playerData: PlayerData, output: CommandOutput, intPos: IntPos, nbt: string, BlockEntity: string) {
         let block = mc.getBlock(intPos);
         let blockRes: boolean, entityRes: boolean = true;
-        if(block == null) throw new Error("dynamic.BlockEditerOperation.edit.error");
+        if(block == null) throw new Error(Tr._(playerData.player.langCode, "dynamic.BlockEditerOperation.edit.error"));
 
         blockRes = block.setNbt(NBT.parseSNBT(nbt));
 

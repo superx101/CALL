@@ -30,7 +30,7 @@ export default class SettingsOperation {
             }
         });
         if (value == null) {
-            throw new Error(`dynamic.SettingsOperation.get.error&&${key}`);
+            throw new Error(Tr._(player.langCode, "dynamic.SettingsOperation.get.error", `${key}`));
         }
         else {
             output.success(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.SettingsOperation.get.success", key, value)))

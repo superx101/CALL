@@ -10,14 +10,15 @@ import Constant from "../type/Constant";
 import ExportManager from "./ExportManager";
 import Pos3D from "../model/Pos3D";
 import NBTManager from "./NBTManager";
+import Tr from "../util/Translator";
 
 export default class ImportManager {
     public static findXuidByName(name: string): string {
         const xuid = data.name2xuid(name);
         if (xuid == null)
-            throw new Error(`console.ImportManager.findXuidByName.error&&${name}`);
+            throw new Error(Tr._c("console.ImportManager.findXuidByName.error", name));
         if (Object.keys(StructureManager.getPrivate()).indexOf(xuid) <= -1)
-            throw new Error(`console.ImportManager.findXuidByName.error&&${name}`);
+            throw new Error(Tr._c("console.ImportManager.findXuidByName.error", name));
         return xuid;
     }
 
@@ -27,7 +28,7 @@ export default class ImportManager {
         let data;
 
         if (!File.exists(`${Config.IMPORT}/${file.base}`))
-            throw new Error(`console.ImportManager.readFile.notFind&&${path.join(process.cwd(), Config.IMPORT)}/${file.base}`);
+            throw new Error(Tr._c("console.ImportManager.readFile.notFind", `${path.join(process.cwd(), Config.IMPORT)}/${file.base}`));
 
         switch (file.ext.substring(1)) {
             case Type.MCSTRUCTURE:
@@ -38,9 +39,9 @@ export default class ImportManager {
                 f.close();
                 break;
             case "":
-                throw new Error(`console.ImportManager.readFile.formatError`)
+                throw new Error(Tr._c("console.ImportManager.readFile.formatError"))
             default:
-                throw new Error(`console.ImportManager.readFile.notSupport&&${file.ext}`);
+                throw new Error(Tr._c("console.ImportManager.readFile.notSupport", `${file.ext}`));
         }
 
         return { type, data };

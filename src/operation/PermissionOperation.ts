@@ -8,14 +8,14 @@ export default class PermissionOperation {
     /*** private */
     private static check(name: string) {
         if (Config.get(Config.GLOBAL, "permission") != PermissionsType.CUSTOMIZE) {
-            throw new Error("console.PermissionOperation.check.error");
+            throw new Error(Tr._c("console.PermissionOperation.check.error"));
         }
         if (name == null) {
-            throw new Error("console.PermissionOperation.check.error1");
+            throw new Error(Tr._c("console.PermissionOperation.check.error1"));
         }
         name = name.trim();
         if (name === "") {
-            throw new Error("console.PermissionOperation.check.error2");
+            throw new Error(Tr._c("console.PermissionOperation.check.error2"));
         }
     }
 
@@ -46,7 +46,7 @@ export default class PermissionOperation {
             }
         }
         else {
-            throw new Error(`console.PermissionOperation.add.fail&&${name}`);
+            throw new Error(Tr._c("console.PermissionOperation.add.fail", `${name}`));
         }
     }
 
@@ -66,7 +66,7 @@ export default class PermissionOperation {
             }
         }
         else {
-            throw new Error(`console.PermissionOperation.ban.fail&&${name}`);
+            throw new Error(Tr._c("console.PermissionOperation.ban.fail", `${name}`));
         }
     }
 }
