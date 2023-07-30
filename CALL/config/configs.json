@@ -290,7 +290,7 @@
                         "cmds": [
                             "ca"
                         ],
-                        "describe": "打开菜单工具"
+                        "describe": "打开菜单工具\nOpen menu tool"
                     }
                 },
                 "minecraft:wooden_axe": {
@@ -298,7 +298,7 @@
                         "cmds": [
                             "ca ar se ${block.pos.x} ${block.pos.y} ${block.pos.z}"
                         ],
-                        "describe": "选区工具"
+                        "describe": "选区工具\nSelection tool"
                     }
                 },
                 "minecraft:shears": {
@@ -306,7 +306,7 @@
                         "cmds": [
                             "ca ar cl"
                         ],
-                        "describe": "取消选区工具"
+                        "describe": "取消选区工具\nCancel selection tool"
                     }
                 },
                 "minecraft:stick": {
@@ -314,7 +314,7 @@
                         "cmds": [
                             "ca ar b ${block.pos.x} ${block.pos.y} ${block.pos.z}"
                         ],
-                        "describe": "B点选区工具"
+                        "describe": "B点选区工具\nB point selection tool"
                     }
                 },
                 "minecraft:arrow": {
@@ -322,7 +322,7 @@
                         "cmds": [
                             "ca ar a ${block.pos.x} ${block.pos.y} ${block.pos.z}"
                         ],
-                        "describe": "A点选区工具"
+                        "describe": "A点选区工具\nA point selection tool"
                     }
                 },
                 "minecraft:trident": {
@@ -330,7 +330,7 @@
                         "cmds": [
                             "ca te a ${block.pos.x} ${block.pos.y} ${block.pos.z}"
                         ],
-                        "describe": "材质a选择工具"
+                        "describe": "材质a选择工具\nTexture a selection tool"
                     }
                 },
                 "minecraft:blaze_rod": {
@@ -338,7 +338,7 @@
                         "cmds": [
                             "ca co"
                         ],
-                        "describe": "复制快捷键工具"
+                        "describe": "复制快捷键工具\nCopy tool"
                     }
                 },
                 "minecraft:bone": {
@@ -346,7 +346,7 @@
                         "cmds": [
                             "ca pa ${block.pos.x} ${block.pos.y} ${block.pos.z}"
                         ],
-                        "describe": "粘贴到点击的位置工具"
+                        "describe": "粘贴到点击的位置工具\nPaste to click position tool"
                     }
                 },
                 "minecraft:wooden_pickaxe": {
@@ -354,7 +354,7 @@
                         "cmds": [
                             "give @s ${block.type} 1 ${block.tileData}"
                         ],
-                        "describe": "获取点击的方块工具 (需要有give指令权限)"
+                        "describe": "获取点击的方块工具 (需要有give指令权限)\nGet block tool"
                     }
                 },
                 "minecraft:emerald": {
@@ -362,7 +362,7 @@
                         "cmds": [
                             "ca bl ${block.pos.x} ${block.pos.y} ${block.pos.z} me"
                         ],
-                        "describe": "编辑点击的方块"
+                        "describe": "编辑点击的方块\nEdit block tool"
                     }
                 }
             },
@@ -372,7 +372,7 @@
                         "cmds": [
                             "ca te b ${block.pos.x} ${block.pos.y} ${block.pos.z}"
                         ],
-                        "describe": "材质b选择工具"
+                        "describe": "材质b选择工具\nTexture b selection tool"
                     }
                 }
             }
