@@ -184,6 +184,11 @@ export default class UpdateManager {
             if (Config.get(Config.GLOBAL, "debugMod", false)) {
                 logger.warn(Tr._c("console.UpdateManager.error", reason));
             }
+        }).catch((reason) => {
+            //debug
+            if (Config.get(Config.GLOBAL, "debugMod", false)) {
+                logger.warn(`检查更新失败,请重试: ` + reason);
+            }
         });
     }
 
