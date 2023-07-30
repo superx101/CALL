@@ -1,10 +1,9 @@
 import path = require("path");
-import Config from "../common/Config";
 import * as PropertiesReader from 'properties-reader';
 import * as sprintf from 'sprintf-js'
+import Config from "../common/Config";
 
 const langListSet: Set<string> = getListSet(Config.LANG);
-
 const readerMap: Map<string, PropertiesReader.Reader> = new Map();
 
 function getListSet(p: string): Set<string> {
@@ -16,26 +15,24 @@ function getListSet(p: string): Set<string> {
     return set;
 }
 
-export default class Translator {
-    public static readonly ITEM = "item";
-    public static readonly DEFAULTLANG = 'zh_CN'
+export default class Tr {
+    public static readonly DEFAULTLANG = 'en_US';
 
-    public static t(type: string, lang: string, key: string, ...args: any): string {
+    public static _c(key: string, ...args: any): string {
+        return Tr._(Config.get(Config.GLOBAL, "consoleLanguage", Tr.DEFAULTLANG), key, ...args);
+    }
+
+    public static _(lang: string, key: string, ...args: any[]): string {
+        if (!langListSet.has(lang)) lang = Tr.DEFAULTLANG;
+
         let reader = readerMap.get(lang);
 
-        //若reader未加载
+        //first load reader
         if (reader == null) {
-            if (langListSet.has(lang)) {
-                //存在语言文件，加载
-                reader = PropertiesReader(`${Config.LANG}/${lang}.lang`);
-                readerMap.set(lang, reader);
-            }
-            else {
-                //不存在语言文件，使用默认（默认文件必须存在）
-                return Translator.t(type, Translator.DEFAULTLANG, key, args);
-            }
+            readerMap.set(lang, PropertiesReader(`${Config.LANG}/${lang}.lang`));
+            reader = readerMap.get(lang);
         }
 
-        return sprintf.sprintf(reader.get(`${type}.${key}`) as string, args);
+        return sprintf.sprintf(reader.get(key) as string, ...args);
     }
 }

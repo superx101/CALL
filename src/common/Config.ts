@@ -1,4 +1,3 @@
-import { Compare } from "../type/Common";
 import Version from "../util/Version";
 
 const ROOT = './plugins/nodejs/call';
@@ -32,12 +31,12 @@ function getDataVersion(): Version {
 }
 
 export default class Config {
-    public static readonly ISOLDVERSION = SERVER_VERSION.compare(Version.fromArr([1, 19, 70])) == Compare.LESSER ? true : false; 
+    public static readonly MINVERSION = Version.fromArr([1, 20, 10]);
     public static readonly ROOT = ROOT;
     public static readonly CONFIG = CONFIG;
     public static readonly LANG = CONFIG + '/lang';
     public static readonly DATAPATH = DATAROOT;
-    public static readonly  BIN = ROOT + "/bin";
+    public static readonly BIN = ROOT + "/bin";
     public static readonly DATA = DATA;
     public static readonly BUILD = DATAROOT + '/build';
     public static readonly PLUGINS = DATAROOT + '/plugins';
@@ -118,35 +117,6 @@ export default class Config {
         }
         catch (e) {
             throw e;
-        }
-    }
-
-    public static check() {
-        try {
-            let check = Config.get(Config.CHECK, "configs");
-            Object.keys(check).forEach(k => {
-                let c = check[k];
-                let data = Config.get(Config.GLOBAL, k);
-                if(data == null) throw new Error(`配置文件中未找到 ${k}`)
-                if (c.type != "enum" && typeof (data) != c.type) throw new Error(`${k} 应为 ${c.type} 类型`);
-                switch (c.type) {
-                    case "number":
-                        if (data < c.min) throw new Error(`${k} 小于最小值 ${c.min}`);
-                        if (data > c.max) throw new Error(`${k} 大于最大值 ${c.max}`);
-                        break;
-                    case "enum":
-                        let has = false;
-                        c.values.forEach((v: any) => {
-                            if (v == data) {
-                                has = true;
-                            }
-                        });
-                        if (!has) throw new Error(`${k} 应为 ${c.values} 其中之一`);
-                        break;
-                }
-            });
-        } catch (e) {
-            throw new Error(`CALL/config/configs文件配置失败: ` + e.message);
         }
     }
 

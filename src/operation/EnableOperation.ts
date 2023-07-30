@@ -2,6 +2,7 @@ import Activity from "../activity/Activity";
 import Players from "../common/Players";
 import PlayerData from "../model/PlayerData";
 import StrFactory from "../util/StrFactory";
+import Tr from "../util/Translator";
 
 
 export default class EnableOperation {
@@ -10,7 +11,7 @@ export default class EnableOperation {
             playerData.settings.enable = true;
             Activity.onStart(player);
         }
-        output.success(StrFactory.cmdSuccess("已启用CALL"));
+        output.success(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.EnableOperation.on")));
     }
 
     public static off(player: Player, output: CommandOutput, playerData: PlayerData) {
@@ -18,7 +19,7 @@ export default class EnableOperation {
             playerData.settings.enable = false;
             Activity.onStop(player);
         }
-        output.success(StrFactory.cmdSuccess("已禁用CALL (/call on指令再次启动)"));
+        output.success(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.EnableOperation.off")));
     }
 
     public static isEnable(player: Player) {

@@ -27,6 +27,7 @@
     >   | 属性 | 含义 | 类型 |
     >   | :-: | :-: | :-: |
     >   | block.name | 游戏内显示的方块名称 | String |
+    >   | states | 方块状态值 (该变量由CALL提供) | String |
     >   | block.type | 方块标准类型名 | String |
     >   | block.id | 方块的游戏内id | Integer |
     >   | block.pos | 方块所在坐标 | IntPos |

@@ -1,8 +1,8 @@
 setTimeout(()=>{
     if (mc.runcmd('ll reload call')) {
-        colorLog("blue", "已重载CALL");
+        colorLog("blue", "reloaded CALL");
     }
     else {
-        logger.error("CALL重载失败");
+        logger.error("reload CALL failed");
     }
 }, 500)

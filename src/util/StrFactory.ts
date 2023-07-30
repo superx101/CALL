@@ -1,10 +1,10 @@
-import Translator from "./Translator";
+import Tr from "./Translator";
 
 const tag = "CALL-";
 
 export default class StrFactory {
     public static item_t(lang: string, key: string, ...args: any) {
-        return Translator.t(Translator.ITEM, lang, key + ".name", args);
+        return Tr._(lang, `item.${key}.name`, args);
     }
 
     public static isLegalName(str: string) {
@@ -85,7 +85,7 @@ export default class StrFactory {
     public static item(str: string) {
         let arr = str.toLowerCase().split(":");
         if (arr.length > 2) {
-            throw new Error("[StrFactory.item] 字符串格式错误");
+            throw new Error("[StrFactory.item] string formatting error");
         }
         else if (arr.length == 2) {
             return str;
@@ -118,10 +118,14 @@ export default class StrFactory {
             return Format.Bold + Format.DarkGreen + on + Format.Clear;
     }
 
+    public static Bold(str: string) {
+        return Format.Bold + str + Format.Clear;
+    }
+
     public static formEnable(bool: boolean, text: string) {
         if(bool)
             return text;
         else 
-            return Format.Bold + Format.Gray + text + Format.Clear;
+            return Format.DarkRed + text + Format.Clear;
     }
 }

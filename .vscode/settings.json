@@ -10,14 +10,6 @@
         "**/.hg": true,
         "**/CVS": true,
         "**/.DS_Store": true,
-        "**/Thumbs.db": true,
-        "lib":true,
-        "bStats": true,
-        "LiteLoader": true,
-        "LLMoney":true,
-        "PermissionAPI":true,
-        "LLMoney.dll":true,
-        "preload.conf":true,
-        "AddonsHelper": true
+        "**/Thumbs.db": true
     }
 }

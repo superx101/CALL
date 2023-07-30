@@ -68,3 +68,14 @@
 ## 形状
 当前版本中自带的形状如下：
 ![Shape](../image/shape.png)
+
+## 构建项目
+这个项目是用vscode编写的，因此建议您也使用vscode来运行代码。当你准备好IDE后，请遵循一下面的步骤来构建项目。
+1. 下载python，nodejs
+2. 使用命令安装uglify-js: `npm i -g uglify-js`
+3. 使用命令安装typescript: `npm i -g typescript`
+4. 下载CALL源码并放置在plugins文件夹下
+5. 运行buildSrc/init.py
+6. 编写代码
+7. 运行buildSrc/compile.py 来编译代码为js
+8. 运行runBDS.bat

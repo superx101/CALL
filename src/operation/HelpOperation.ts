@@ -2,7 +2,6 @@ import Config from "../common/Config";
 import PlayerData from "../model/PlayerData";
 import { FileMode } from "../type/Common";
 import StrFactory from "../util/StrFactory";
-import ShapeOperation from "./ShapeOperation";
 
 export default class HelpOperation {
     public static start(player: Player, output: CommandOutput, playerData: PlayerData) {
@@ -13,13 +12,6 @@ export default class HelpOperation {
         //@ts-ignore
         let file = new File(Config.CONFIG + "/help.json", FileMode.ReadMode, false);
         let help = JSON.parse(file.readAllSync() as string);
-        let pkgs = ShapeOperation.getPkgs();
-        Object.keys(pkgs).forEach(pkgName => {
-            let obj = ShapeOperation.getTutorial(pkgName);
-            if (obj != null) {
-                help["进阶功能介绍"][pkgName] = obj;
-            }
-        });
         return help;
     }
 

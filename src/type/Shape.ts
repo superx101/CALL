@@ -10,16 +10,18 @@ export interface BlockData {
 
 export type Blocks = Array<BlockData>
 
-export interface data  {
+export interface BasicInfo  {
+    shapeNum: number;
     version: Version;
-    name: string;
-    shapeNames: string[];
-    shapeImages: string[];
     author: string;
-    introduction: string;
     icon: string;
 }
 
-export interface pkgs {
-    [x: string]: data;
+export interface TransledInfo {
+    name: string;
+    description: string;
+}
+
+export interface PKGs {
+    [x: string]: BasicInfo;
 }

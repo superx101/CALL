@@ -13,6 +13,7 @@ export default class PlayerData {
     public forbidCmd: boolean;
     public prePos: any;
     public direction: DirectionAngle;
+    public player: Player;
 
     constructor(xuid: string) {
         let settings: Settings = Config.get(Config.PLAYERS_SETTINGS, `player.${xuid}`);
@@ -28,6 +29,7 @@ export default class PlayerData {
         this.displayPos = null;
         this.forbidCmd = false;
         this.prePos = null;
+        this.player = mc.getPlayer(xuid);
     }
 
     public saveAll() {

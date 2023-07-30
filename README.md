@@ -62,3 +62,14 @@ CALL provides you [document](https://superx101.github.io/CALL/) with a detailed 
 ## Shape
 The shapes of the current version are as follows:
 ![Shape](./docs/image/shape.png)
+
+## Run the Project
+This project is written in vscode, so it is recommended that you also use vscode to run the code. Once you have your IDE ready, follow the steps below to build the project.
+1. download python, nodejs, npm
+2. Install uglify-js with the command: `npm i -g uglify-js`
+3. Install typescript with the following command: `npm i -g typescript`
+4. Download the CALL source code and place it in the **plugins** folder.
+5. Run buildSrc/init.py.
+6. Write the code
+7. Run buildSrc/compile.py to compile the code to js
+8. Run runBDS.bat.

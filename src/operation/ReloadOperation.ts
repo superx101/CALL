@@ -1,5 +1,6 @@
 import Config from "../common/Config";
 import StrFactory from "../util/StrFactory";
+import Tr from "../util/Translator";
 
 export default class ReloadOperation {
     public static unload() {
@@ -10,9 +11,9 @@ export default class ReloadOperation {
         })
     }
 
-    public static start(msg: string) {
+    public static start() {
         mc.getOnlinePlayers().forEach(pl => {
-            pl.sendText(StrFactory.cmdTip(msg));
+            pl.sendText(StrFactory.cmdTip(Tr._(pl.langCode, "dynamic.ReloadOperation.start.reload")));
         });
         mc.runcmd(`ll load "${Config.BIN}/CALL_Reloader.js"`);
     }

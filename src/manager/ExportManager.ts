@@ -5,6 +5,7 @@ import StructureNBT from "../model/StructureNBT";
 import { FileMode } from "../type/Common";
 import Constant from "../type/Constant";
 import { NBT } from "../type/Structure";
+import Tr from "../util/Translator";
 import StructureManager from "./StructureManager";
 
 export default class ExportManager {
@@ -27,7 +28,7 @@ export default class ExportManager {
         if (isFind)
             return Structure.fromStructure(st);
         else
-            throw new Error(`未在所有人的保存中找到id为 ${sid} 的结构`)
+            throw new Error(Tr._c("console.ExportManager.checkStructure.notFind", `${sid}`));
     }
 
     /**

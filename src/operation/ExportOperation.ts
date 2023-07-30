@@ -4,6 +4,7 @@ import ExportManager from "../manager/ExportManager";
 import { Type } from "../type/Structure";
 import StrFactory from "../util/StrFactory";
 import * as ProgressBar from "cli-progress"
+import Tr from "../util/Translator";
 
 export default class ExportOperation {
     public static start(res: {type: string, id: string, includeEntity?: boolean, Name?: string}, output: CommandOutput) {
@@ -18,7 +19,7 @@ export default class ExportOperation {
 
         function initProgress(max: number) {
             bar.start(max, 0, {
-                title: '导出结构中'
+                title: Tr._c("console.ExportOperation.start.exporting")
             });
         }
 
@@ -34,15 +35,15 @@ export default class ExportOperation {
                 break;
             default:
                 bar.stop();
-                throw new Error("无法识别导出格式");
+                throw new Error(Tr._c("console.ExportOperation.start.notFind"));
         }
         //写入文件
         if(ExportManager.writeFile(content, fileName, res.type, isBinary)) {
-            output.success(StrFactory.cmdSuccess(`已导出结构 ${res.id} 到服务端, 路径: ${path.join(process.cwd(), Config.EXPORT)}/${fileName}.${res.type}`))
+            output.success(StrFactory.cmdSuccess(Tr._c("console.ExportOperation.start.success", `${res.id}`, `${path.join(process.cwd(), Config.EXPORT)}/${fileName}.${res.type}`)))
         }
         else {
             bar.stop();
-            throw new Error(`写入文件${fileName}失败`);
+            throw new Error(Tr._c("console.ExportOperation.start.fail", `${fileName}`));
         }
         bar.stop();
     }

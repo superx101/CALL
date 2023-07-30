@@ -4,6 +4,7 @@ import ToolOperation from "../operation/ToolOperation";
 import { Listener } from "../type/Common";
 import { ToolType } from "../type/Tool";
 import StrFactory from "../util/StrFactory";
+import Tr from "../util/Translator";
 import Form from "./Form";
 import Menu from "./Menu";
 
@@ -35,10 +36,10 @@ export default class SettingForm extends Form {
     private hotkeyForm(v: any[], mod: number, type: ToolType) {
         let arr;
         if (mod == 0) {
-            arr = ["添加快捷键"];
+            arr = [Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyForm.s0")];
         }
         else {
-            arr = ["修改快捷键", "删除快捷键", "获取快捷键物品"];
+            arr = [Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyForm.s1"), Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyForm.s2"), Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyForm.s3")];
         }
         let cmdstr = "";
         (v[3] == null ? [] : v[3]).forEach((v1: any) => {
@@ -49,13 +50,13 @@ export default class SettingForm extends Form {
         }
 
         let form = mc.newCustomForm()
-            .setTitle(`快捷键设置-${type}`)
-            .addDropdown("执行操作:", arr, 0)
-            .addLabel(`快捷键信息:`)
-            .addInput("  物品种类", "请输入正确的物品英文id", v[0] == null ? "" : v[0])
-            .addInput("  物品名称\n  [可不输入] 不输入则匹配无命名的工具", "仅包含中英文、数字、下划线", v[1] == null ? "" : v[1])
-            .addInput("  功能描述", "(必须输入) 快捷键功能描述", v[2] == null ? "" : v[2])
-            .addInput("  指令组", "输入指令 (;号分割多条指令)", cmdstr)
+            .setTitle(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyForm.s4", type))
+            .addDropdown(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyForm.s5"), arr, 0)
+            .addLabel(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyForm.s45"))
+            .addInput(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyForm.s6"), Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyForm.s7"), v[0] == null ? "" : v[0])
+            .addInput(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyForm.s8"), Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyForm.s9"), v[1] == null ? "" : v[1])
+            .addInput(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyForm.s10"), Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyForm.s11"), v[2] == null ? "" : v[2])
+            .addInput(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyForm.s12"), Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyForm.s13"), cmdstr)
 
         this.player.sendForm(form, (pl, data) => {
             if (data == null) {
@@ -83,14 +84,14 @@ export default class SettingForm extends Form {
 
     private hotkeyListForm(type: ToolType) {
         let form = mc.newSimpleForm()
-            .setTitle(`快捷键设置-${type}`)
-            .addButton("返回上一级", "")
-            .addButton("添加快捷键", "textures/ui/color_plus.png")
+            .setTitle(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyForm.s4", type))
+            .addButton(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyListForm.s15"), "")
+            .addButton(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyForm.s0"), "textures/ui/color_plus.png")
         let list = ToolOperation.getLinearList(this.player, this.playerData, type);
         list.forEach((v: any) => {
             const type = v[0].replace("minecraft:", "");
             form.addButton(
-                `${StrFactory.item_t(this.player.langCode, type)} ${StrFactory.color(Format.Black, v[0])}\n名称: ${StrFactory.color(Format.DarkGreen, v[1])} 描述: ${StrFactory.color(Format.DarkPurple, v[2])}`,
+                Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyListForm.s17", StrFactory.item_t(this.player.langCode, type), StrFactory.color(Format.Black, v[0]), StrFactory.color(Format.DarkGreen, v[1]), StrFactory.color(Format.DarkPurple, v[2])),
                 Config.ITEM_ICONS.has(type) ? `textures/items/${type}` : Config.get(Config.ITEM_TEXTURES, type, "")
             );
         });
@@ -114,12 +115,12 @@ export default class SettingForm extends Form {
 
     private hotkeyKindForm() {
         let form = mc.newSimpleForm()
-            .setTitle("快捷键种类")
-            .addButton("返回上一级", "")
-            .addButton("恢复默认快捷键", "textures/ui/switch_home_button.png")
-            .addButton("获取所有快捷键", "textures/ui/xbox_start_button.png")
-            .addButton("点击(右键)式", "textures/ui/generic_right_trigger.png")
-            .addButton("破坏(左键)式", "textures/ui/generic_left_trigger.png")
+            .setTitle(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyKindForm.s18"))
+            .addButton(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyListForm.s15"), "")
+            .addButton(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyKindForm.s20"), "textures/ui/switch_home_button.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyKindForm.s21"), "textures/ui/xbox_start_button.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyKindForm.s22"), "textures/ui/generic_right_trigger.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyKindForm.s23"), "textures/ui/generic_left_trigger.png")
 
         this.player.sendForm(form, (pl, id) => {
             switch (id) {
@@ -128,10 +129,10 @@ export default class SettingForm extends Form {
                     break;
                 case 1:
                     let form2 = mc.newSimpleForm()
-                        .setTitle("恢复默认快捷键")
-                        .setContent("是否清空当前所有快捷键设置并恢复默认设置？\n\n\n\n\n\n\n\n")
-                        .addButton("确认", "textures/ui/check.png")
-                        .addButton("取消", "textures/ui/cancel.png")
+                        .setTitle(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyKindForm.s20"))
+                        .setContent(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyKindForm.s25"))
+                        .addButton(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyKindForm.s26"), "textures/ui/check.png")
+                        .addButton(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyKindForm.s27"), "textures/ui/cancel.png")
                     this.player.sendForm(form2, (pl, id) => {
                         switch (id) {
                             case 0:
@@ -183,16 +184,16 @@ export default class SettingForm extends Form {
             ["textureSelectorMode", this.settings.textureSelectorMode]
         ];
         let form = mc.newCustomForm()
-            .setTitle("其他设置")
-            .addStepSlider("填充方块 从( )号物品栏选择", barArr, setArr[0][1])
-            .addStepSlider("被替换方块 从( )号物品栏选择", barArr, setArr[1][1])
-            .addSwitch("加载新区块时提示", setArr[2][1])
-            .addSwitch("显示进度条", setArr[3][1])
-            .addSwitch("退出后保存选区", setArr[4][1])
-            .addSwitch("退出后保存撤销", setArr[5][1])
-            .addSwitch("退出后保存复制", setArr[6][1])
-            .addSwitch("结构中保存实体", setArr[7][1])
-            .addSwitch("启用材质选择器模式", setArr[8][1])
+            .setTitle(Tr._(this.player.langCode, "dynamic.SettingForm.otherSettingForm.s28"))
+            .addStepSlider(Tr._(this.player.langCode, "dynamic.SettingForm.otherSettingForm.s29"), barArr, setArr[0][1])
+            .addStepSlider(Tr._(this.player.langCode, "dynamic.SettingForm.otherSettingForm.s30"), barArr, setArr[1][1])
+            .addSwitch(Tr._(this.player.langCode, "dynamic.SettingForm.otherSettingForm.s31"), setArr[2][1])
+            .addSwitch(Tr._(this.player.langCode, "dynamic.SettingForm.otherSettingForm.s32"), setArr[3][1])
+            .addSwitch(Tr._(this.player.langCode, "dynamic.SettingForm.otherSettingForm.s33"), setArr[4][1])
+            .addSwitch(Tr._(this.player.langCode, "dynamic.SettingForm.otherSettingForm.s34"), setArr[5][1])
+            .addSwitch(Tr._(this.player.langCode, "dynamic.SettingForm.otherSettingForm.s35"), setArr[6][1])
+            .addSwitch(Tr._(this.player.langCode, "dynamic.SettingForm.otherSettingForm.s36"), setArr[7][1])
+            .addSwitch(Tr._(this.player.langCode, "dynamic.SettingForm.otherSettingForm.s37"), setArr[8][1])
 
         this.player.sendForm(form, (pl, data) => {
             if (data == null) {
@@ -200,7 +201,7 @@ export default class SettingForm extends Form {
                 return;
             }
             if (data[0] == data[1]) {
-                pl.sendText(StrFactory.cmdErr("填充方块和被替换方块不能相同"));
+                pl.sendText(StrFactory.cmdErr(Tr._(this.player.langCode, "dynamic.SettingForm.otherSettingForm.s38")));
                 return;
             }
             let json: any = {};
@@ -246,11 +247,11 @@ export default class SettingForm extends Form {
 
     public override sendForm(opts: Array<number> = []) {
         let form = mc.newSimpleForm()
-            .setTitle("设置")
-            .addButton("返回上一级", "")
-            .addButton("快捷键设置", "textures/ui/attack_pressed.png")
-            .addButton("其他设置", "textures/ui/automation_glyph.png")
-            .addButton(StrFactory.on_off(this.settings.enable, '关闭', '开启') + "CALL", StrFactory.choose(this.settings.enable, 'textures/ui/toggle_off.png', 'textures/ui/toggle_on.png'))
+            .setTitle(Tr._(this.player.langCode, "dynamic.SettingForm.sendForm.s39"))
+            .addButton(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyListForm.s15"), "")
+            .addButton(Tr._(this.player.langCode, "dynamic.SettingForm.sendForm.s41"), "textures/ui/attack_pressed.png")
+            .addButton(Tr._(this.player.langCode, "dynamic.SettingForm.otherSettingForm.s28"), "textures/ui/automation_glyph.png")
+            .addButton(StrFactory.on_off(this.settings.enable, Tr._(this.player.langCode, "dynamic.SettingForm.sendForm.s43"), Tr._(this.player.langCode, "dynamic.SettingForm.sendForm.s44")) + "CALL", StrFactory.choose(this.settings.enable, 'textures/ui/toggle_off.png', 'textures/ui/toggle_on.png'))
 
         if (opts.length > 0) {
             this.opt(opts);

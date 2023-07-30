@@ -1,5 +1,6 @@
 import PlayerData from "../model/PlayerData";
 import StrFactory from "../util/StrFactory";
+import Tr from "../util/Translator";
 
 export default class SettingsOperation {
     private static forbidModifyKeys: Set<string>;
@@ -29,10 +30,10 @@ export default class SettingsOperation {
             }
         });
         if (value == null) {
-            throw new Error(`暂无键为${key}的设置项, 请检查拼写`);
+            throw new Error(Tr._(player.langCode, "dynamic.SettingsOperation.get.error", `${key}`));
         }
         else {
-            output.success(StrFactory.cmdSuccess(`设置项${key}值为: ${value}`))
+            output.success(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.SettingsOperation.get.success", key, value)))
         }
     }
 
@@ -52,6 +53,6 @@ export default class SettingsOperation {
         });
         successKey = successKey.substring(0, successKey.length - 1);
         failKey = failKey.substring(0, failKey.length - 1);
-        output.success(StrFactory.cmdSuccess(`成功修改设置项: ${successKey}`) + `\n${failKey === "" ? "" : StrFactory.red(`其他设置项: ${failKey}修改失败, 请检查拼写和是否可修改`)}`);
+        output.success(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.SettingsOperation.set.success", successKey, failKey === "" ? "" : StrFactory.red(Tr._(player.langCode, "dynamic.SettingsOperation.set.other", failKey)))));
     }
 }

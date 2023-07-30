@@ -1,0 +1,11 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "type": "f5anything",
+        "request": "launch",
+        "name": "Launch .bat Script",
+        "command": "start runBDS.bat"
+      }
+    ]
+  }

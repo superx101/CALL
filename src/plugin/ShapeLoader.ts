@@ -1,17 +1,18 @@
 import Config from "../common/Config"
 import ShapeManager from "../manager/ShapeManager"
-import StrFactory from "../util/StrFactory"
+import Tr from "../util/Translator"
 import Version from "../util/Version"
-import ShapeForm from "../views/ShapeForm"
+import * as path from "path"
 
 const APISAPCE = "call_shape_api"
 const EXPORTSAPCE = "call_shape_plugin"
 const CMD = "_cmd"
 const FORM = "_form"
+const INFO = "_info"
 const TUTORAIL = "_tutorail"
 
 const pluginPath = Config.PLUGINS + "/shape";
-const buildPath = Config.DATAPATH + "/build/shape";
+const distPath = Config.DATAPATH + "/dist/shape";
 const templatesPath = Config.TEMPLATES + "/ShapeTemplate.js";
 
 interface Plugin {
@@ -23,13 +24,14 @@ export default class ShapeLoader {
     static EXPORTSAPCE = EXPORTSAPCE;
     static CMD = CMD;
     static FORM = FORM;
+    static INFO = INFO;
     static TUTORAIL = TUTORAIL;
     static pluginsSet = new Set();
 
     private static parser(str: string): Plugin | null {
         try {
             if (/call\.[a-zA-Z0-9]+\.[a-zA-Z0-9]+\_\d+\.\d+\.\d+\.js/.test(str) == false) {
-                throw new Error("文件命名错误, 格式: [call.作者名.插件名_版本号.js] 作者名、插件名由英文+数字组成, 作者名建议为github用户名或其他不会重复的名称, 文件名示例: call.steve.example_0.1.0.js");
+                throw new Error(Tr._c("console.ShapeLoader.parser.s0"));
             }
             let arr = str.split("_");
             let version = Version.fromString(arr[1].slice(0, -3));
@@ -38,7 +40,7 @@ export default class ShapeLoader {
             return { version, name };
         }
         catch (e) {
-            colorLog("red", `形状包文件${str}读取失败, 原因: ` + e.message);
+            colorLog("red", Tr._c("console.ShapeLoader.parser.s1", str) + e.message);
         }
         return null;
     }
@@ -49,7 +51,7 @@ export default class ShapeLoader {
         //@ts-ignore
         ll.export(ShapeManager.getData, APISAPCE, "getData");
         //@ts-ignore
-        ll.export(ShapeForm.shapeForm, APISAPCE, "shapeForm")
+        ll.export(ShapeManager.listForm, APISAPCE, "listForm");
 
         let loadMap = new Map<string, Plugin>();
         let plugins = ll.listPlugins();
@@ -60,8 +62,11 @@ export default class ShapeLoader {
                 mc.runcmd(`ll unload ${str}`)
             }
         });
+
         //查找plugins/shape中js文件
         File.getFilesList(pluginPath).forEach(file => {
+            let ext = path.extname(file);
+            if (ext !== ".js") return;
             let plugin = ShapeLoader.parser(file);
             if (plugin != null) {
                 //版本检测
@@ -80,13 +85,14 @@ export default class ShapeLoader {
                 .replace(/^\s*\/\/.+\n/gm, '')
                 .replace(/\/\*[\s\S]*?\*\/|([^:]|^)\/\/.*$/gm, '$1')
                 .replace(/^\s*[\r\n]/gm, '');
-            let target = buildPath + "/" + name.replaceAll(".", "_") + ".js";
+            let target = distPath + "/" + name.replaceAll(".", "_") + ".js";
             let output = template
                 .replace(/APISAPCE/g, `"${APISAPCE}"`)
                 .replace(/PKG/g, `"${name}"`)
                 .replace(/VERSION/g, `[${plugin.version.major},${plugin.version.minor},${plugin.version.revision}]`)
                 .replace(/EXPORTSAPCE/g, `"${EXPORTSAPCE}"`)
                 .replace(/CMD/g, `"${CMD}"`)
+                .replace(/INFO/g, `"${INFO}"`)
                 .replace(/FORM/g, `"${FORM}"`)
                 .replace(/TUTORAIL/g, `"${TUTORAIL}"`)
                 .replace(/CODE/g, code)
@@ -98,9 +104,9 @@ export default class ShapeLoader {
         setTimeout(() => {
             loadMap.forEach((plugin, name) => {
                 name = name.replaceAll(".", "_");
-                logger.info(`ll load "${buildPath}/${name}.js"`)
-                if (mc.runcmd(`ll load "${buildPath}/${name}.js"`)) {
-                    colorLog("green", `初始化形状包: ${plugin.name} 版本: ${plugin.version}`)
+                logger.info(`ll load "${distPath}/${name}.js"`)
+                if (mc.runcmd(`ll load "${distPath}/${name}.js"`)) {
+                    colorLog("green", Tr._c("console.ShapeLoader.start.s2", plugin.name, `${plugin.version}`))
                 }
             });
         }, 1000)

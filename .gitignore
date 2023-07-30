@@ -1,15 +1,5 @@
-/lib
-/LiteLoader
-/LLMoney.dll
-/LLMoney
-/preload.conf
-/PermissionAPI
 /nodejs
 /node_modules
-/bStats
 /package-lock.json
 /output/**
-/CALL/data/nbt
-/CALL/export/*
-/CALL/import/*
-/CALL/build/shape/**/*.js
+__pycache__/

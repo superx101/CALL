@@ -11,6 +11,15 @@
                 "customize"
             ]
         },
+        "consoleLanguage": {
+            "type": "enum",
+            "values": [
+                "zh_CN",
+                "zh_TW",
+                "en_US",
+                "ru_RU"
+            ]
+        },
         "autoUpdate": {
             "type": "boolean"
         },
@@ -28,9 +37,6 @@
             "type": "boolean"
         },
         "outputCmd": {
-            "type": "boolean"
-        },
-        "oldCommandType": {
             "type": "boolean"
         },
         "maxSaveStructure": {

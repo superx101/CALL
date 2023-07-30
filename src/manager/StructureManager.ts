@@ -10,6 +10,7 @@ import NBTManager from "./NBTManager";
 import { Complex, Data } from "../type/Structure";
 import { Matrix3D, Transform3 } from "../util/SimpleMatrix";
 import { FileMode } from "../type/Common";
+import Tr from "../util/Translator";
 
 export default class StructureManager {
     public static STRUCT_OPN_MOD = {
@@ -37,12 +38,12 @@ export default class StructureManager {
             }
             else {
                 if (playerData.settings.loadChuckTip) {
-                    player.sendText(StrFactory.cmdMsg(`${area} 超出加载范围\n正在尝试加载...`));
+                    player.sendText(StrFactory.cmdMsg(Tr._(player.langCode, "dynamic.StructureManager.loadChunk.overRange", `${area}`)));
                 }
                 const id = setInterval(() => {
                     if (StructureManager.canGetBlock(area)) {
                         if (playerData.settings.loadChuckTip) {
-                            player.sendText(StrFactory.cmdTip(`${area} 加载成功`));
+                            player.sendText(StrFactory.cmdTip(Tr._(player.langCode, "dynamic.StructureManager.loadChunk.success", `${area}`)));
                         }
                         clearInterval(id);
                         resolve(true);
@@ -51,7 +52,7 @@ export default class StructureManager {
                     else if (n <= 0) {
                         //失败
                         if (playerData.settings.loadChuckTip) {
-                            player.sendText(StrFactory.cmdErr(`${area} 尝试加载区块${max}次均失败, 已取消操作`));
+                            player.sendText(StrFactory.cmdErr(Tr._(player.langCode, "dynamic.StructureManager.loadChunk.cancel", `${area}`, max)));
                         }
                         clearInterval(id);
                         resolve(false);
@@ -178,7 +179,7 @@ export default class StructureManager {
         let structid = StructureManager.generateSid(player.xuid);
 
         //保存所有分结构
-        await StructureManager.traversal(player, playerData, areas, `保存中 ${index + 1}/${total}`, 1, (x: number, z: number) => {
+        await StructureManager.traversal(player, playerData, areas, Tr._(player.langCode, "dynamic.StructureManager.save.saving", `${index + 1}/${total}`) , 1, (x: number, z: number) => {
             let saveid;
             saveid = structid + "_" + x + "_" + z;
             NBTManager.save(saveid, areas[x][z], false, !playerData.settings.saveEntity);
@@ -229,7 +230,7 @@ export default class StructureManager {
         }
         let saveid;
         let start;
-        await StructureManager.traversal(player, playerData, areas, `加载中 ${index + 1}/${total}`, 6, (x: number, z: number) => {
+        await StructureManager.traversal(player, playerData, areas, Tr._(player.langCode, "dynamic.StructureManager.load.loading", `${index + 1}/${total}`), 6, (x: number, z: number) => {
             //index变换
             saveid = structid + "_" + x + "_" + z;
             // Players.cmd(player, `/structure load "${saveid}" ${areas[x][z].start.formatStr()} ${degrees} ${mirror} ${String(includeEntities)} ${String(includeBlocks)} ${integrity} ${seed}`);

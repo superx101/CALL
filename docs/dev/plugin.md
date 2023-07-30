@@ -59,6 +59,9 @@ CALL默认不会输出异常，您需要在配置文件中设置 [debugMod](user
 
 ### 代码规范
 一个合法的形状包js文件中至少包括如下内容
+
+?> 该代码已过期，具体实现请参考形状包
+
 ```javascript
 //注册形状包
 SHP.registerPackage("形状包中文名称", ["形状名称"], "简介");
@@ -72,13 +75,6 @@ SHP.export_cmd((player, index, intPos, param)=>{
 SHP.export_form((player, index, intPos)=>{
 
 })
-
-//导出函数--帮助文本
-SHP.export_tutorial(()=>{
-    return {
-        名称: "详细说明"
-    }
-});
 ```
 代码中的的函数用于导出。函数详细功能请见 [形状包API](dev/shape.md)
 
@@ -97,6 +93,9 @@ SHP.export_tutorial(()=>{
 
 ### 示例
 该示例为 `plugins/CALL/plugins/shape/call.superx101.basicShape_2.0.0.js` 中的部分代码，用体素的方法生成了一个可自由旋转的立方体
+
+?> 该代码已过期，具体实现请参考形状包
+
 ```javascript
 //立方体参数表单
 function cube_form(player, index, intPos, plData) {
@@ -208,15 +207,7 @@ function cmd(player, index, intPos, param) {
     }
 }
 
-function tutorial() {
-    return {
-        基础概念介绍: "[自由变换]\n  本形状包中的“自由变换”为任意角度的旋转\n[生成位置]\n  默认的生成位置为您脚下\n您也可自定义生成位置\n  形状包将以您指定的位置为中心生成形状",
-        立方体: "生成立方体\n可自由变换角度",
-    }
-}
-
 SHP.registerPackage("基础形状", ["自由立方体"], "CALL自带的一个简单形状包", [], "textures/ui/switch_face_button_down.png");
 SHP.export_cmd(cmd);
 SHP.export_form(form);
-SHP.export_tutorial(tutorial);
 ```

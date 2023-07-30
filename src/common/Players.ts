@@ -58,12 +58,8 @@ export default class Players {
     }
 
     public static cmd(player: Player, cmd: string, isTell: boolean = true) {
-        if (Config.get(Config.GLOBAL, "oldCommandType") && Config.ISOLDVERSION) {
-            cmd = `/execute "${player.realName}" ${Pos3D.fromPos(player.pos).floor().formatStr()} ` + cmd;
-        }
-        else {
-            cmd = `/execute at "${player.realName}" run ` + cmd;
-        }
+        cmd = `/execute at "${player.realName}" run ` + cmd;
+
         //sendText
         let res = mc.runcmdEx(cmd);
         if (!res.success && isTell) {

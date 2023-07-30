@@ -1,4 +1,4 @@
-export default class Test {
+export default class TestUtil {
     public static log(...arr: any) {
         let str = "";
         arr.forEach((v: any)=>{
@@ -10,5 +10,12 @@ export default class Test {
             }
         })
         logger.info(str);
+    }
+
+    public static equal(title: string, f: Function, value: any) {
+        if(f() == value)
+            logger.info(`[Test] (passed) ${title}`);
+        else
+            logger.error(`[Test] (failed) ${title} :expect=${value}, result=${f()}`);
     }
 }

@@ -6,12 +6,13 @@ import { Warn } from "../type/Error";
 import StrFactory from "../util/StrFactory";
 import StructureManager from "./StructureManager";
 import Enums from "../type/Enums";
+import Tr from "../util/Translator";
 
 export default class AreaDisplayerManager {
     static posMap = new Map();
 
     /*** private */
-    private static add(pos: Pos3D, lens: number[], offset: number) {
+    private static add(pos: Pos3D, lens: number[], offset: number, player: Player) {
         try {
             //保存方块
             let data: { blockEntityNbt: NbtCompound, blockNbt: NbtCompound } = {
@@ -36,7 +37,7 @@ export default class AreaDisplayerManager {
             blockEntity.setNbt(entityNbt);
         }
         catch (e) {
-            throw new Error("区域显示: 设置结构方块失败, " + e.message);
+            throw new Error(Tr._(player.langCode, "dynamic.AreaDisplayerManager.add.error", `${e.message}`));
         }
     };
 
@@ -53,7 +54,7 @@ export default class AreaDisplayerManager {
                 }
             }
             else {
-                player.sendText(StrFactory.cmdWarn('正在取消选区显示'));
+                player.sendText(StrFactory.cmdWarn(Tr._(player.langCode, 'dynamic.AreaDisplayerManager.undo.cancel')));
                 StructureManager.savePos(player, playerData);
 
                 const id = setInterval(()=>{
@@ -65,7 +66,7 @@ export default class AreaDisplayerManager {
                             bl.getBlockEntity().setNbt(data.blockEntityNbt);
                         }
                         StructureManager.tp(player, playerData, false);
-                        player.sendText(StrFactory.cmdTip('已取消选区显示'));
+                        player.sendText(StrFactory.cmdTip(Tr._(player.langCode, 'dynamic.AreaDisplayerManager.undo.canceled')));
                         clearInterval(id);
                     }
                 }, 200);
@@ -74,7 +75,7 @@ export default class AreaDisplayerManager {
         catch (e) { }
     };
 
-    public static set(area: Area3D) {
+    public static set(area: Area3D, player: Player) {
         let tempArea = Area3D.fromArea3D(area);
         let top = tempArea.end.y;
         let bottom = tempArea.start.y;
@@ -86,7 +87,7 @@ export default class AreaDisplayerManager {
 
         //无法加载则退出
         if (mc.getBlock(tempPos.x, tempPos.y, tempPos.z, tempPos.dimid) == null) {
-            throw new Warn("无法加载区块, 已取消选区显示")
+            throw new Warn("dynamic.AreaDisplayerManager.set.cannotLoad")
         }
 
         //寻找一个未被记录的位置
@@ -111,7 +112,7 @@ export default class AreaDisplayerManager {
             }
         }
         if (success) {
-            AreaDisplayerManager.add(tempPos, lens, offset);
+            AreaDisplayerManager.add(tempPos, lens, offset, player);
             return tempPos;
         }
         //超过最高高度限制，改为向下寻找
@@ -137,11 +138,11 @@ export default class AreaDisplayerManager {
             }
         }
         if (success) {
-            AreaDisplayerManager.add(tempPos, lens, offset);
+            AreaDisplayerManager.add(tempPos, lens, offset, player);
             return tempPos;
         }
         else {
-            throw new Error("可用显示位置已满,无法显示");
+            throw new Error(Tr._(player.langCode, "dynamic.AreaDisplayerManager.set.cannotDisplay"));
         }
     }
 
@@ -155,8 +156,8 @@ export default class AreaDisplayerManager {
         if(playerData.settings.areaTextShow && playerData.hasSetArea && playerData.settings.enable) {
             const area = Area3D.fromArea3D(playerData.settings.area);
             const lens = area.getLens();
-            const str0 = `选区: ${playerData.settings.area.start}->${playerData.settings.area.end}`;
-            const str1 = `长度: ${Format.Red}${lens[0]} ${Format.Green}${lens[1]} ${Format.Aqua}${lens[2]}`;
+            const str0 = Tr._(player.langCode, "dynamic.AreaDisplayerManager.areaTextTip.str0", `${playerData.settings.area.start}->${playerData.settings.area.end}`);
+            const str1 = Tr._(player.langCode, "dynamic.AreaDisplayerManager.areaTextTip.str1", `${Format.Red}${lens[0]} ${Format.Green}${lens[1]} ${Format.Aqua}${lens[2]}`);
             const space = (str0.length - str1.length + 3) / 2;
             player.sendText(`${str0}\n${Array.from({length: space}, ()=>' ').join('') + str1}`, Enums.msg.TIP);
         }

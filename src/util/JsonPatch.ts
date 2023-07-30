@@ -1,5 +1,6 @@
 import * as jsonpath from 'fast-json-patch'
 import * as fs from "fs"
+import Tr from './Translator'
 
 export default class JsonPatch {
     public static delete = 'delete'
@@ -25,7 +26,7 @@ export default class JsonPatch {
             return true;
         }
         catch(ex) {
-            logger.error(`文件${path}写入失败, 请手动写入：\n${data}`);
+            logger.error(Tr._c("console.JsonPatch.patchFuc.s0", path, data));
             return false;
         }
     }
@@ -158,7 +159,7 @@ export default class JsonPatch {
             return true;
         }
         catch(ex) {
-            logger.error(`文件${path}写入失败, 请手动写入：\n${data}`);
+            logger.error(Tr._c("console.JsonPatch.patchFuc.s0", path, data));
             return false;
         }
     }
@@ -172,7 +173,7 @@ export default class JsonPatch {
             return true;
         }
         catch(e) {
-            logger.error("创建文件" + path + "失败, 请手动创建")
+            logger.error(Tr._c("console.JsonPatch.mkDirFuc.s2", path))
             return false; 
         }
     }
