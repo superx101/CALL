@@ -9,6 +9,7 @@ import * as acorn from "acorn";
 import * as escodegen from "escodegen";
 import * as estraverse from "estraverse";
 import Tr from "../util/Translator";
+import BlockType from "../model/BlockType";
 
 type ToolVariable = {
     readonly pos: Pos3D;
@@ -95,6 +96,10 @@ export default class ToolOperation {
     }
 
     public static cmdsTranslator(player: Player, itemArr: Item[], iA: number, iB: number, cmds: string[], block: Block, posFloat: FloatPos) {
+        // customize variable
+        //@ts-ignore
+        block["states"] = BlockType.generateFromBlock(block).states;
+
         const data: ToolVariable = {
             pos: Pos3D.fromPos(block.pos).floor(),
             posf: Pos3D.fromPos(posFloat),
@@ -169,20 +174,20 @@ export default class ToolOperation {
         }
         let pos = Pos3D.fromPos(player.pos).calibration().add(0, 1, 0);
         mc.spawnItem(item, pos.x, pos.y, pos.z, pos.dimid);
-        output.success(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.ToolOperation.bind.s5", cmd, item.type, name === "" ? Tr._(player.langCode,"word.noName") : name, describe)));
+        output.success(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.ToolOperation.bind.s5", cmd, item.type, name === "" ? Tr._(player.langCode, "word.noName") : name, describe)));
     }
 
     public static unbind(player: Player, output: CommandOutput, playerData: PlayerData, item: Item, type: ToolType, name: string) {
         let items = ToolOperation.getItems(playerData, type);
         name = (name == null ? "" : name);
         if (items[item.type] == null || items[item.type][name] == null) {
-            throw new Error(Tr._(player.langCode, "dynamic.ToolOperation.unbind.s6", item.type, name === "" ? Tr._(player.langCode,"word.noName") : name));
+            throw new Error(Tr._(player.langCode, "dynamic.ToolOperation.unbind.s6", item.type, name === "" ? Tr._(player.langCode, "word.noName") : name));
         }
         delete items[item.type][name];
         if (Object.keys(items[item.type]).length == 0) {
             delete items[item.type];
         }
-        output.success(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.ToolOperation.unbind.s7", item.type, name === "" ? Tr._(player.langCode,"word.noName") : name)));
+        output.success(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.ToolOperation.unbind.s7", item.type, name === "" ? Tr._(player.langCode, "word.noName") : name)));
     }
 
     public static list(player: Player, output: CommandOutput, playerData: PlayerData) {
