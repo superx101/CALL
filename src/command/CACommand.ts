@@ -271,7 +271,7 @@ export default class CACommand {
         // cmd.setEnum("texture", ["texture", "te"]);
         // cmd.mandatory("action", ParamType.Enum, "brush");
 
-        cmd.setCallback((cmd, ori, output, res) => {
+        cmd.setCallback((cmd: Command, ori: CommandOrigin, output: CommandOutput, res: any) => {
             try {
                 switch (ori.type) {
                     case OriginType.Player:
@@ -279,7 +279,13 @@ export default class CACommand {
                         break;
                     case OriginType.Server:
                         CACommand.command_consoleCallback(output, res);
+                    case OriginType.Virtual:
+                        //use command: execute
+                        if(ori.player == undefined) break;
+                        CACommand.command_playerCallback(ori, output, res);
+                        break;
                     default:
+                        logger.error(Tr._c("console.app.command.unknowType", ori.type));
                         break;
                 }
 

@@ -602,8 +602,9 @@ dynamic.StructureForm.myForm.s20=(MT)返回上一級
 dynamic.TutorailForm.dfsSendForm.s0=(MT)基礎教程
 dynamic.TutorailForm.dfsSendForm.s1=(MT)返回上一級
 
-console.app.command.introduction=(MT)建造助手CALL(Construct Assistant for LiteLoaderBDS)指令
+console.app.command.introduction=建造助手CALL(Construct Assistant for LiteLoaderBDS)指令
 console.app.command_consoleCallback.cmdError=(MT)當前指令格式錯誤或為非控制台指令
+console.app.command.unknowType=錯誤的指令來源: %s
 console.app.checkVersion=(MT)當前LL版本為%s, 小於當前CALL支持的LL最小版本%s, 若出現部分功能失效請更新LL(LiteLoaderBDS)
 console.app.oldVersion=(MT)當前BDS版本為:%s, 當前版本後主要適配%s即以上版本, 已不與舊版兼容, 若使用中出現問題請安裝舊版
 console.Config.check.notFind=(MT)配置文件中未找到: %s

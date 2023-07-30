@@ -605,6 +605,7 @@ dynamic.TutorailForm.dfsSendForm.s1=(MT)Back to previous level
 
 console.app.command.introduction=(MT)Construct Assistant CALL (Construct Assistant for LiteLoaderBDS) instruction
 console.app.command_consoleCallback.cmdError=(MT)The current command format is wrong or is a non-console command
+console.app.command.unknowType=Unknown CommandOrigin: %s
 console.app.checkVersion=(MT)The current LL version is %s, which is smaller than the minimum LL version %s supported by the current CALL. If some functions fail, please update LL(LiteLoaderBDS)
 console.app.oldVersion=(MT)The current BDS version is: %s. After the current version, it is mainly adapted to the version above %s. It is no longer compatible with the old version. If there is a problem in use, please install the old version
 console.Config.check.notFind=(MT)Not found in configuration file: %s

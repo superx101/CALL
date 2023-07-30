@@ -604,6 +604,7 @@ dynamic.TutorailForm.dfsSendForm.s1=(MT)Вернуться на предыдущ
 
 console.app.command.introduction=(MT)Construct Assistant CALL (Инструкция Construct Assistant для LiteLoaderBDS)
 console.app.command_consoleCallback.cmdError=(MT)Текущий формат команды неверен или является неконсольной командой
+console.app.command.unknowType=(MT)Неизвестный источник команд: %s
 console.app.checkVersion=(MT)Текущая версия LL – %s, что меньше минимальной версии LL %s, поддерживаемой текущим CALL. Если некоторые функции не работают, обновите LL(LiteLoaderBDS)
 console.app.oldVersion=(MT)Текущая версия BDS: %s. После текущей версии она в основном адаптирована к версии выше %s. Она больше не совместима со старой версией. Если есть проблема при использовании, пожалуйста установить старую версию
 console.Config.check.notFind=(MT)Не найдено в файле конфигурации: %s

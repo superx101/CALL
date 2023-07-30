@@ -604,6 +604,7 @@ dynamic.TutorailForm.dfsSendForm.s1=返回上一级
 
 console.app.command.introduction=建造助手CALL(Construct Assistant for LiteLoaderBDS)指令
 console.app.command_consoleCallback.cmdError=当前指令格式错误或为非控制台指令
+console.app.command.unknowType=错误的指令来源: %s
 console.app.checkVersion=当前LL版本为%s, 小于当前CALL支持的LL最小版本%s, 若出现部分功能失效请更新LL(LiteLoaderBDS)
 console.app.oldVersion=当前BDS版本为:%s, 当前版本后主要适配%s即以上版本, 已不与旧版兼容, 若使用中出现问题请安装旧版
 console.Config.check.notFind=配置文件中未找到: %s
