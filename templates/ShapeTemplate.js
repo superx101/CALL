@@ -2,7 +2,7 @@ ll.registerPlugin(PKG.replaceAll(".", "_"), "CALL's shape package", VERSION, {})
 const SHP = {
     _registerPackage: ll.import(APISAPCE, "registerPackage"),
     _getData: ll.import(APISAPCE, "getData"),
-    _shapeForm: ll.import(APISAPCE, "shapeForm"),
+    _listForm: ll.import(APISAPCE, "listForm"),
     _state: {
         register: false,
         cmd: false,
@@ -26,12 +26,12 @@ const SHP = {
             throw new Error("Please do not repeat call: export_form");
         }
     },
-    export_tutorial: function (f) {
-        if (!this._state.tutorial && typeof f == 'function') {
-            this._state.tutorial = true;
-            return ll.export(f, EXPORTSAPCE, PKG + TUTORAIL);
+    export_info: function (f) {
+        if (!this._state.info && typeof f == 'function') {
+            this._state.info = true;
+            return ll.export(f, EXPORTSAPCE, PKG + INFO);
         } else {
-            throw new Error("Please do not repeat call: export_tutorial");
+            throw new Error("Please do not repeat call: export_info");
         }
     },
     getVersion() {
@@ -54,16 +54,16 @@ const SHP = {
             itemB
         }
     },
-    registerPackage: function (name, shapeNames, introduction, shapeImages, icon) {
+    registerPackage: function (shapeNum, icon) {
         if (!this._state.register) {
             this._state.register = true;
-            this._registerPackage(VERSION ,PKG, name, shapeNames, introduction, shapeImages, icon);
+            this._registerPackage(VERSION, PKG, shapeNum, icon);
         } else {
             throw new Error("Please do not repeat call: registerPackage");
         }
     },
     listForm: function (player) {
-        this._shapeForm(player, PKG);
+        this._listForm(player);
     },
     Message: {
         warn: function (player, str, mode = 0) {
@@ -127,4 +127,4 @@ Object.keys(SHP).forEach(key => {if(key !== '_state') Object.freeze(SHP[key]); }
 CODE
 if(!SHP._state.cmd) throw new Error("CALL shapePackage " + PKG + ": function not used: export_cmd");
 if(!SHP._state.form) throw new Error("CALL shapePackage " + PKG + ": function not used: export_form");
-if(!SHP._state.tutorial) throw new Error("CALL shapePackage " + PKG + ": function not used: export_tutorial");
+if(!SHP._state.info) throw new Error("CALL shapePackage " + PKG + ": function not used: export_info");

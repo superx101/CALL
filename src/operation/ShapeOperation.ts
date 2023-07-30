@@ -31,21 +31,6 @@ export default class ShapeOperation {
         ShapeManager.run(player, playerData, pack, index, Pos3D.fromPos(pos).calibration().floor(), Json);
     }
 
-    public static sendForm(player: Player, playerData: PlayerData, pkgName: string, index: number) {
-        try {
-            let pos = Pos3D.fromPos(player.pos).calibration().floor();
-            let posInt = mc.newIntPos(pos.x, pos.y, pos.z, pos.dimid);
-            //@ts-ignore
-            let fuc = ll.import(ShapeLoader.EXPORTSAPCE, pkgName + ShapeLoader.FORM);
-            fuc(player, index, posInt);
-        }
-        catch (e) {
-            if(ShapeManager.debugMod) {
-                colorLog("Red", Tr._c("console.ShapeOperation.sendForm.error", pkgName, e));
-            }
-        }
-    }
-
     public static getList() {
         return ShapeManager.getList();
     }

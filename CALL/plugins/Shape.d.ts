@@ -50,13 +50,13 @@ declare namespace SHP {
         info(player: Player, str: string, mode?: number): void;
         success(player: Player, str: string, mode?: number): void;
     };
+    function registerPackage(shapeNum: number, icon: string): void;
     function export_cmd(callback: (player: Player, index: number, intPos: IntPos, param: JSON) => { pos: IntPos, arr: [] }): void;
-    function export_form(callback: (player: Player, index: number, intPos: IntPos) => void): void;
-    function export_tutorial(callback: () => any): void;
+    function export_form(callback: (player: Player, intPos: IntPos) => void): void;
+    function getInfo(callback: (langCode: string) => {name: string, introduction: string}): void;
     function getData(player: Player): { posA: IntPos, posB: IntPos, itemAIndex: number, itemBIndex: number, itemA: Item, itemB: Item }
     function listForm(player: Player): void;
     function getVersion(): number[];
-    function registerPackage(name: string, shapeNames: string[], introduction: string, shapeImages: string[], icon: string): void;
     function setBlock(x: number, y: number, z: number, block_palette?: string, block_position_data?: string): { x: number, y: number, z: number, block_palette: string, block_position_data: string };
     function getPackageName(): string;
     function getVector3(x: number, y: number, z: number): THREE.Vector3;

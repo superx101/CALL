@@ -355,6 +355,10 @@
                     "value": "zh_CN"
                 }
             ]
+        },
+        {
+            "type": "delete",
+            "path": "./plugins/CALL/plugins/shape/superx101.basicShape_2.0.0.js"
         }
     ]
 }

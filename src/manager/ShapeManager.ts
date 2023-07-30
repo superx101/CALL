@@ -5,37 +5,29 @@ import Area3D from "../model/Area3D";
 import Pos3D from "../model/Pos3D";
 import Structure from "../model/Structure";
 import ShapeLoader from "../plugin/ShapeLoader";
-import { Blocks, data, pkgs } from "../type/Shape";
+import { Blocks, BasicInfo, PKGs, TransledInfo } from "../type/Shape";
 import StrFactory from "../util/StrFactory";
 import StructureManager from "./StructureManager";
 import { Pos } from "../type/Pos";
 import PlayerData from "../model/PlayerData";
 import Version from "../util/Version";
 import Tr from "../util/Translator";
+import ShapeForm from "../views/ShapeForm";
 
 export default class ShapeManager {
-    public static pkgs: pkgs = {};
+    public static pkgs: PKGs = {};
     public static debugMod = Config.get(Config.GLOBAL, "debugMod");
 
     /*** export */
-    public static registerPackage(version: number[], pkgName: string, name: string, shapeNames: string[], introduction: string, shapeImages: string[] = [], icon: string = "") {
-        if (ShapeManager.pkgs[pkgName] == null || Config.get(Config.GLOBAL, "debugMod")) {
-            //填充shapeImages
-            if (shapeImages.length < shapeNames.length) {
-                for (let i = 0, l = shapeNames.length - shapeImages.length; i < l; i++) {
-                    shapeImages.push("");
-                }
-            }
-            let data: data = {
+    public static registerPackage(version: number[], pkgId: string, shapeNum: number, icon: string = "") {
+        if (ShapeManager.pkgs[pkgId] == null || Config.get(Config.GLOBAL, "debugMod")) {
+            let data: BasicInfo = {
+                shapeNum: shapeNum,
                 version: Version.fromArr(version),
-                name: name,
-                shapeNames: shapeNames,
-                shapeImages: shapeImages,
-                author: pkgName.split(".")[1],
-                introduction: introduction,
+                author: pkgId.split(".")[1],
                 icon: icon
             }
-            ShapeManager.pkgs[pkgName] = data;
+            ShapeManager.pkgs[pkgId] = data;
         }
     }
 
@@ -50,6 +42,28 @@ export default class ShapeManager {
             itemAIndex: playerData.settings.barReplace,
             itemBIndex: playerData.settings.barReplaced,
         }
+    }
+
+    /*** export */
+    public static listForm(player: Player) {
+        let playerData = Players.getData(player.xuid);
+        new ShapeForm(player, playerData).sendForm([]);
+    }
+
+    /** import */
+    public static getInfo(pkgId: string, player: Player): TransledInfo {
+        //@ts-ignore
+        let f = ll.import(ShapeLoader.EXPORTSAPCE, pkgId + ShapeLoader.INFO);
+        return f(player.langCode);
+    }
+
+    /** import */
+    public static form(player: Player, pkgId: string) {
+        //@ts-ignore
+        let f = ll.import(ShapeLoader.EXPORTSAPCE, pkgId + ShapeLoader.FORM);
+        let pos = Pos3D.fromPos(player.pos).calibration().floor();
+        let posInt = mc.newIntPos(pos.x, pos.y, pos.z, pos.dimid);
+        return f(player, posInt);
     }
 
     public static arrayToNBTs(arr: Blocks, pos: Pos, player: Player) {
@@ -202,17 +216,17 @@ export default class ShapeManager {
         return Object.keys(ShapeManager.pkgs);
     }
 
-    public static run(player: Player, playerData: PlayerData, pkgName: string, index: number, posInt: Pos3D, jsonStr: string) {
-        if (ShapeManager.pkgs[pkgName] == null) {
-            throw new Error(Tr._(player.langCode, "ynamic.ShapeManager.run.cantFind", `${pkgName}`));
+    public static run(player: Player, playerData: PlayerData, pkgId: string, index: number, posInt: Pos3D, jsonStr: string) {
+        if (ShapeManager.pkgs[pkgId] == null) {
+            throw new Error(Tr._(player.langCode, "dynamic.ShapeManager.run.cantFind", `${pkgId}`));
         }
-        let len = ShapeManager.pkgs[pkgName].shapeNames.length;
+        let len = ShapeManager.pkgs[pkgId].shapeNum;
         if (index >= len) {
-            throw new Error(Tr._(player.langCode, "ynamic.ShapeManager.run.wrongIndex", `${len-1}`));
+            throw new Error(Tr._(player.langCode, "dynamic.ShapeManager.run.wrongIndex", `${len-1}`));
         }
         try {
             //@ts-ignore
-            let fuc = ll.import(ShapeLoader.EXPORTSAPCE, pkgName + ShapeLoader.CMD);
+            let fuc = ll.import(ShapeLoader.EXPORTSAPCE, pkgId + ShapeLoader.CMD);
             let shape = fuc(player, index, posInt, JSON.parse(jsonStr));
             player.sendText(StrFactory.cmdTip(Tr._(player.langCode, "dynamic.ShapeManager.run.creating")));
 
@@ -244,7 +258,7 @@ export default class ShapeManager {
         }
         catch (e) {
             if (ShapeManager.debugMod) {
-                throw new Error(`[${pkgName}][error] ${e.message}\n${e.stack}`);
+                throw new Error(`[${pkgId}][error] ${e.message}\n${e.stack}`);
             }
         }
     }
