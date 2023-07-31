@@ -346,19 +346,23 @@
             "value": "1.2.0"
         },
         {
-            "type": "patch_plus",
+            "type": "patch",
             "path": "./plugins/CALL/config/configs.json",
             "patch": [
                 {
                     "op": "add",
                     "path": "/consoleLanguage",
                     "value": "zh_CN"
+                },
+                {
+                    "op": "remove",
+                    "path": "/oldCommandType"
                 }
             ]
         },
         {
             "type": "delete",
-            "path": "./plugins/CALL/plugins/shape/superx101.basicShape_2.0.0.js"
+            "path": "./plugins/CALL/plugins/shape/call.superx101.basicShape_2.0.0.js"
         }
     ]
 }

@@ -51,7 +51,7 @@ zip_file.writestr('安装更新注意事项(必读)-README.txt',
                 [Installation]
                     First time installation, you need to put CALL and CALL.llplugin into the plugins directory. 
                 [Manual Update]
-                    Manual update installation only needs to put CALL.llplugin into the plugins directory, and update and replace the shape pack under CALL/plugin/. 
+                    Manual update installation only needs to put CALL.llplugin into the plugins directory, and update and replace files under CALL/plugin/. 
                 [Auto Update]
                     Check for updates automatically can be enabled in the configuration, or enter /call u in the background to check for updates automatically. 
                 [Failure to load plugin after update]
@@ -62,7 +62,7 @@ zip_file.writestr('安装更新注意事项(必读)-README.txt',
                 [安装]
                     初次安装时需将CALL和CALL.llplugin放入plugins目录。
                 [手动更新]
-                    手动更新安装时只需将CALL.llplugin放入plugins目录, 且更新替换CALL/plugin/下的形状包即可。
+                    手动更新安装时只需将CALL.llplugin放入plugins目录, 且更新替换CALL/plugin/下的文件即可。
                 [自动更新]
                     可在配置中开启自动检查更新, 或在后台输入/call u 检查并自动更新。
                 [更新后报错加载插件失败]

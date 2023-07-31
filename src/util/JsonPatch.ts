@@ -10,11 +10,13 @@ export default class JsonPatch {
     public static mkDir = 'mkDir'
 
     private static deleteFuc(path: string) {
-        return File.delete(path);
+        fs.unlinkSync(path);
+        return !fs.existsSync(path)
     }
 
     private static createFuc(path: string, value: string) {
-        return File.writeTo(path, value);
+        fs.writeFileSync(path, value);
+        return true;
     }
 
     private static patchFuc(path: string, patch: any) {
@@ -112,6 +114,11 @@ export default class JsonPatch {
         return paths;
     }
 
+    /**
+     * add data in exist json
+     * 
+     * @example: {a: {b: 1, c: 2}} ---- add d:3 to a ---> {a: {b: 1, c: 2, d: 3}}
+     */
     private static patchPlusAdd(obj: any, path: any, name: any, value: any): any {
         JsonPatch.getPaths(obj, path).forEach((directory: string) => {
             let json = JsonPatch.getData(obj, directory);
@@ -122,6 +129,11 @@ export default class JsonPatch {
         return obj;
     }
 
+    /**
+     * insert path in exist json
+     * 
+     * @example /a/b/c/d --- insert i to c ---> /a/b/c/i/d
+     */
     private static patchPlusInsert(obj: any, path: any, to: string, value: any): any {
         JsonPatch.getPaths(obj, path).forEach((directory: string) => {
             //获取数据
@@ -143,7 +155,7 @@ export default class JsonPatch {
             }
         }
 
-        let obj = JSON.parse(File.readFrom(path));
+        let obj = JSON.parse(fs.readFileSync(path, "utf-8"));
         if (patch == undefined) return false;
         if (Array.isArray(patch)) {
             patch.forEach((v: any) => {

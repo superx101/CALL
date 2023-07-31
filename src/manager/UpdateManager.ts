@@ -33,7 +33,7 @@ export default class UpdateManager {
                 if (pathName.startsWith(shapeFilePath)) {
                     const outputPathName = Config.PLUGINS + `/shape/${path.basename(pathName)}`;
                     if (!fs.existsSync(outputPathName)) {
-                        File.mkdir(path.dirname(outputPathName));
+                        fs.mkdirSync(path.dirname(outputPathName));
                     }
                     entry.pipe(fs.createWriteStream(outputPathName));
                 } else {

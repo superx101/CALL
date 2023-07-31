@@ -2,8 +2,9 @@ import TestUtil from "./TestUtil";
 import BlockType from "../src/model/BlockType";
 
 export default class BlockTypeTest {
-    public static run() {
-        TestUtil.equal("nbtToStates_normal", ()=>{
+    public static preTest() {
+        const test = new TestUtil("BlockType");
+        test.equal("nbtToStates_normal", ()=>{
             var nbt = new NbtCompound({
                 "a": new NbtInt(3),
                 "b": new NbtString("test"),
@@ -14,7 +15,7 @@ export default class BlockTypeTest {
             return BlockType.nbtToStates(nbt);
         }, `["a"=3,"b"="test","c"=false,"d"=true,"e"=66666]`);
 
-        TestUtil.equal("nbtToStates_empty", ()=>{
+        test.equal("nbtToStates_empty", ()=>{
             var nbt = new NbtCompound({});
             return BlockType.nbtToStates(nbt);
         }, `[]`);

@@ -1,5 +1,6 @@
 import Config from "../src/common/Config";
 import BlockTypeTest from "./BlockTypeTest";
+import JsonPatchTest from "./JsonPatchTest";
 import TranslatorTest from "./TranslatorTest";
 
 export default class Test {
@@ -7,8 +8,9 @@ export default class Test {
 
     public static preTest() {
         if(!Test.runTest) return;
-        BlockTypeTest.run();
-        TranslatorTest.run();
+        BlockTypeTest.preTest();
+        TranslatorTest.preTest();
+        JsonPatchTest.preTest();
     }
 
     public static postTest() {
