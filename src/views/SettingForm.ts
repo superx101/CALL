@@ -1,7 +1,6 @@
 import Config from "../common/Config";
 import Players from "../common/Players";
 import ToolOperation from "../operation/ToolOperation";
-import { Listener } from "../type/Common";
 import { ToolType } from "../type/Tool";
 import StrFactory from "../util/StrFactory";
 import Tr from "../util/Translator";
@@ -10,12 +9,12 @@ import Menu from "./Menu";
 
 export default class SettingForm extends Form {
     constructor(form: Form) {
-        super(form.player, form.playerData);
+        super(form.caPlayer);
         return this;
     }
 
     private deleteHotkey(itemType: string, type: ToolType, name: string) {
-        Players.silenceCmd(this.player, `ca to un ${itemType} ${type} "${name}"`);
+        Players.silenceCmd(this.caPlayer, `ca to un ${itemType} ${type} "${name}"`);
     }
 
     private updateHotkey(preArr: any[], itemType: string, type: ToolType, name: string, describe: string, cmds: string) {
@@ -24,7 +23,7 @@ export default class SettingForm extends Form {
     }
 
     private addHotkey(itemType: string, type: ToolType, name: string = "", describe: string, cmds: string) {
-        Players.silenceCmd(this.player, `ca to bi ${itemType} ${type} "${cmds}" "${describe}" "${name}"`);
+        Players.silenceCmd(this.caPlayer, `ca to bi ${itemType} ${type} "${cmds}" "${describe}" "${name}"`);
     }
 
     private getItem(itemType: string, name: string, describe: string) {
@@ -87,7 +86,7 @@ export default class SettingForm extends Form {
             .setTitle(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyForm.s4", type))
             .addButton(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyListForm.s15"), "")
             .addButton(Tr._(this.player.langCode, "dynamic.SettingForm.hotkeyForm.s0"), "textures/ui/color_plus.png")
-        let list = ToolOperation.getLinearList(this.player, this.playerData, type);
+        let list = ToolOperation.getLinearList(this.caPlayer, type);
         list.forEach((v: any) => {
             const type = v[0].replace("minecraft:", "");
             form.addButton(
@@ -136,7 +135,7 @@ export default class SettingForm extends Form {
                     this.player.sendForm(form2, (pl, id) => {
                         switch (id) {
                             case 0:
-                                ToolOperation.restoreDefaults(this.player, this.playerData);
+                                ToolOperation.restoreDefaults(this.caPlayer);
                                 break;
                             case 1:
                             default:
@@ -147,8 +146,8 @@ export default class SettingForm extends Form {
                     break;
                 case 2:
                     let list: { [x: string]: any[] } = {
-                        left: ToolOperation.getLinearList(this.player, this.playerData, ToolType.LEFT),
-                        right: ToolOperation.getLinearList(this.player, this.playerData, ToolType.RIGHT)
+                        left: ToolOperation.getLinearList(this.caPlayer, ToolType.LEFT),
+                        right: ToolOperation.getLinearList(this.caPlayer, ToolType.RIGHT)
                     }
                     for (let key of Object.keys(list)) {
                         const arr = list[key];
@@ -215,7 +214,7 @@ export default class SettingForm extends Form {
                 }
             });
             if (Object.keys(json).length > 0) {
-                Players.silenceCmd(pl, "ca setting set " + JSON.stringify(json));
+                Players.silenceCmd(this.caPlayer, "ca setting set " + JSON.stringify(json));
             }
         });
 
@@ -224,7 +223,7 @@ export default class SettingForm extends Form {
     private opt(opts: Array<number>) {
         switch (opts.shift()) {
             case 0:
-                new Menu(this.player, this.playerData).sendForm();
+                new Menu(this.caPlayer).sendForm();
                 break;
             case 1:
                 this.hotkeyKindForm();
@@ -234,10 +233,10 @@ export default class SettingForm extends Form {
                 break;
             case 3:
                 if (this.settings.enable) {
-                    Players.silenceCmd(this.player, `ca off`);
+                    Players.silenceCmd(this.caPlayer, `ca off`);
                 }
                 else {
-                    Players.silenceCmd(this.player, `ca on`);
+                    Players.silenceCmd(this.caPlayer, `ca on`);
                 }
                 break;
             default:

@@ -2,7 +2,7 @@ import Config from "../common/Config";
 import AreaOperation from "../operation/AreaOperation";
 import { Settings } from "../type/Data";
 
-export default class PlayerData {
+export default class CAPlayer {
     public xuid: string;
     public settings: Settings;
     public click: boolean;
@@ -13,7 +13,7 @@ export default class PlayerData {
     public forbidCmd: boolean;
     public prePos: any;
     public direction: DirectionAngle;
-    public player: Player;
+    public $: LLSE_Player;
 
     constructor(xuid: string) {
         let settings: Settings = Config.get(Config.PLAYERS_SETTINGS, `player.${xuid}`);
@@ -29,7 +29,7 @@ export default class PlayerData {
         this.displayPos = null;
         this.forbidCmd = false;
         this.prePos = null;
-        this.player = mc.getPlayer(xuid);
+        this.$ = mc.getPlayer(xuid);
     }
 
     public saveAll() {

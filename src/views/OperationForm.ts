@@ -10,7 +10,7 @@ import Menu from "./Menu";
 
 export default class OperationForm extends Form {
     constructor(form: Form) {
-        super(form.player, form.playerData);
+        super(form.caPlayer);
     }
 
     private static MODE = {
@@ -24,7 +24,7 @@ export default class OperationForm extends Form {
     private opt(opts: Array<number>) {
         switch (opts.shift()) {
             case 0:
-                new Menu(this.player, this.playerData).sendForm();
+                new Menu(this.caPlayer).sendForm();
                 break;
             case 1:
                 this.fillForm(OperationForm.MODE.NULL);
@@ -36,7 +36,7 @@ export default class OperationForm extends Form {
                 this.fillForm(OperationForm.MODE.OUTLINE);
                 break;
             case 4:
-                Players.silenceCmd(this.player, "ca cl");
+                Players.silenceCmd(this.caPlayer, "ca cl");
                 break;
             case 5:
                 this.fillForm(OperationForm.MODE.REPLACE);
@@ -60,7 +60,7 @@ export default class OperationForm extends Form {
 
     public override sendForm(opts: Array<number> = []) {
         try {
-            AreaOperation.hasArea(this.playerData);
+            AreaOperation.hasArea(this.caPlayer);
         }
         catch (e) {
             this.player.sendText(StrFactory.cmdErr(Tr._(this.player.langCode, "dynamic.OperationForm.sendForm.s0")));
@@ -92,37 +92,35 @@ export default class OperationForm extends Form {
     }
 
     private fillForm(mode: number) {
-        const player = this.player;
-
         function run(blockTypeA: BlockType, blockTypeB: BlockType) {
             switch (mode) {
                 case OperationForm.MODE.NULL:
-                    Players.silenceCmd(player, `ca fi ${blockTypeA.toFormatString()} nu`);
+                    Players.silenceCmd(this.PlayerData, `ca fi ${blockTypeA.toFormatString()} nu`);
                     break;
                 case OperationForm.MODE.HOLLOW:
-                    Players.silenceCmd(player, `ca fi ${blockTypeA.toFormatString()} ho`);
+                    Players.silenceCmd(this.PlayerData, `ca fi ${blockTypeA.toFormatString()} ho`);
                     break;
                 case OperationForm.MODE.OUTLINE:
-                    Players.silenceCmd(player, `ca fi ${blockTypeA.toFormatString()} ou`);
+                    Players.silenceCmd(this.PlayerData, `ca fi ${blockTypeA.toFormatString()} ou`);
                     break;
                 case OperationForm.MODE.REPLACE:
-                    Players.silenceCmd(player, `ca re ${blockTypeA.toFormatString()} ${blockTypeB.toFormatString()}`);
+                    Players.silenceCmd(this.PlayerData, `ca re ${blockTypeA.toFormatString()} ${blockTypeB.toFormatString()}`);
                     break;
             }
         }
 
         //是否开启材质选择模式
-        if (this.playerData.settings.textureSelectorMode) {
+        if (this.caPlayer.settings.textureSelectorMode) {
             //无选择默认为空气
             let typeA: string, statesA: string;
             let typeB: string, statesB: string;
-            if(this.playerData.settings.texture.a != null) {
-                typeA = this.playerData.settings.texture.a.type;
-                statesA = this.playerData.settings.texture.a.states;
+            if(this.caPlayer.settings.texture.a != null) {
+                typeA = this.caPlayer.settings.texture.a.type;
+                statesA = this.caPlayer.settings.texture.a.states;
             }
-            if(this.playerData.settings.texture.b != null) {
-                typeB = this.playerData.settings.texture.b.type;
-                statesB = this.playerData.settings.texture.b.states;
+            if(this.caPlayer.settings.texture.b != null) {
+                typeB = this.caPlayer.settings.texture.b.type;
+                statesB = this.caPlayer.settings.texture.b.states;
             }
             // 直接执行
             run(new BlockType(typeA, statesA), new BlockType(typeB, statesB));
@@ -182,7 +180,7 @@ export default class OperationForm extends Form {
                     z = z + pos.z;
                     break;
             }
-            Players.silenceCmd(pl, `ca mo ${x} ${y} ${z}`);
+            Players.silenceCmd(this.caPlayer, `ca mo ${x} ${y} ${z}`);
         });
     }
 
@@ -201,7 +199,7 @@ export default class OperationForm extends Form {
                 z = parseInt(arr[2]);
             }
             catch (e) { }
-            Players.silenceCmd(pl, `ca st ${x} ${y} ${z}`);
+            Players.silenceCmd(this.caPlayer, `ca st ${x} ${y} ${z}`);
         });
     }
 
@@ -223,7 +221,7 @@ export default class OperationForm extends Form {
                 z = parseInt(data[3]);
             }
             catch (e) { }
-            Players.silenceCmd(pl, `ca mi ${arr[data[0]]} ${x} ${y} ${z}`);
+            Players.silenceCmd(this.caPlayer, `ca mi ${arr[data[0]]} ${x} ${y} ${z}`);
         });
     }
 
@@ -245,7 +243,7 @@ export default class OperationForm extends Form {
                 z = parseInt(data[3]);
             }
             catch (e) { }
-            Players.silenceCmd(pl, `ca ro ${arr[data[0]]}_degrees ${x} ${y} ${z}`);
+            Players.silenceCmd(this.caPlayer, `ca ro ${arr[data[0]]}_degrees ${x} ${y} ${z}`);
         });
     }
 }

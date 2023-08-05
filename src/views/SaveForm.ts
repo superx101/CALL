@@ -7,13 +7,13 @@ import Menu from "./Menu";
 
 export default class SaveForm extends Form {
     constructor(form: Form) {
-        super(form.player, form.playerData);
+        super(form.caPlayer);
         return this;
     }
 
     public override sendForm(opts: Array<number>) {
         try {
-            AreaOperation.hasArea(this.playerData);
+            AreaOperation.hasArea(this.caPlayer);
         }
         catch (e) {
             this.player.sendText(StrFactory.cmdErr(Tr._(this.player.langCode, "dynamic.SaveForm.sendForm.s0")));
@@ -26,10 +26,10 @@ export default class SaveForm extends Form {
 
         this.player.sendForm(form, (pl, data) => {
             if (data == null) {
-                new Menu(this.player, this.playerData).sendForm();
+                new Menu(this.caPlayer).sendForm();
                 return;
             }
-            Players.silenceCmd(pl, `ca sa "${data[0]}"`);
+            Players.silenceCmd(this.caPlayer, `ca sa "${data[0]}"`);
         });
     }
 }

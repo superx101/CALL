@@ -1,6 +1,6 @@
 import Constant from "../type/Constant";
 import Area3D from "../model/Area3D";
-import PlayerData from "../model/PlayerData";
+import CAPlayer from "../model/CAPlayer";
 import Pos3D from "../model/Pos3D";
 import { Warn } from "../type/Error";
 import StrFactory from "../util/StrFactory";
@@ -12,7 +12,7 @@ export default class AreaDisplayerManager {
     static posMap = new Map();
 
     /*** private */
-    private static add(pos: Pos3D, lens: number[], offset: number, player: Player) {
+    private static add(pos: Pos3D, lens: number[], offset: number, caPlayer: CAPlayer) {
         try {
             //保存方块
             let data: { blockEntityNbt: NbtCompound, blockNbt: NbtCompound } = {
@@ -37,12 +37,13 @@ export default class AreaDisplayerManager {
             blockEntity.setNbt(entityNbt);
         }
         catch (e) {
-            throw new Error(Tr._(player.langCode, "dynamic.AreaDisplayerManager.add.error", `${e.message}`));
+            throw new Error(Tr._(caPlayer.$.langCode, "dynamic.AreaDisplayerManager.add.error", `${e.message}`));
         }
     };
 
     /*** private */
-    private static undo(pos: Pos3D, player: Player, playerData: PlayerData) {
+    private static undo(pos: Pos3D, caPlayer: CAPlayer) {
+        const player = mc.getPlayer(caPlayer.xuid);
         try {
             const block = mc.getBlock(pos.x, pos.y, pos.z, pos.dimid);
             let data = AreaDisplayerManager.posMap.get(pos);
@@ -55,7 +56,7 @@ export default class AreaDisplayerManager {
             }
             else {
                 player.sendText(StrFactory.cmdWarn(Tr._(player.langCode, 'dynamic.AreaDisplayerManager.undo.cancel')));
-                StructureManager.savePos(player, playerData);
+                StructureManager.savePos(caPlayer);
 
                 const id = setInterval(()=>{
                     player.teleport(pos.x, pos.y, pos.z, pos.dimid);
@@ -65,7 +66,7 @@ export default class AreaDisplayerManager {
                         if (data.blockEntityNbt != null) {
                             bl.getBlockEntity().setNbt(data.blockEntityNbt);
                         }
-                        StructureManager.tp(player, playerData, false);
+                        StructureManager.tp(caPlayer, false);
                         player.sendText(StrFactory.cmdTip(Tr._(player.langCode, 'dynamic.AreaDisplayerManager.undo.canceled')));
                         clearInterval(id);
                     }
@@ -75,7 +76,7 @@ export default class AreaDisplayerManager {
         catch (e) { }
     };
 
-    public static set(area: Area3D, player: Player) {
+    public static set(area: Area3D, caPlayer: CAPlayer) {
         let tempArea = Area3D.fromArea3D(area);
         let top = tempArea.end.y;
         let bottom = tempArea.start.y;
@@ -112,7 +113,7 @@ export default class AreaDisplayerManager {
             }
         }
         if (success) {
-            AreaDisplayerManager.add(tempPos, lens, offset, player);
+            AreaDisplayerManager.add(tempPos, lens, offset, caPlayer);
             return tempPos;
         }
         //超过最高高度限制，改为向下寻找
@@ -138,28 +139,27 @@ export default class AreaDisplayerManager {
             }
         }
         if (success) {
-            AreaDisplayerManager.add(tempPos, lens, offset, player);
+            AreaDisplayerManager.add(tempPos, lens, offset, caPlayer);
             return tempPos;
         }
         else {
-            throw new Error(Tr._(player.langCode, "dynamic.AreaDisplayerManager.set.cannotDisplay"));
+            throw new Error(Tr._(caPlayer.$.langCode, "dynamic.AreaDisplayerManager.set.cannotDisplay"));
         }
     }
 
-    public static remove(playerData: PlayerData) {
-        let player = mc.getPlayer(playerData.xuid);
-        AreaDisplayerManager.undo(playerData.displayPos, player, playerData);
-        AreaDisplayerManager.posMap.delete(playerData.displayPos);
+    public static remove(caPlayer: CAPlayer) {
+        AreaDisplayerManager.undo(caPlayer.displayPos, caPlayer);
+        AreaDisplayerManager.posMap.delete(caPlayer.displayPos);
     }
 
-    public static areaTextTip(player: Player, playerData: PlayerData) {
-        if(playerData.settings.areaTextShow && playerData.hasSetArea && playerData.settings.enable) {
-            const area = Area3D.fromArea3D(playerData.settings.area);
+    public static areaTextTip(caPlayer: CAPlayer) {
+        if(caPlayer.settings.areaTextShow && caPlayer.hasSetArea && caPlayer.settings.enable) {
+            const area = Area3D.fromArea3D(caPlayer.settings.area);
             const lens = area.getLens();
-            const str0 = Tr._(player.langCode, "dynamic.AreaDisplayerManager.areaTextTip.str0", `${playerData.settings.area.start}->${playerData.settings.area.end}`);
-            const str1 = Tr._(player.langCode, "dynamic.AreaDisplayerManager.areaTextTip.str1", `${Format.Red}${lens[0]} ${Format.Green}${lens[1]} ${Format.Aqua}${lens[2]}`);
+            const str0 = Tr._(caPlayer.$.langCode, "dynamic.AreaDisplayerManager.areaTextTip.str0", `${caPlayer.settings.area.start}->${caPlayer.settings.area.end}`);
+            const str1 = Tr._(caPlayer.$.langCode, "dynamic.AreaDisplayerManager.areaTextTip.str1", `${Format.Red}${lens[0]} ${Format.Green}${lens[1]} ${Format.Aqua}${lens[2]}`);
             const space = (str0.length - str1.length + 3) / 2;
-            player.sendText(`${str0}\n${Array.from({length: space}, ()=>' ').join('') + str1}`, Enums.msg.TIP);
+            caPlayer.$.sendText(`${str0}\n${Array.from({length: space}, ()=>' ').join('') + str1}`, Enums.msg.TIP);
         }
     }
 }

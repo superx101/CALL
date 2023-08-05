@@ -1,8 +1,7 @@
 import Config from "../common/Config";
 import Players from "../common/Players";
-import PlayerData from "../model/PlayerData";
+import CAPlayer from "../model/CAPlayer";
 import Pos3D from "../model/Pos3D";
-import { Listener } from "../type/Common";
 import { ToolType } from "../type/Tool";
 import StrFactory from "../util/StrFactory";
 import * as acorn from "acorn";
@@ -18,69 +17,69 @@ type ToolVariable = {
     readonly itemA: Item;
     readonly itemB: Item;
     readonly itemArr: Array<Item>;
-    readonly me: Player;
+    readonly me: LLSE_Player;
 }
 
 export default class ToolOperation {
-    public static start(player: Player, output: CommandOutput, playerData: PlayerData, res: { enum_1: any; enum_2: any; item: Item; cmd: string; describe: string; Name: string; }) {
+    public static start(output: CommandOutput, caPlayer: CAPlayer, res: { enum_1: any; enum_2: any; item: Item; cmd: string; describe: string; Name: string; }) {
         switch (res.enum_1) {
             case "list":
             case "li":
-                ToolOperation.list(player, output, playerData);
+                ToolOperation.list(output, caPlayer);
                 break;
             case "bind":
             case "bi":
-                ToolOperation.bind(player, output, playerData, res.item, res.enum_2, res.cmd, res.describe, res.Name);
+                ToolOperation.bind(output, caPlayer, res.item, res.enum_2, res.cmd, res.describe, res.Name);
                 break;
             case "unbind":
             case "un":
-                ToolOperation.unbind(player, output, playerData, res.item, res.enum_2, res.Name);
+                ToolOperation.unbind(output, caPlayer, res.item, res.enum_2, res.Name);
                 break;
         }
     }
 
-    private static getItems(playerData: PlayerData, type: ToolType) {
+    private static getItems(caPlayer: CAPlayer, type: ToolType) {
         switch (type) {
             case ToolType.RIGHT:
-                return playerData.settings.items.onUseItemOn
+                return caPlayer.settings.items.onUseItemOn
             case ToolType.LEFT:
-                return playerData.settings.items.onStartDestroyBlock
+                return caPlayer.settings.items.onStartDestroyBlock
         }
     }
 
     /*** private */
-    private static checkName(name: string, player: Player) {
+    private static checkName(name: string, caPlayer: CAPlayer) {
         if (name !== "") {
             if (!/^[a-zA-Z0-9_\u4e00-\u9fa5]+$/.test(name)) {
-                throw new Error(Tr._(player.langCode, "dynamic.ToolOperation.checkName.s0", name));
+                throw new Error(Tr._(caPlayer.$.langCode, "dynamic.ToolOperation.checkName.s0", name));
             }
         }
     }
 
     /*** private */
-    private static getList(player: Player, playerData: PlayerData, type: ToolType) {
-        let items = ToolOperation.getItems(playerData, type);
+    private static getList(caPlayer: CAPlayer, type: ToolType) {
+        let items = ToolOperation.getItems(caPlayer, type);
         let arr: any[] = [];
         let nameArr: any[] = [];
         let tempArr: any[] = [];
         Object.keys(items).forEach(type => {
-            arr.push(Tr._(player.langCode, "dynamic.ToolOperation.getList.s1", StrFactory.color(Format.Bold + Format.Gold, type)));
+            arr.push(Tr._(caPlayer.$.langCode, "dynamic.ToolOperation.getList.s1", StrFactory.color(Format.Bold + Format.Gold, type)));
             nameArr = [];
             Object.keys(items[type]).forEach((name, i, a) => {
-                nameArr.push(Tr._(player.langCode, "dynamic.ToolOperation.getList.s2", StrFactory.color(Format.Bold + Format.Gold, name), StrFactory.color(Format.Bold + Format.Gold, items[type][name].describe)));
+                nameArr.push(Tr._(caPlayer.$.langCode, "dynamic.ToolOperation.getList.s2", StrFactory.color(Format.Bold + Format.Gold, name), StrFactory.color(Format.Bold + Format.Gold, items[type][name].describe)));
                 tempArr = [];
                 items[type][name].cmds.forEach((cmd: string) => {
                     tempArr.push(StrFactory.color(Format.MinecoinGold, cmd));
                 })
-                nameArr.push([Tr._(player.langCode, "dynamic.ToolOperation.list.s10"), tempArr]);
+                nameArr.push([Tr._(caPlayer.$.langCode, "dynamic.ToolOperation.list.s10"), tempArr]);
             });
             arr.push(nameArr);
         });
         return arr;
     }
 
-    public static getLinearList(player: Player, playerData: PlayerData, type: ToolType) {
-        let items = ToolOperation.getItems(playerData, type);
+    public static getLinearList(caPlayer: CAPlayer, type: ToolType) {
+        let items = ToolOperation.getItems(caPlayer, type);
         let arr: any[] = [];
         Object.keys(items).forEach(type => {
             Object.keys(items[type]).forEach((name, i, a) => {
@@ -90,12 +89,12 @@ export default class ToolOperation {
         return arr;
     }
 
-    public static restoreDefaults(player: Player, playerData: PlayerData) {
-        playerData.settings.items = Config.get(Config.PLAYERS_SETTINGS, "default.items");
-        player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.ToolOperation.restoreDefaults.s3")));
+    public static restoreDefaults(caPlayer: CAPlayer) {
+        caPlayer.settings.items = Config.get(Config.PLAYERS_SETTINGS, "default.items");
+        caPlayer.$.sendText(StrFactory.cmdSuccess(Tr._(caPlayer.$.langCode, "dynamic.ToolOperation.restoreDefaults.s3")));
     }
 
-    public static cmdsTranslator(player: Player, itemArr: Item[], iA: number, iB: number, cmds: string[], block: Block, posFloat: FloatPos) {
+    public static cmdsTranslator(caPlayer: CAPlayer, itemArr: Item[], iA: number, iB: number, cmds: string[], block: Block, posFloat: FloatPos) {
         // customize variable
         //@ts-ignore
         block["states"] = BlockType.generateFromBlock(block).states;
@@ -107,7 +106,7 @@ export default class ToolOperation {
             itemA: itemArr[iA],
             itemB: itemArr[iB],
             itemArr: itemArr,
-            me: player
+            me: caPlayer.$
         }
 
         const arr: string[] = [];
@@ -137,8 +136,8 @@ export default class ToolOperation {
         return arr;
     }
 
-    public static onClick(type: ToolType, player: Player, playerData: PlayerData, item: Item, block: Block, posFloat: FloatPos) {
-        let items = ToolOperation.getItems(playerData, type);
+    public static onClick(type: ToolType, caPlayer: CAPlayer, item: Item, block: Block, posFloat: FloatPos) {
+        let items = ToolOperation.getItems(caPlayer, type);
         let name = "";
         try {
             //@ts-ignore
@@ -148,50 +147,50 @@ export default class ToolOperation {
         }
         catch (e) { }
         if (items[item.type] != null && items[item.type][name] != null) {
-            const itemArr = player.getInventory().getAllItems();
-            ToolOperation.cmdsTranslator(player, itemArr, playerData.settings.barReplace, playerData.settings.barReplaced, items[item.type][name].cmds, block, posFloat).forEach((cmd) => {
-                Players.silenceCmd(player, cmd);
+            const itemArr = caPlayer.$.getInventory().getAllItems();
+            ToolOperation.cmdsTranslator(caPlayer, itemArr, caPlayer.settings.barReplace, caPlayer.settings.barReplaced, items[item.type][name].cmds, block, posFloat).forEach((cmd) => {
+                Players.silenceCmd(caPlayer, cmd);
             });
         }
     }
 
-    public static bind(player: Player, output: CommandOutput, playerData: PlayerData, item: Item, type: ToolType, cmd: string, describe: string, name: string) {
+    public static bind(output: CommandOutput, caPlayer: CAPlayer, item: Item, type: ToolType, cmd: string, describe: string, name: string) {
         if (name == null) {
             name = "";
         }
         else {
-            ToolOperation.checkName(name, player);
+            ToolOperation.checkName(name, caPlayer);
         }
         if (item.isBlock) {
-            throw new Error(Tr._(player.langCode, "dynamic.ToolOperation.bind.s4"));
+            throw new Error(Tr._(caPlayer.$.langCode, "dynamic.ToolOperation.bind.s4"));
         }
-        let items = ToolOperation.getItems(playerData, type);
+        let items = ToolOperation.getItems(caPlayer, type);
         let cmds = cmd.split(";");
         items[item.type] = (items[item.type] == null ? {} : items[item.type]);
         items[item.type][name] = { cmds: cmds, describe: describe };
         if (name !== "") {
             item.setDisplayName(name + "\n" + describe);
         }
-        let pos = Pos3D.fromPos(player.pos).calibration().add(0, 1, 0);
+        let pos = Pos3D.fromPos(caPlayer.$.pos).calibration().add(0, 1, 0);
         mc.spawnItem(item, pos.x, pos.y, pos.z, pos.dimid);
-        output.success(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.ToolOperation.bind.s5", cmd, item.type, name === "" ? Tr._(player.langCode, "word.noName") : name, describe)));
+        output.success(StrFactory.cmdSuccess(Tr._(caPlayer.$.langCode, "dynamic.ToolOperation.bind.s5", cmd, item.type, name === "" ? Tr._(caPlayer.$.langCode, "word.noName") : name, describe)));
     }
 
-    public static unbind(player: Player, output: CommandOutput, playerData: PlayerData, item: Item, type: ToolType, name: string) {
-        let items = ToolOperation.getItems(playerData, type);
+    public static unbind(output: CommandOutput, caPlayer: CAPlayer, item: Item, type: ToolType, name: string) {
+        let items = ToolOperation.getItems(caPlayer, type);
         name = (name == null ? "" : name);
         if (items[item.type] == null || items[item.type][name] == null) {
-            throw new Error(Tr._(player.langCode, "dynamic.ToolOperation.unbind.s6", item.type, name === "" ? Tr._(player.langCode, "word.noName") : name));
+            throw new Error(Tr._(caPlayer.$.langCode, "dynamic.ToolOperation.unbind.s6", item.type, name === "" ? Tr._(caPlayer.$.langCode, "word.noName") : name));
         }
         delete items[item.type][name];
         if (Object.keys(items[item.type]).length == 0) {
             delete items[item.type];
         }
-        output.success(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.ToolOperation.unbind.s7", item.type, name === "" ? Tr._(player.langCode, "word.noName") : name)));
+        output.success(StrFactory.cmdSuccess(Tr._(caPlayer.$.langCode, "dynamic.ToolOperation.unbind.s7", item.type, name === "" ? Tr._(caPlayer.$.langCode, "word.noName") : name)));
     }
 
-    public static list(player: Player, output: CommandOutput, playerData: PlayerData) {
-        output.success(Tr._(player.langCode, "dynamic.ToolOperation.list.s8") + StrFactory.catalog(ToolOperation.getList(player, playerData, ToolType.RIGHT)));
-        output.success(Tr._(player.langCode, "dynamic.ToolOperation.list.s9") + StrFactory.catalog(ToolOperation.getList(player, playerData, ToolType.LEFT)));
+    public static list(output: CommandOutput, caPlayer: CAPlayer) {
+        output.success(Tr._(caPlayer.$.langCode, "dynamic.ToolOperation.list.s8") + StrFactory.catalog(ToolOperation.getList(caPlayer, ToolType.RIGHT)));
+        output.success(Tr._(caPlayer.$.langCode, "dynamic.ToolOperation.list.s9") + StrFactory.catalog(ToolOperation.getList(caPlayer, ToolType.LEFT)));
     }
 }

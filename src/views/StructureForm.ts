@@ -15,14 +15,14 @@ interface Data {
 
 export default class StructureForm extends Form {
     constructor(form: Form) {
-        super(form.player, form.playerData);
+        super(form.caPlayer);
         return this;
     }
 
     private opt(opts: Array<number>) {
         switch (opts.shift()) {
             case 0:
-                new Menu(this.player, this.playerData).sendForm();
+                new Menu(this.caPlayer).sendForm();
                 break;
             case 1:
                 this.publicForm();
@@ -76,7 +76,7 @@ export default class StructureForm extends Form {
                 z = parseInt(arr[2]);
             }
             catch (e) { }
-            Players.silenceCmd(pl, `ca lo ${stData.id} ${x} ${y} ${z} ${degreeArr[data[2]]}_degrees ${mirrorArr_select[data[3]]}`);
+            Players.silenceCmd(this.caPlayer, `ca lo ${stData.id} ${x} ${y} ${z} ${degreeArr[data[2]]}_degrees ${mirrorArr_select[data[3]]}`);
         });
     }
 
@@ -85,7 +85,7 @@ export default class StructureForm extends Form {
             .setTitle(Tr._(this.player.langCode, "dynamic.StructureForm.sendForm.s2"))
             .addButton(Tr._(this.player.langCode, "dynamic.StructureForm.sendForm.s1"))
 
-        let list = StructureOperation.getSaveList(1, this.player) as Array<Data>;
+        let list = StructureOperation.getSaveList(1, this.caPlayer) as Array<Data>;
         //倒序加入
         for (let i = list.length - 1; i >= 0; i--) {
             form.addButton(Tr._(this.player.langCode, "dynamic.StructureForm.publicForm.s13", list[i].name, data.xuid2name(list[i].author), list[i].id));
@@ -120,14 +120,14 @@ export default class StructureForm extends Form {
                     this.loadOpertionForm(data, ()=>{this.my_structureForm(data)});
                     break;
                 case 2:
-                    Players.silenceCmd(pl, `ca de ${data.id}`);
+                    Players.silenceCmd(this.caPlayer, `ca de ${data.id}`);
                     break;
                 case 3:
                     if (data.isPublic) {
-                        Players.silenceCmd(pl, `ca pr ${data.id}`);
+                        Players.silenceCmd(this.caPlayer, `ca pr ${data.id}`);
                     }
                     else {
-                        Players.silenceCmd(pl, `ca pu ${data.id}`);
+                        Players.silenceCmd(this.caPlayer, `ca pu ${data.id}`);
                     }
                     break;
                 default:
@@ -141,7 +141,7 @@ export default class StructureForm extends Form {
             .setTitle(Tr._(this.player.langCode, "dynamic.StructureForm.sendForm.s3"))
             .addButton(Tr._(this.player.langCode, "dynamic.StructureForm.sendForm.s1"))
 
-        let list = StructureOperation.getSaveList(0, this.player) as Array<Data>;
+        let list = StructureOperation.getSaveList(0, this.caPlayer) as Array<Data>;
         //倒序加入
         for (let i = list.length - 1; i >= 0; i--) {
             form.addButton(`${list[i].name}\nid: ${list[i].id}`);

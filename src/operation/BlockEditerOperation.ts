@@ -1,26 +1,26 @@
-import PlayerData from "../model/PlayerData";
+import CAPlayer from "../model/CAPlayer";
 import Pos3D from "../model/Pos3D";
 import StrFactory from "../util/StrFactory";
 import Tr from "../util/Translator";
 import BlockEditerForm from "../views/BlockEditerForm";
 
 export default class BlockEditerOperation {
-    public static start(player: Player, output: CommandOutput, playerData: PlayerData, res: {intPos: IntPos, nbt: string, BlockEntity: string, enum_1: string}) {
+    public static start(output: CommandOutput, caPlayer: CAPlayer, res: {intPos: IntPos, nbt: string, BlockEntity: string, enum_1: string}) {
         switch (res.enum_1) {
             case undefined:
-                BlockEditerOperation.edit(playerData, output, res.intPos, res.nbt, res.BlockEntity);
+                BlockEditerOperation.edit(caPlayer, output, res.intPos, res.nbt, res.BlockEntity);
                 break;
             case "menu":
             case "me":
-                new BlockEditerForm(player, playerData).init(Pos3D.fromPos(res.intPos).floor());
+                new BlockEditerForm(caPlayer).init(Pos3D.fromPos(res.intPos).floor());
                 break;
         }
     }
 
-    private static edit(playerData: PlayerData, output: CommandOutput, intPos: IntPos, nbt: string, BlockEntity: string) {
+    private static edit(caPlayer: CAPlayer, output: CommandOutput, intPos: IntPos, nbt: string, BlockEntity: string) {
         let block = mc.getBlock(intPos);
         let blockRes: boolean, entityRes: boolean = true;
-        if(block == null) throw new Error(Tr._(playerData.player.langCode, "dynamic.BlockEditerOperation.edit.error"));
+        if(block == null) throw new Error(Tr._(caPlayer.$.langCode, "dynamic.BlockEditerOperation.edit.error"));
 
         blockRes = block.setNbt(NBT.parseSNBT(nbt));
 
@@ -30,14 +30,14 @@ export default class BlockEditerOperation {
         }
 
         if(blockRes && entityRes) {
-            output.success(StrFactory.cmdSuccess(Tr._(playerData.player.langCode, `${Pos3D.fromPos(block.pos).toString()}`)));
+            output.success(StrFactory.cmdSuccess(Tr._(caPlayer.$.langCode, `${Pos3D.fromPos(block.pos).toString()}`)));
         }
         else {
             if(!blockRes) {
-                output.error(StrFactory.cmdErr(Tr._(playerData.player.langCode, `${Pos3D.fromPos(block.pos).toString()}`)));
+                output.error(StrFactory.cmdErr(Tr._(caPlayer.$.langCode, `${Pos3D.fromPos(block.pos).toString()}`)));
             }
             if(!entityRes) {
-                output.error(StrFactory.cmdErr(Tr._(playerData.player.langCode, `${Pos3D.fromPos(block.pos).toString()}`)));
+                output.error(StrFactory.cmdErr(Tr._(caPlayer.$.langCode, `${Pos3D.fromPos(block.pos).toString()}`)));
             }
         }
     }

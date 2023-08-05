@@ -9,7 +9,7 @@ import { Blocks, BasicInfo, PKGs, TransledInfo } from "../type/Shape";
 import StrFactory from "../util/StrFactory";
 import StructureManager from "./StructureManager";
 import { Pos } from "../type/Pos";
-import PlayerData from "../model/PlayerData";
+import CAPlayer from "../model/CAPlayer";
 import Version from "../util/Version";
 import Tr from "../util/Translator";
 import ShapeForm from "../views/ShapeForm";
@@ -33,40 +33,39 @@ export default class ShapeManager {
 
     /*** export */
     public static getData(xuid: string) {
-        let playerData = Players.getData(xuid);
-        if (playerData == null) return null;
+        let caPlayer = Players.getCAPlayer(xuid);
+        if (caPlayer == null) return null;
 
         return {
-            posA: playerData.settings.area.start,
-            posB: playerData.settings.area.end,
-            itemAIndex: playerData.settings.barReplace,
-            itemBIndex: playerData.settings.barReplaced,
+            posA: caPlayer.settings.area.start,
+            posB: caPlayer.settings.area.end,
+            itemAIndex: caPlayer.settings.barReplace,
+            itemBIndex: caPlayer.settings.barReplaced,
         }
     }
 
     /*** export */
-    public static listForm(player: Player) {
-        let playerData = Players.getData(player.xuid);
-        new ShapeForm(player, playerData).sendForm([]);
+    public static listForm(caPlayer: CAPlayer) {
+        new ShapeForm(caPlayer).sendForm([]);
     }
 
     /** import */
-    public static getInfo(pkgId: string, player: Player): TransledInfo {
+    public static getInfo(pkgId: string, caPlayer: CAPlayer): TransledInfo {
         //@ts-ignore
         let f = ll.import(ShapeLoader.EXPORTSAPCE, pkgId + ShapeLoader.INFO);
-        return f(player.langCode);
+        return f(caPlayer.$.langCode);
     }
 
     /** import */
-    public static form(player: Player, pkgId: string) {
+    public static form(caPlayer: CAPlayer, pkgId: string) {
         //@ts-ignore
         let f = ll.import(ShapeLoader.EXPORTSAPCE, pkgId + ShapeLoader.FORM);
-        let pos = Pos3D.fromPos(player.pos).calibration().floor();
+        let pos = Pos3D.fromPos(caPlayer.$.pos).calibration().floor();
         let posInt = mc.newIntPos(pos.x, pos.y, pos.z, pos.dimid);
-        return f(player, posInt);
+        return f(caPlayer.$, posInt);
     }
 
-    public static arrayToNBTs(arr: Blocks, pos: Pos, player: Player) {
+    public static arrayToNBTs(arr: Blocks, pos: Pos, caPlayer: CAPlayer) {
         let xSize: number, ySize: number, zSize: number;
         let xMin: number, yMin: number, zMin: number;
         //size表示最大坐标
@@ -79,7 +78,7 @@ export default class ShapeManager {
             zMin = arr[0].z;
         }
         catch (e) {
-            throw new Error(Tr._(player.langCode, "dynamic.ShapeManager.arrayToNBTs.moreData", `${e}`));
+            throw new Error(Tr._(caPlayer.$.langCode, "dynamic.ShapeManager.arrayToNBTs.moreData", `${e}`));
         }
         let map = new Map();
 
@@ -216,7 +215,8 @@ export default class ShapeManager {
         return Object.keys(ShapeManager.pkgs);
     }
 
-    public static run(player: Player, playerData: PlayerData, pkgId: string, index: number, posInt: Pos3D, jsonStr: string) {
+    public static run(caPlayer: CAPlayer, pkgId: string, index: number, posInt: Pos3D, jsonStr: string) {
+        const player = caPlayer.$;
         if (ShapeManager.pkgs[pkgId] == null) {
             throw new Error(Tr._(player.langCode, "dynamic.ShapeManager.run.cantFind", `${pkgId}`));
         }
@@ -235,11 +235,11 @@ export default class ShapeManager {
                 throw new Error(Tr._(player.langCode, "dynamic.ShapeManager.run.empty"));
             }
             if (shape instanceof Object) {
-                let res = ShapeManager.arrayToNBTs(shape.arr, shape.pos, player);
+                let res = ShapeManager.arrayToNBTs(shape.arr, shape.pos, caPlayer);
                 //undo保存
-                StructureManager.undoSave(player, playerData, [res.st], () => {
+                StructureManager.undoSave(caPlayer, [res.st], () => {
                     //生成
-                    StructureManager.traversal(player, playerData, res.areas, Tr._(player.langCode, "dynamic.ShapeManager.run.creating1"), 15, (x: number, z: number) => {
+                    StructureManager.traversal(caPlayer, res.areas, Tr._(player.langCode, "dynamic.ShapeManager.run.creating1"), 15, (x: number, z: number) => {
                         if (res.nbts != null) {
                             mc.setStructure(res.nbts[x][z], mc.newIntPos(res.areas[x][z].start.x, res.areas[x][z].start.y, res.areas[x][z].start.z, res.areas[x][z].start.dimid));
                         }

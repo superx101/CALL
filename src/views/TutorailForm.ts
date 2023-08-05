@@ -6,7 +6,7 @@ import Menu from "./Menu";
 export default class TutorailForm extends Form {
     private obj: any;
     constructor(form: Form) {
-        super(form.player, form.playerData);
+        super(form.caPlayer);
         this.obj = HelpOperation.readFile();
         return this;
     }
@@ -43,7 +43,7 @@ export default class TutorailForm extends Form {
             if (id == null) return;
             if (id == 0) {
                 if (trace.length == 0) {
-                    new Menu(this.player, this.playerData).sendForm();
+                    new Menu(this.caPlayer).sendForm();
                 }
                 else {
                     trace.pop();

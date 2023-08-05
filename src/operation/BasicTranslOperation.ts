@@ -3,7 +3,7 @@ import Players from "../common/Players";
 import FillManager from "../manager/FillManager";
 import StructureManager from "../manager/StructureManager";
 import Area3D from "../model/Area3D";
-import PlayerData from "../model/PlayerData";
+import CAPlayer from "../model/CAPlayer";
 import Pos3D from "../model/Pos3D";
 import Structure from "../model/Structure";
 import { Pos } from "../type/Pos";
@@ -16,10 +16,10 @@ import Tr from "../util/Translator";
 
 export default class BasicTranslOperation {
     /*** private */
-    private static sl(player: any, playerData: any, st1: Structure, st2: Structure, mirror: string, degrees: string, overCallback: Function) {
-        StructureManager.savePos(player, playerData);
+    private static sl(caPlayer: CAPlayer, st1: Structure, st2: Structure, mirror: string, degrees: string, overCallback: Function) {
+        StructureManager.savePos(caPlayer);
         //保存complex
-        StructureManager.undoSave(player, playerData, [st1, st2], (complex: Complex) => {
+        StructureManager.undoSave(caPlayer, [st1, st2], (complex: Complex) => {
             let st1id: string;
             Object.keys(complex).forEach(sid => {
                 if (complex[sid].area.equals(st1.area)) {
@@ -27,22 +27,23 @@ export default class BasicTranslOperation {
                 }
             });
             //清空原位置
-            FillManager.ergod(player, playerData, st1.getAreas(), 0, 1, (yBottom: number, yTop: number, area: Area3D) => {
-                return Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} air`, false).success;
+            FillManager.ergod(caPlayer, st1.getAreas(), 0, 1, (yBottom: number, yTop: number, area: Area3D) => {
+                return Players.cmd(caPlayer, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} air`, false).success;
             }, (warn: number) => {
-                if (warn != 0) player.sendText(StrFactory.cmdWarn(Tr._(player.langCode, "dynamic.FillManager.soildFill.warn")));
+                if (warn != 0) caPlayer.$.sendText(StrFactory.cmdWarn(Tr._(caPlayer.$.langCode, "dynamic.FillManager.soildFill.warn")));
 
                 //粘贴
-                StructureManager.load(player, playerData, st1, st1id, st2.area.start, 0, 1, mirror, degrees, true, true, false, 100, "", () => {
+                StructureManager.load(caPlayer, st1, st1id, st2.area.start, 0, 1, mirror, degrees, true, true, false, 100, "", () => {
                     overCallback();
-                    StructureManager.tp(player, playerData);
+                    StructureManager.tp(caPlayer);
                 });
             });
         });
     }
 
-    public static move(player: Player, output: CommandOutput, playerData: PlayerData, res: { IntPos: IntPos; }) {
-        AreaOperation.hasArea(playerData);
+    public static move( output: CommandOutput, caPlayer: CAPlayer, res: { IntPos: IntPos; }) {
+        const player = caPlayer.$;
+        AreaOperation.hasArea(caPlayer);
         let pos: Pos3D;
         if (res.IntPos == null) {
             pos = Pos3D.fromPos(player.pos).floor().calibration();
@@ -50,16 +51,17 @@ export default class BasicTranslOperation {
         else {
             pos = Pos3D.fromPos(res.IntPos).floor();
         }
-        let st1 = new Structure(playerData.settings.area);
+        let st1 = new Structure(caPlayer.settings.area);
         let st2 = StructureManager.getTargetStruct(st1, pos);
-        StructureOperation.checkTargetStruct(st1.area, pos, player);//检查移动后的区域是否超过限制
-        BasicTranslOperation.sl(player, playerData, st1, st2, "none", "0_degrees", () => {
+        StructureOperation.checkTargetStruct(st1.area, pos, caPlayer);//检查移动后的区域是否超过限制
+        BasicTranslOperation.sl(caPlayer, st1, st2, "none", "0_degrees", () => {
             player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.BasicTranslOperation.move.success",`${pos}`)));
         });
     }
 
-    public static rote(player: Player, output: CommandOutput, playerData: PlayerData, res: { AxisPos: Pos; degrees: string; }) {
-        AreaOperation.hasArea(playerData);
+    public static rote(output: CommandOutput, caPlayer: CAPlayer, res: { AxisPos: Pos; degrees: string; }) {
+        const player = caPlayer.$;
+        AreaOperation.hasArea(caPlayer);
         let axisPos: Pos3D;
         if (res.AxisPos == null) {
             axisPos = Pos3D.fromPos(player.pos).floor().calibration();
@@ -67,7 +69,7 @@ export default class BasicTranslOperation {
         else {
             axisPos = Pos3D.fromPos(res.AxisPos).floor();
         }
-        let st1 = new Structure(playerData.settings.area);
+        let st1 = new Structure(caPlayer.settings.area);
         let st2;
         //计算complex
         let area = st1.area;
@@ -78,13 +80,14 @@ export default class BasicTranslOperation {
         let va = trans.mul(new Vector3D(area.start.x, area.start.z, 1));
         let vb = trans.mul(new Vector3D(area.end.x, area.end.z, 1));
         st2 = new Structure(new Area3D(new Pos3D(va.arr[0], area.start.y, va.arr[1], area.start.dimid), new Pos3D(vb.arr[0], area.end.y, vb.arr[1], area.end.dimid)));
-        BasicTranslOperation.sl(player, playerData, st1, st2, "none", res.degrees, () => {
+        BasicTranslOperation.sl(caPlayer, st1, st2, "none", res.degrees, () => {
             player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.BasicTranslOperation.rote.success", `${axisPos}`, `${parseFloat(res.degrees)}`)));
         });
     }
 
-    public static mirror(player: Player, output: CommandOutput, playerData: PlayerData, res: { AxisPos: Pos; mirror: string; }) {
-        AreaOperation.hasArea(playerData);
+    public static mirror(output: CommandOutput, caPlayer: CAPlayer, res: { AxisPos: Pos; mirror: string; }) {
+        const player = caPlayer.$;
+        AreaOperation.hasArea(caPlayer);
         let axisPos: Pos3D;
         if (res.AxisPos == null) {
             axisPos = Pos3D.fromPos(player.pos).floor().calibration();
@@ -92,7 +95,7 @@ export default class BasicTranslOperation {
         else {
             axisPos = Pos3D.fromPos(res.AxisPos).floor();
         }
-        let st1 = new Structure(playerData.settings.area);
+        let st1 = new Structure(caPlayer.settings.area);
         let st2;
         //计算complex
         let area = st1.area;
@@ -119,31 +122,32 @@ export default class BasicTranslOperation {
         let va = trans.mul(new Vector3D(area.start.x, area.start.z, 1));
         let vb = trans.mul(new Vector3D(area.end.x, area.end.z, 1));
         st2 = new Structure(new Area3D(new Pos3D(va.arr[0], area.start.y, va.arr[1], area.start.dimid), new Pos3D(vb.arr[0], area.end.y, vb.arr[1], area.end.dimid)));
-        BasicTranslOperation.sl(player, playerData, st1, st2, res.mirror, "0_degrees", () => {
+        BasicTranslOperation.sl(caPlayer, st1, st2, res.mirror, "0_degrees", () => {
             player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.BasicTranslOperation.mirror.success", `${axisPos}`, `${res.mirror}`)));
         });
     }
 
-    public static sErgod(player: Player, playerData: PlayerData, st: Structure, sid: string, arr: any[], n: number, overCallback: Function) {
+    public static sErgod(caPlayer: CAPlayer, st: Structure, sid: string, arr: any[], n: number, overCallback: Function) {
         if (n < arr.length) {
             let is = arr[n];
             let area = st.area;
             let lens = area.getLens();
             let pos = new Pos3D(area.start.x + is[0] * lens[0], area.start.y + is[1] * lens[1], area.start.z + is[2] * lens[2], area.start.dimid);
-            StructureManager.load(player, playerData, st, sid, pos, 0, 1, "none", "0_degrees", true, true, false, 100, "", () => {
-                BasicTranslOperation.sErgod(player, playerData, st, sid, arr, ++n, overCallback);
+            StructureManager.load(caPlayer, st, sid, pos, 0, 1, "none", "0_degrees", true, true, false, 100, "", () => {
+                BasicTranslOperation.sErgod(caPlayer, st, sid, arr, ++n, overCallback);
             });
         } else {
             overCallback();
         }
     }
 
-    public static stack(player: Player, output: CommandOutput, playerData: PlayerData, res: { xMultiple: number; yMultiple: number; zMultiple: number; }) {
-        AreaOperation.hasArea(playerData);
+    public static stack(output: CommandOutput, caPlayer: CAPlayer, res: { xMultiple: number; yMultiple: number; zMultiple: number; }) {
+        const player = caPlayer.$;
+        AreaOperation.hasArea(caPlayer);
         let nx = res.xMultiple;
         let ny = res.yMultiple;
         let nz = res.zMultiple;
-        let area = Area3D.fromArea3D(playerData.settings.area);
+        let area = Area3D.fromArea3D(caPlayer.settings.area);
         let lens = area.getLens();
         if (ny >= 0) {
             let top = area.end.y + ny * lens[1];
@@ -161,11 +165,11 @@ export default class BasicTranslOperation {
         let p1 = Pos3D.fromPos3D(area.start).add(nx < 0 ? nx * lens[0] : 0, ny < 0 ? ny * lens[1] : 0, nz < 0 ? nz * lens[2] : 0);
         let p2 = Pos3D.fromPos3D(area.end).add(nx > 0 ? nx * lens[0] : 0, ny > 0 ? ny * lens[1] : 0, nz > 0 ? nz * lens[2] : 0);
         let allst = new Structure(new Area3D(p1, p2));
-        StructureManager.savePos(player, playerData);
+        StructureManager.savePos(caPlayer);
         //save st
-        StructureManager.save(player, playerData, st, 0, 1, (stSid: string, data: any) => {
+        StructureManager.save(caPlayer, st, 0, 1, (stSid: string, data: any) => {
             //undoSave
-            StructureManager.undoSave(player, playerData, [allst], (complex: any) => {
+            StructureManager.undoSave(caPlayer, [allst], (complex: any) => {
                 //load ALL
                 let arr = [];
                 let ax = Math.abs(nx);
@@ -182,12 +186,12 @@ export default class BasicTranslOperation {
                     }
                 }
                 arr.shift();
-                BasicTranslOperation.sErgod(player, playerData, st, stSid, arr, 0, () => {
+                BasicTranslOperation.sErgod(caPlayer, st, stSid, arr, 0, () => {
                     //delete st
                     setTimeout(() => {
-                        StructureManager.delete(player, stSid, st);
+                        StructureManager.delete(caPlayer, stSid, st);
                     }, 100)
-                    StructureManager.tp(player, playerData);
+                    StructureManager.tp(caPlayer);
                     let d = (nx == 0 ? 0 : 1) + (ny == 0 ? 0 : 1) + (nz == 0 ? 0 : 1);
                     let nStr = StrFactory.replaceAll(`${ax != 0 ? ax : ""} ${ay != 0 ? ay : ""} ${az != 0 ? az : ""}`.trim(), " +", ",");
                     player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.BasicTranslOperation.stack.success" ,`${nx != 0 ? (nx >= 0 ? "+" : "-") + "x" : ""}${ny != 0 ? (ny >= 0 ? "+" : "-") + "y" : ""}${nz != 0 ? (nz >= 0 ? "+" : "-") + "z" : ""}`,`${d}`,`${nStr}`)));

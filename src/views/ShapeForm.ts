@@ -1,5 +1,5 @@
 import ShapeManager from "../manager/ShapeManager";
-import PlayerData from "../model/PlayerData";
+import CAPlayer from "../model/CAPlayer";
 import ShapeOperation from "../operation/ShapeOperation";
 import Tr from "../util/Translator";
 import Form from "./Form";
@@ -7,8 +7,8 @@ import Menu from "./Menu";
 
 
 export default class ShapeForm extends Form {
-    constructor(player: Player, playerData: PlayerData) {
-        super(player, playerData);
+    constructor(caPlayer: CAPlayer) {
+        super(caPlayer);
         return this;
     }
 
@@ -21,7 +21,7 @@ export default class ShapeForm extends Form {
         let datas = ShapeOperation.getPkgs();
         let ids = Object.keys(datas);
         ids.forEach(pkgName => {
-            let text = ShapeManager.getInfo(pkgName, this.player).name;
+            let text = ShapeManager.getInfo(pkgName, this.caPlayer).name;
             form.addButton(`${text.replace(/\n*/g, "")} -- ${datas[pkgName].version.toString()}\n${pkgName}`, datas[pkgName].icon);
         });
 
@@ -30,10 +30,10 @@ export default class ShapeForm extends Form {
                 return;
             }
             else if (i == 0) {
-                new Menu(this.player, this.playerData).sendForm();
+                new Menu(this.caPlayer).sendForm();
             }
             else {
-                ShapeManager.form(this.player, ids[i - 1]);
+                ShapeManager.form(this.caPlayer, ids[i - 1]);
             }
         });
     }

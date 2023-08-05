@@ -1,5 +1,6 @@
 import Config from "../common/Config";
 import Area3D from "../model/Area3D";
+import CAPlayer from "../model/CAPlayer";
 import Pos3D from "../model/Pos3D";
 import { FileMode } from "../type/Common";
 
@@ -29,7 +30,7 @@ export default class NBTManager {
         return res;
     }
 
-    public static load(player: Player, saveid: string, pos: Pos3D, mirror = "None", rataion = 0) {
+    public static load(caPlayer: CAPlayer, saveid: string, pos: Pos3D, mirror = "None", rataion = 0) {
         //@ts-ignore
         let file = new File(NBTManager.PATH + `/${saveid}.mcstructure`, FileMode.ReadMode, true);
         let bnbt = file.readAllSync();
@@ -49,7 +50,7 @@ export default class NBTManager {
                 mir = 3;
                 break;
         }
-        player.teleport(intPos);
+        caPlayer.$.teleport(intPos);
         return mc.setStructure(nbtObj, intPos, mir, (rataion / 90) as e);
     }
 

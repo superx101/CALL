@@ -1,6 +1,6 @@
 import Config from "../common/Config";
 import Players from "../common/Players";
-import PlayerData from "../model/PlayerData";
+import CAPlayer from "../model/CAPlayer";
 import StructureOperation from "../operation/StructureOperation";
 import StrFactory from "../util/StrFactory";
 import Tr from "../util/Translator";
@@ -16,8 +16,8 @@ import TutorailForm from "./TutorailForm";
 
 
 export default class Menu extends Form {
-    constructor(public player: Player, public playerData: PlayerData) {
-        super(player, playerData);
+    constructor(public caPlayer: CAPlayer) {
+        super(caPlayer);
     }
 
     public override sendForm(opts: Array<number> = []) {
@@ -57,19 +57,19 @@ export default class Menu extends Form {
                 new AreaForm(this).sendForm(opts);
                 break;
             case 1:
-                Players.silenceCmd(this.player, "ca ud");
+                Players.silenceCmd(this.caPlayer, "ca ud");
                 break;
             case 2:
-                Players.silenceCmd(this.player, "ca rd");
+                Players.silenceCmd(this.caPlayer, "ca rd");
                 break;
             case 3:
                 new OperationForm(this).sendForm(opts);
                 break;
             case 4:
-                Players.silenceCmd(this.player, "ca co");
+                Players.silenceCmd(this.caPlayer, "ca co");
                 break;
             case 5:
-                Players.silenceCmd(this.player, "ca pa");
+                Players.silenceCmd(this.caPlayer, "ca pa");
                 break;
             case 6:
                 new SaveForm(this).sendForm(opts);
@@ -78,13 +78,13 @@ export default class Menu extends Form {
                 new StructureForm(this).sendForm(opts);
                 break;
             case 8:
-                new ShapeForm(this.player, this.playerData).sendForm(opts);
+                new ShapeForm(this.caPlayer).sendForm(opts);
                 break;
             case 9:
-                new BlockEditerForm(this.player, this.playerData).sendForm(opts);
+                new BlockEditerForm(this.caPlayer).sendForm(opts);
                 break;
             case 10:
-                Players.silenceCmd(this.player, "ca rf");
+                Players.silenceCmd(this.caPlayer, "ca rf");
                 break;
             case 11:
                 new SettingForm(this).sendForm(opts);

@@ -1,5 +1,5 @@
 import { Areas } from "../type/Data";
-import PlayerData from "../model/PlayerData";
+import CAPlayer from "../model/CAPlayer";
 import StructureManager from "./StructureManager";
 import Constant from "../type/Constant";
 import Config from "../common/Config";
@@ -13,13 +13,13 @@ import BlockType from "../model/BlockType";
 import Tr from "../util/Translator";
 
 export default class FillManager {
-    public static async ergod(player: Player, playerData: PlayerData, areas: Areas, index: number, total: number, cmdCallback: (yBottom: number, yTop: number, area: Area3D) => boolean, overCallback: (warn: number) => void) {
+    public static async ergod(caPlayer: CAPlayer, areas: Areas, index: number, total: number, cmdCallback: (yBottom: number, yTop: number, area: Area3D) => boolean, overCallback: (warn: number) => void) {
         const yNum = Math.ceil(areas[0][0].getLens()[1] / Constant.FILL.MAX_HIGHT);//y轴填充个数
         const fillWaitTime = Config.get(Config.GLOBAL, "fillWaitTime");
         const tpWaitTime = fillWaitTime * 10;
         let warn = 0;
 
-        await StructureManager.traversal(player, playerData, areas, Tr._(player.langCode, "dynamic.FillManager.ergod.fill", `${index + 1}/${total}`), 11, async (x: number, z: number) => {
+        await StructureManager.traversal(caPlayer, areas, Tr._(caPlayer.$.langCode, "dynamic.FillManager.ergod.fill", `${index + 1}/${total}`), 11, async (x: number, z: number) => {
             async function cmd(yBottom: number, yTop: number, area: Area3D) {
                 return new Promise(resolve => {
                     setTimeout(() => {
@@ -35,7 +35,7 @@ export default class FillManager {
             let yTop: number, yBottom: number = area.start.y;
 
             //传送
-            if(!await Players.tpAsync(player, (area.start.x + area.end.x) / 2, yBottom, (area.start.z + area.end.z) / 2, area.start.dimid)) {
+            if(!await Players.tpAsync(caPlayer, (area.start.x + area.end.x) / 2, yBottom, (area.start.z + area.end.z) / 2, area.start.dimid)) {
                 return Promise.resolve(false);
             }
             //等待
@@ -63,15 +63,15 @@ export default class FillManager {
         return;
     }
 
-    public static soildFill(player: Player, playerData: PlayerData, targetArea: Area3D, blockTypeA: BlockType, blockTypeB: BlockType, mod: string, overCallback: () => void) {
+    public static soildFill(caPlayer: CAPlayer, targetArea: Area3D, blockTypeA: BlockType, blockTypeB: BlockType, mod: string, overCallback: () => void) {
         let st = new Structure(Area3D.fromArea3D(targetArea));
-        StructureManager.undoSave(player, playerData, [st], () => {
-            FillManager.ergod(player, playerData, st.getAreas(), 0, 1,
+        StructureManager.undoSave(caPlayer, [st], () => {
+            FillManager.ergod(caPlayer, st.getAreas(), 0, 1,
                 (yBottom: number, yTop: number, area: Area3D) => {
-                    return Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} ${blockTypeA.toString()} ${mod} ${blockTypeB.toString()}`, false).success;
+                    return Players.cmd(caPlayer, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} ${blockTypeA.toString()} ${mod} ${blockTypeB.toString()}`, false).success;
                 },
                 (warn: number) => {
-                    if (warn != 0) player.sendText(StrFactory.cmdWarn(Tr._(player.langCode, "dynamic.FillManager.soildFill.warn", warn)))
+                    if (warn != 0) caPlayer.$.sendText(StrFactory.cmdWarn(Tr._(caPlayer.$.langCode, "dynamic.FillManager.soildFill.warn", warn)))
 
                     overCallback();
                 }
@@ -79,7 +79,7 @@ export default class FillManager {
         });
     }
 
-    public static fillOutside(player: Player, playerData: PlayerData, tArea: Area3D, blockTypeA: BlockType, isHollow: boolean, overCallback: Function) {
+    public static fillOutside(caPlayer: CAPlayer, tArea: Area3D, blockTypeA: BlockType, isHollow: boolean, overCallback: Function) {
         let sts: Array<Structure> = [];
         let a = Area3D.fromArea3D(tArea);
         sts.push(new Structure(new Area3D(new Pos3D(a.start.x, a.start.y, a.start.z, a.start.dimid), new Pos3D(a.start.x, a.end.y, a.end.z, a.start.dimid))));
@@ -97,15 +97,15 @@ export default class FillManager {
                 sts.push(new Structure(ar));
             }
         }
-        StructureManager.undoSave(player, playerData, sts, async () => {
+        StructureManager.undoSave(caPlayer, sts, async () => {
             let warn = 0;
             for (let i = 0; i < sts.length; i++) {
-                await FillManager.ergod(player, playerData, sts[i].getAreas(), i, sts.length, (yBottom: number, yTop: number, area: Area3D) => {
+                await FillManager.ergod(caPlayer, sts[i].getAreas(), i, sts.length, (yBottom: number, yTop: number, area: Area3D) => {
                     if (i == 6) {
-                        return Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} air`, false).success;
+                        return Players.cmd(caPlayer, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} air`, false).success;
                     }
                     else {
-                        return Players.cmd(player, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} ${blockTypeA.toString()}`, false).success;
+                        return Players.cmd(caPlayer, `fill ${area.start.x} ${yBottom} ${area.start.z} ${area.end.x} ${yTop} ${area.end.z} ${blockTypeA.toString()}`, false).success;
                     }
                 }, (w: number) => {
                     warn += w;
@@ -114,7 +114,7 @@ export default class FillManager {
                     }
                 });
             }
-            if (warn != 0) player.sendText(StrFactory.cmdWarn(Tr._(player.langCode, "dynamic.FillManager.soildFill.warn", warn)))
+            if (warn != 0) caPlayer.$.sendText(StrFactory.cmdWarn(Tr._(caPlayer.$.langCode, "dynamic.FillManager.soildFill.warn", warn)))
             
         });
     }

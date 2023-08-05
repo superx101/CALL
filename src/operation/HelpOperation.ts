@@ -1,10 +1,10 @@
 import Config from "../common/Config";
-import PlayerData from "../model/PlayerData";
+import CAPlayer from "../model/CAPlayer";
 import { FileMode } from "../type/Common";
 import StrFactory from "../util/StrFactory";
 
 export default class HelpOperation {
-    public static start(player: Player, output: CommandOutput, playerData: PlayerData) {
+    public static start(output: CommandOutput, caPlayer: CAPlayer) {
         output.success(StrFactory.catalog(HelpOperation.getTreeList()));
     }
 

@@ -1,14 +1,14 @@
-import PlayerData from "../model/PlayerData";
+import CAPlayer from "../model/CAPlayer";
 import Menu from "../views/Menu";
 
 export default class MenuOperation {
-    static start(player:Player, output:CommandOutput, playerData:PlayerData, res: { option: string; }) {
+    static start(output:CommandOutput, caPlayer:CAPlayer, res: { option: string; }) {
         let option: number[];
         if(res.option != null) 
             option = res.option.match(/\d+/g).map(Number);
         else 
             option = [];
 
-        new Menu(player, playerData).sendForm(option);
+        new Menu(caPlayer).sendForm(option);
     }
 }

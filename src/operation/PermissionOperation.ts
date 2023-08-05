@@ -1,5 +1,7 @@
 import Activity from "../activity/Activity";
 import Config from "../common/Config";
+import Players from "../common/Players";
+import CAPlayer from "../model/CAPlayer";
 import { PermissionsType } from "../type/Config";
 import StrFactory from "../util/StrFactory";
 import Tr from "../util/Translator";
@@ -41,7 +43,7 @@ export default class PermissionOperation {
             output.success(Tr._c("console.PermissionOperation.add.success", name, player == null ? Tr._c("word.no") : Tr._c("word.ok")));
 
             if(player != null) {
-                Activity.onCreate(player);
+                Players.setCAPlayer(player.xuid, new CAPlayer(player.xuid));
                 player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.PermissionOperation.add.success")));
             }
         }
@@ -61,7 +63,7 @@ export default class PermissionOperation {
             output.success(Tr._c("console.PermissionOperation.ban.success", name, player == null ? Tr._c("word.no") : Tr._c("word.ok")));
 
             if(player != null) {
-                Activity.onDestroy(player);
+                Activity.onDestroy(Players.getCAPlayer(player.xuid));
                 player.sendText(StrFactory.cmdErr(Tr._(player.langCode, "dynamic.PermissionOperation.ban.success")));
             }
         }

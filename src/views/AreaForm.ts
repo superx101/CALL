@@ -7,29 +7,29 @@ import Menu from "./Menu";
 
 export default class AreaForm extends Form {
     constructor(form: Form) {
-        super(form.player, form.playerData);
+        super(form.caPlayer);
         return this;
     }
 
     private opt(opts: Array<number>) {
         switch (opts.shift()) {
             case 0:
-                new Menu(this.player, this.playerData).sendForm();
+                new Menu(this.caPlayer).sendForm();
                 break;
             case 1:
-                Players.silenceCmd(this.player, `ca ar st ${Pos3D.fromPos(this.player.pos).calibration().floor().formatStr()}`);
+                Players.silenceCmd(this.caPlayer, `ca ar st ${Pos3D.fromPos(this.player.pos).calibration().floor().formatStr()}`);
                 break;
             case 2:
-                Players.silenceCmd(this.player, `ca ar en ${Pos3D.fromPos(this.player.pos).calibration().floor().formatStr()}`);
+                Players.silenceCmd(this.caPlayer, `ca ar en ${Pos3D.fromPos(this.player.pos).calibration().floor().formatStr()}`);
                 break;
             case 3:
-                Players.silenceCmd(this.player, "ca ar cl");
+                Players.silenceCmd(this.caPlayer, "ca ar cl");
                 break;
             case 4:
-                Players.silenceCmd(this.player, `ca setting set {"areaTextShow":${this.settings.areaTextShow ? false : true}}`);
+                Players.silenceCmd(this.caPlayer, `ca setting set {"areaTextShow":${this.settings.areaTextShow ? false : true}}`);
                 break;
             case 5:
-                Players.silenceCmd(this.player, `ca ar sh ${this.settings.displayArea ? "off" : "on"}`);
+                Players.silenceCmd(this.caPlayer, `ca ar sh ${this.settings.displayArea ? "off" : "on"}`);
                 break;
             default:
                 break;

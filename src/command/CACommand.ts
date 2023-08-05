@@ -305,26 +305,26 @@ export default class CACommand {
     }
 
     private static command_playerCallback(ori: CommandOrigin, output: CommandOutput, res: any) {
-        if (!Players.hasPermission(ori.player)) {
+        const player = ori.player;
+        if (!Players.checkPermission(player)) {
             throw new Error(Tr._(ori.player.langCode, "dynamic.app.command_playerCallback.notHasPermission"));
         }
-        let playerData = Players.getData(ori.player.xuid);
-        let player = ori.player;
-        if (playerData.forbidCmd) {
+        const caPlayer = Players.getCAPlayer(ori.player.xuid);
+        if (caPlayer.forbidCmd) {
             throw new Error(Tr._(player.langCode, "dynamic.app.command_playerCallback.wait"));
         }
 
         switch (res.action) {
             case "on":
-                EnableOperation.on(player, output, playerData);
+                EnableOperation.on(output, caPlayer);
                 break;
             case "off":
             case "of":
-                EnableOperation.off(player, output, playerData);
+                EnableOperation.off(output, caPlayer);
                 return;
         }
 
-        if (!playerData.settings.enable) {
+        if (!caPlayer.settings.enable) {
             throw new Error(Tr._(player.langCode, "dynamic.app.command_playerCallback.close"));
         }
 
@@ -332,106 +332,106 @@ export default class CACommand {
             case undefined:
             case "me":
             case "menu":
-                MenuOperation.start(player, output, playerData, res);
+                MenuOperation.start(output, caPlayer, res);
                 break;
             case "area":
             case "ar":
-                AreaOperation.start(player, output, playerData, res);
+                AreaOperation.start(output, caPlayer, res);
                 break;
             case "refresh":
             case "rf":
-                ChunkOperation.start(player, output, playerData);
+                ChunkOperation.start(output, caPlayer);
                 break;
             case "fill":
             case "fi":
-                FillOperation.fill(player, output, playerData, res);
+                FillOperation.fill(output, caPlayer, res);
                 break;
             case "clear":
             case "cl":
-                FillOperation.clear(player, output, playerData);
+                FillOperation.clear(output, caPlayer);
                 break;
             case "replace":
             case "re":
-                FillOperation.replace(player, output, playerData, res);
+                FillOperation.replace(output, caPlayer, res);
                 break;
             case "move":
             case "mo":
-                BasicTranslOperation.move(player, output, playerData, res);
+                BasicTranslOperation.move(output, caPlayer, res);
                 break;
             case "stack":
             case "st":
-                BasicTranslOperation.stack(player, output, playerData, res);
+                BasicTranslOperation.stack(output, caPlayer, res);
                 break;
             case "mirror":
             case "mi":
-                BasicTranslOperation.mirror(player, output, playerData, res);
+                BasicTranslOperation.mirror(output, caPlayer, res);
                 break;
             case "rote":
             case "ro":
-                BasicTranslOperation.rote(player, output, playerData, res);
+                BasicTranslOperation.rote(output, caPlayer, res);
                 break;
             case "shape":
             case "sh":
-                ShapeOperation.start(player, output, playerData, res);
+                ShapeOperation.start(output, caPlayer, res);
                 break;
             case "texture":
             case "te":
-                TextureOperation.start(player, output, playerData, res);
+                TextureOperation.start(output, caPlayer, res);
                 break;
             case "block":
             case "bl":
-                BlockEditerOperation.start(player, output, playerData, res);
+                BlockEditerOperation.start(output, caPlayer, res);
                 break;
             case "copy":
             case "co":
-                StructureOperation.copy(player, output, playerData);
+                StructureOperation.copy(output, caPlayer);
                 break;
             case "paste":
             case "pa":
-                StructureOperation.paste(player, output, playerData, res);
+                StructureOperation.paste(output, caPlayer, res);
                 break;
             case "save":
             case "sa":
-                StructureOperation.save(player, output, playerData, res);
+                StructureOperation.save(output, caPlayer, res);
                 break;
             case "list":
             case "li":
-                StructureOperation.list(player, output, playerData);
+                StructureOperation.list(output, caPlayer);
                 break;
             case "load":
             case "lo":
-                StructureOperation.load(player, output, playerData, res);
+                StructureOperation.load(output, caPlayer, res);
                 break;
             case "delete":
             case "de":
-                StructureOperation.delete(player, output, playerData, res);
+                StructureOperation.delete(output, caPlayer, res);
                 break;
             case "public":
             case "pu":
-                StructureOperation.public(player, output, playerData, res);
+                StructureOperation.public(output, caPlayer, res);
                 break;
             case "private":
             case "pr":
-                StructureOperation.private(player, output, playerData, res);
+                StructureOperation.private(output, caPlayer, res);
                 break;
             case "undo":
             case "ud":
-                StructureOperation.undo(player, output, playerData);
+                StructureOperation.undo(output, caPlayer);
                 break;
             case "redo":
             case "rd":
-                StructureOperation.redo(player, output, playerData);
+                StructureOperation.redo(output, caPlayer);
                 break;
             case "tool":
             case "to":
-                ToolOperation.start(player, output, playerData, res);
+                ToolOperation.start(output, caPlayer, res);
             case "setting":
-                SettingsOperation.start(player, output, playerData, res);
+                SettingsOperation.start(output, caPlayer, res);
                 break;
             case "help":
             case "he":
             case "?":
-                HelpOperation.start(player, output, playerData);
+                HelpOperation.start(output, caPlayer);
                 break;
             case "ban":
             case "add":

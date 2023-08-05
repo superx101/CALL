@@ -1,41 +1,36 @@
 import Players from "../common/Players";
 import StructureManager from "../manager/StructureManager";
-import PlayerData from "../model/PlayerData";
+import CAPlayer from "../model/CAPlayer";
 import AreaOperation from "../operation/AreaOperation";
 import SettingsOperation from "../operation/SettingsOperation";
- 
+
 export default class Activity {
     public static onServerCreate() {
         SettingsOperation.onServerCreate();
     }
 
-    public static onCreate(player: Player) {
-        let playerData = new PlayerData(player.xuid);
-        Players.setData(player.xuid, playerData);
+    public static onCreate(xuid: string) {
+        Players.createCAPlayer(xuid);
     }
 
-    public static onStart(player: Player) {
-        let playerData = Players.getData(player.xuid);
-        AreaOperation.onStart(playerData);//Restore selection display
+    public static onStart(caPlayer: CAPlayer) {
+        AreaOperation.onStart(caPlayer);//Restore selection display
     }
 
-    public static onStop(player: Player) {
-        let playerData = Players.getData(player.xuid);
-        AreaOperation.onStop(playerData);//clear selection display
+    public static onStop(caPlayer: CAPlayer) {
+        AreaOperation.onStop(caPlayer);//clear selection display
     }
 
-    public static onDestroy(player: Player) {
-        let playerData = Players.getData(player.xuid);
-        if(playerData != null) {
-            playerData.saveAll();
-            Players.dataMap.delete(player.xuid);
-            if (!playerData.settings.saveUndo) {
-                StructureManager.clearUndoList(player);
-                StructureManager.clearRedoList(player);
-            }
-            if (!playerData.settings.saveCopy) {
-                StructureManager.clearCopy(player);
-            }
+    public static onDestroy(caPlayer: CAPlayer) {
+        if (caPlayer == null) return;
+        caPlayer.saveAll();
+        Players.dataMap.delete(caPlayer.xuid);
+        if (!caPlayer.settings.saveUndo) {
+            StructureManager.clearUndoList(caPlayer);
+            StructureManager.clearRedoList(caPlayer);
+        }
+        if (!caPlayer.settings.saveCopy) {
+            StructureManager.clearCopy(caPlayer);
         }
     }
 }

@@ -1,5 +1,5 @@
 import Players from "../common/Players";
-import PlayerData from "../model/PlayerData";
+import CAPlayer from "../model/CAPlayer";
 import Pos3D from "../model/Pos3D";
 import StrFactory from "../util/StrFactory";
 import Tr from "../util/Translator";
@@ -24,8 +24,8 @@ export default class BlockEditerForm extends Form {
     private hasEntity: boolean;
     private pos: Pos3D;
     private mode: Mode;
-    constructor(player: Player, playerData: PlayerData) {
-        super(player, playerData);
+    constructor(caPlayer: CAPlayer) {
+        super(caPlayer);
         return this;
     }
 
@@ -88,7 +88,7 @@ export default class BlockEditerForm extends Form {
             .addInput(Tr._(this.player.langCode, "dynamic.BlockEditerForm.operationForm.s8"), Tr._(this.player.langCode, "dynamic.BlockEditerForm.operationForm.s9"), defValue)
             .addDropdown(Tr._(this.player.langCode, "dynamic.BlockEditerForm.operationForm.s10"), [Tr._(this.player.langCode, "dynamic.BlockEditerForm.operationForm.s11"), Tr._(this.player.langCode, "dynamic.BlockEditerForm.operationForm.s12"), Tr._(this.player.langCode, "dynamic.BlockEditerForm.operationForm.s13")], type)
 
-        this.player.sendForm(form, (pl: Player, data: any[]) => {
+        this.player.sendForm(form, (pl: LLSE_Player, data: any[]) => {
             if (data == null) {
                 this.attributeForm(Tr._(this.player.langCode, "dynamic.BlockEditerForm.operationForm.s14"));
                 return;
@@ -142,7 +142,7 @@ export default class BlockEditerForm extends Form {
             form.addButton(key)
         }
 
-        this.player.sendForm(form, (pl: Player, id: number) => {
+        this.player.sendForm(form, (pl: LLSE_Player, id: number) => {
             if (id == null) {
                 this.failMsg();
                 return;
@@ -170,7 +170,7 @@ export default class BlockEditerForm extends Form {
 
         if (content !== "") form.setContent(content);
 
-        this.player.sendForm(form, (pl: Player, id: number) => {
+        this.player.sendForm(form, (pl: LLSE_Player, id: number) => {
             switch (id) {
                 case 0:
                     this.sendForm(null);
@@ -187,7 +187,7 @@ export default class BlockEditerForm extends Form {
                     }
                     break;
                 case 3:
-                    Players.silenceCmd(this.player, `ca bl ${this.pos.formatStr()} ${JSON.stringify(this.blockNbt)} ${this.hasEntity ? JSON.stringify(this.entityNbt) : ""}`)
+                    Players.silenceCmd(this.caPlayer, `ca bl ${this.pos.formatStr()} ${JSON.stringify(this.blockNbt)} ${this.hasEntity ? JSON.stringify(this.entityNbt) : ""}`)
                     break;
                 default:
                     this.failMsg();
@@ -220,7 +220,7 @@ export default class BlockEditerForm extends Form {
             .addLabel(content)
             .addInput(Tr._(this.player.langCode, "dynamic.BlockEditerForm.sendForm.s29"), Tr._(this.player.langCode, "dynamic.BlockEditerForm.sendForm.s30"), `${Pos3D.fromPos(this.player.pos).calibration().add(0, -1, 0).floor().formatStr()}`)
 
-        this.player.sendForm(form, (pl: Player, data: string[]) => {
+        this.player.sendForm(form, (pl: LLSE_Player, data: string[]) => {
             if (data == null) {
                 this.failMsg();
             } else {
