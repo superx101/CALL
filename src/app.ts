@@ -40,6 +40,7 @@ namespace ListenerHandler {
         if (Players.checkPermission(player)) {
             const caPlayer = Players.getCAPlayer(player.xuid);
             Activity.onStop(caPlayer);
+            Activity.onDestroy(caPlayer);
         }
     }
 
