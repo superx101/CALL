@@ -6,10 +6,10 @@ export interface Complex {
 
 export interface Data {
     pid: number,
-    copy: any,
-    undoList: [],
-    redoList: [],
-    saveList: any
+    copy: Complex,
+    undoList: Array<Complex>,
+    redoList: Array<Complex>,
+    saveList: Complex
 }
 
 export enum Type {

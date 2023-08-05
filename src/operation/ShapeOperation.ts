@@ -1,7 +1,6 @@
 import ShapeManager from "../manager/ShapeManager";
 import CAPlayer from "../model/CAPlayer";
 import Pos3D from "../model/Pos3D";
-import ShapeLoader from "../plugin/ShapeLoader";
 import Tr from "../util/Translator";
 
 export default class ShapeOperation {
@@ -29,7 +28,7 @@ export default class ShapeOperation {
         let pos;
         if(intPos == null) pos = player.pos;
         else pos = intPos;
-        ShapeManager.run(caPlayer, pack, index, Pos3D.fromPos(pos).calibration().floor(), Json);
+        ShapeManager.run(caPlayer, pack, index, Pos3D.fromPos(pos).floor(), Json);
     }
 
     public static getList() {

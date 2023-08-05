@@ -317,10 +317,9 @@ export default class StructureManager {
         return new Structure(area);
     }
 
-    public static getTargetStructs(complex: Complex, targetPos: Pos3D) {
+    public static getTargetStructs(complex: Complex, targetPos: Pos3D): Array<Structure> {
         let res: Array<Structure> = [];
         let area;
-        let st;
         Object.keys(complex).forEach((sid, i) => {
             area = Area3D.fromArea3D(complex[sid].area).relative();
             area.start.add(targetPos.x, targetPos.y, targetPos.z);

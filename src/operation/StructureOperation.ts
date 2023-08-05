@@ -12,6 +12,13 @@ import { Pos } from "../type/Pos";
 import Tr from "../util/Translator";
 
 export default class StructureOperation {
+    private static setDimid(complex: any, distDimid: number): void {
+        Object.keys(complex).forEach((sid, i) => {
+            complex[sid].area.start.dimid = distDimid;
+            complex[sid].area.end.dimid = distDimid;
+        })
+    }
+
     public static findId(input: string, caPlayer: CAPlayer) {
         let xuid = caPlayer.$.xuid;
         let data = StructureManager.getData(xuid);
@@ -88,6 +95,7 @@ export default class StructureOperation {
             .relative()
             .addBoth(pos.x, pos.y, pos.z);
         StructureManager.savePos(caPlayer);
+        StructureOperation.setDimid({st: structure}, pos.dimid);// set dimid to structure
         //save dist area
         StructureManager.undoSave(caPlayer, [new Structure(targetArea)], () => {
             StructureManager.load(caPlayer, structure, r.structid, pos, 0, 1, res.Mirror, res.Degrees, res.IncludeEntities, res.IncludeBlocks, res.Waterlogged, res.Integrity, res.Seed, () => {
@@ -240,7 +248,8 @@ export default class StructureOperation {
 
     public static paste(output: CommandOutput, caPlayer: CAPlayer, res: { IntPos: Pos; }) {
         const player = caPlayer.$;
-        let data = StructureManager.getData(player.xuid);
+        // data's type is any, not Complex. it not has functions
+        let data = StructureManager.getData(player.xuid) as Data;
         let keys = Object.keys(data.copy);
         if (keys.length == 0) {
             output.error(Tr._(player.langCode, "dynamic.StructureOperation.paste.s21"));
@@ -257,6 +266,7 @@ export default class StructureOperation {
             StructureOperation.checkTargetStruct(data.copy[sid].area, pos, caPlayer);
         })
         StructureManager.savePos(caPlayer);
+        StructureOperation.setDimid(data.copy, pos.dimid);// set dimid to data.copy
         StructureManager.undoSave(caPlayer, StructureManager.getTargetStructs(data.copy, pos), () => {
             StructureManager.paste(caPlayer, pos, data, () => {
                 StructureManager.tp(caPlayer);
