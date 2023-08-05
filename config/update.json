@@ -364,5 +364,20 @@
             "type": "delete",
             "path": "./plugins/CALL/plugins/shape/call.superx101.basicShape_2.0.0.js"
         }
+    ],
+    "1.2.1": [
+        {
+            "type": "delete",
+            "path": "./plugins/CALL/version"
+        },
+        {
+            "type": "create",
+            "path": "./plugins/CALL/version",
+            "value": "1.2.1"
+        },
+        {
+            "type": "delete",
+            "path": "./plugins/CALL/plugins/shape/call.superx101.basicShape_2.1.0.js"
+        }  
     ]
 }
