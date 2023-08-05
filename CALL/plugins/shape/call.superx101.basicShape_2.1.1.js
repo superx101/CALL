@@ -685,7 +685,7 @@ function cube_form(player, index, intPos, plData) {
     let itemStr = plData.itemA.isNull() ? "" : `${plData.itemA.type} ${plData.itemA.aux}`;
     let form = mc.newCustomForm()
         .setTitle(i18n.trl(player.langCode, "form.s0"))
-        .addLabel(i18n.trl(player.langCode, "form.s1", `${plData.itemAIndex + 1}`, `${itemStr}`)``)
+        .addLabel(i18n.trl(player.langCode, "form.s1", `${plData.itemAIndex + 1}`, `${itemStr}`))
         .addInput(i18n.trl(player.langCode, "form.s2"), i18n.trl(player.langCode, "form.s3"))
         .addInput(i18n.trl(player.langCode, "form.s4"), i18n.trl(player.langCode, "form.s5"), `${intPos.x} ${intPos.y} ${intPos.z}`)
         .addStepSlider(i18n.trl(player.langCode, "form.s6"), orderArr)
@@ -847,11 +847,12 @@ function line_generate(param, intPos, player, itemA) {
 
     let va = SHP.getVector3(0, 0, 1);
     let v = SHP.getVector3(param.x, param.y, param.z)
-    v.sub(SHP.getVector3(intPos.x, intPos.y, intPos.z));
+    v.sub(SHP.getVector3(intPos.x, intPos.y, intPos.z)); // line vector
     let cube = new SHP.THREE.BoxGeometry(1, 1, v.length() + 1, 1, 1, 1);
-    let angle = va.angleTo(v);
+    let angle = va.angleTo(v); // angle between line and va
 
-    let m4 = SHP.getMAT4().makeRotationAxis(va.normalize(), angle);
+    let axisV = va.cross(v).normalize();// get axis from va and v
+    let m4 = SHP.getMAT4().makeRotationAxis(axisV, angle);// get Rotation Matrix from axis and angle
     shape.arr = cube_simpleCubeVoxelization(cube, m4, param.snbt);
     shape.pos = mc.newIntPos(Math.round((param.x + intPos.x) / 2), Math.round((param.y + intPos.y) / 2), Math.round((param.z + intPos.z) / 2), intPos.dimid);
     return shape;
