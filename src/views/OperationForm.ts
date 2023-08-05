@@ -1,6 +1,7 @@
 import Players from "../common/Players";
 import Area3D from "../model/Area3D";
 import BlockType from "../model/BlockType";
+import CAPlayer from "../model/CAPlayer";
 import Pos3D from "../model/Pos3D";
 import AreaOperation from "../operation/AreaOperation";
 import StrFactory from "../util/StrFactory";
@@ -92,19 +93,19 @@ export default class OperationForm extends Form {
     }
 
     private fillForm(mode: number) {
-        function run(blockTypeA: BlockType, blockTypeB: BlockType) {
+        function run(caPlayer: CAPlayer, blockTypeA: BlockType, blockTypeB: BlockType) {
             switch (mode) {
                 case OperationForm.MODE.NULL:
-                    Players.silenceCmd(this.PlayerData, `ca fi ${blockTypeA.toFormatString()} nu`);
+                    Players.silenceCmd(caPlayer, `ca fi ${blockTypeA.toFormatString()} nu`);
                     break;
                 case OperationForm.MODE.HOLLOW:
-                    Players.silenceCmd(this.PlayerData, `ca fi ${blockTypeA.toFormatString()} ho`);
+                    Players.silenceCmd(caPlayer, `ca fi ${blockTypeA.toFormatString()} ho`);
                     break;
                 case OperationForm.MODE.OUTLINE:
-                    Players.silenceCmd(this.PlayerData, `ca fi ${blockTypeA.toFormatString()} ou`);
+                    Players.silenceCmd(caPlayer, `ca fi ${blockTypeA.toFormatString()} ou`);
                     break;
                 case OperationForm.MODE.REPLACE:
-                    Players.silenceCmd(this.PlayerData, `ca re ${blockTypeA.toFormatString()} ${blockTypeB.toFormatString()}`);
+                    Players.silenceCmd(caPlayer, `ca re ${blockTypeA.toFormatString()} ${blockTypeB.toFormatString()}`);
                     break;
             }
         }
@@ -123,7 +124,7 @@ export default class OperationForm extends Form {
                 statesB = this.caPlayer.settings.texture.b.states;
             }
             // 直接执行
-            run(new BlockType(typeA, statesA), new BlockType(typeB, statesB));
+            run(this.caPlayer, new BlockType(typeA, statesA), new BlockType(typeB, statesB));
         }
         else {
             let con = this.player.getInventory();
@@ -147,7 +148,7 @@ export default class OperationForm extends Form {
                 if (mode == OperationForm.MODE.REPLACE)
                     blockB = data[1].split(" ");
 
-                run(new BlockType(blockA[0], blockA[1]), new BlockType(blockB[0] as string, blockB[1] as string));
+                run(this.caPlayer, new BlockType(blockA[0], blockA[1]), new BlockType(blockB[0] as string, blockB[1] as string));
             });
         }
     }
