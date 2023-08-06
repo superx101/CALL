@@ -567,6 +567,7 @@ dynamic.SettingForm.otherSettingForm.s35=退出后保存复制
 dynamic.SettingForm.otherSettingForm.s36=结构中保存实体
 dynamic.SettingForm.otherSettingForm.s37=启用材质选择器模式
 dynamic.SettingForm.otherSettingForm.s38=填充方块和被替换方块不能相同
+dynamic.SettingForm.otherSettingForm.s39=每次操作完成后刷新区块
 dynamic.SettingForm.sendForm.s39=设置
 dynamic.SettingForm.sendForm.s40=返回上一级
 dynamic.SettingForm.sendForm.s41=快捷键设置

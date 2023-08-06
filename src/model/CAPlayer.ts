@@ -1,6 +1,6 @@
 import Config from "../common/Config";
 import AreaOperation from "../operation/AreaOperation";
-import { Settings } from "../type/Data";
+import { Settings, defaultSettings } from "../type/Data";
 
 export default class CAPlayer {
     public xuid: string;
@@ -30,6 +30,19 @@ export default class CAPlayer {
         this.forbidCmd = false;
         this.prePos = null;
         this.$ = mc.getPlayer(xuid);
+        this.setDefaultSettings();
+    }
+
+    public setDefaultSettings() {
+        Object.keys(defaultSettings).forEach(key => {
+            if (this.settings[key] == null) this.settings[key] = defaultSettings[key];
+        })
+    }
+
+    public refreshAllChunks() {
+        if (this.settings.refreshChunks) {
+            this.$.refreshChunks();
+        }
     }
 
     public saveAll() {

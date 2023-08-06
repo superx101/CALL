@@ -180,7 +180,8 @@ export default class SettingForm extends Form {
             ["saveUndo", this.settings.saveUndo],
             ["saveCopy", this.settings.saveCopy],
             ["saveEntity", this.settings.saveEntity],
-            ["textureSelectorMode", this.settings.textureSelectorMode]
+            ["textureSelectorMode", this.settings.textureSelectorMode],
+            ["refreshChunk", this.settings.refreshChunk]
         ];
         let form = mc.newCustomForm()
             .setTitle(Tr._(this.player.langCode, "dynamic.SettingForm.otherSettingForm.s28"))
@@ -193,6 +194,7 @@ export default class SettingForm extends Form {
             .addSwitch(Tr._(this.player.langCode, "dynamic.SettingForm.otherSettingForm.s35"), setArr[6][1])
             .addSwitch(Tr._(this.player.langCode, "dynamic.SettingForm.otherSettingForm.s36"), setArr[7][1])
             .addSwitch(Tr._(this.player.langCode, "dynamic.SettingForm.otherSettingForm.s37"), setArr[8][1])
+            .addSwitch(Tr._(this.player.langCode, "dynamic.SettingForm.otherSettingForm.s39"), setArr[9][1])
 
         this.player.sendForm(form, (pl, data) => {
             if (data == null) {

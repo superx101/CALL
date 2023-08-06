@@ -66,7 +66,7 @@ export default class AreaDisplayerManager {
                         if (data.blockEntityNbt != null) {
                             bl.getBlockEntity().setNbt(data.blockEntityNbt);
                         }
-                        StructureManager.tp(caPlayer, false);
+                        StructureManager.tp(caPlayer);
                         player.sendText(StrFactory.cmdTip(Tr._(player.langCode, 'dynamic.AreaDisplayerManager.undo.canceled')));
                         clearInterval(id);
                     }

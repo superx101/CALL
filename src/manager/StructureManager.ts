@@ -66,7 +66,6 @@ export default class StructureManager {
         });
     }
 
-
     public static register(xuid: string) {
         let pr = Config.get(Config.STRUCTURES, "private");
         let data = pr.default;
@@ -104,13 +103,13 @@ export default class StructureManager {
         caPlayer.direction = caPlayer.$.direction;
     }
 
-    public static tp(caPlayer: CAPlayer, refresh: boolean = true) {
+    public static tp(caPlayer: CAPlayer) {
         let pos = caPlayer.prePos;
         const player = caPlayer.$;
         let diArr = Pos3D.directionToPosArr(caPlayer.direction);
         let res: { success: boolean; output: string; } = Players.cmd(caPlayer, `/tp "${player.realName}" ${pos.x.toFixed(2)} ${(pos.y - 0.5).toFixed(2)} ${pos.z.toFixed(2)} facing ${parseFloat(pos.x.toFixed(2)) + diArr[0]} ${parseFloat(pos.y.toFixed(2)) + diArr[1]} ${parseFloat(pos.z.toFixed(2)) + diArr[2]}`, false);
-        if (res.success && refresh) {
-            player.refreshChunks();
+        if (res.success) {
+            caPlayer.refreshAllChunks();
         }
     }
 
@@ -446,7 +445,6 @@ export default class StructureManager {
     }
 
     public static copy(caPlayer: CAPlayer, structArr: Array<Structure>, delLast: any, lastComplex: Complex, overCallback: (complex: Complex) => void) {
-        const player = caPlayer.$;
         //删除上个存储结构
         if (delLast) {
             Object.keys(lastComplex).forEach((sid, i, a) => {

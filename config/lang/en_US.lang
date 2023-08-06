@@ -567,6 +567,7 @@ dynamic.SettingForm.otherSettingForm.s34=(MT)Save and undo after exit
 dynamic.SettingForm.otherSettingForm.s35=(MT)Save copy after exit
 dynamic.SettingForm.otherSettingForm.s36=(MT)Store entity in structure
 dynamic.SettingForm.otherSettingForm.s37=(MT)Enable material selector mode
+dynamic.SettingForm.otherSettingForm.s39=Refresh chunks after each operation
 dynamic.SettingForm.otherSettingForm.s38=(MT)The filling square and the replaced square cannot be the same
 dynamic.SettingForm.sendForm.s39=(MT)Settings
 dynamic.SettingForm.sendForm.s40=(MT)Back to previous level

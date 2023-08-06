@@ -245,7 +245,7 @@ export default class ShapeManager {
                         }
                         return Promise.resolve(true);
                     }, () => {
-                        player.refreshChunks();
+                        caPlayer.refreshAllChunks();
                         player.sendText(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.ShapeManager.run.success")));
                     }, () => {
                         player.sendText(StrFactory.cmdErr(Tr._(player.langCode, "dynamic.ShapeManager.run.fail")));

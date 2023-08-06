@@ -13,6 +13,7 @@ export interface Settings {
     displayProgressBar: boolean;
     loadChuckTip: boolean,
     textureSelectorMode: boolean,
+    refreshChunk: boolean,
     displayPos: any,
     texture: {
         a: {
@@ -30,6 +31,32 @@ export interface Settings {
     },
     area: any,
     [x: string]: any
+}
+
+export const defaultSettings: Settings = {
+    enable: true,
+    barReplace: 0,
+    barReplaced: 1,
+    saveArea: true,
+    saveUndo: true,
+    saveCopy: true,
+    saveEntity: true,
+    areaTextShow: true,
+    displayArea: true,
+    displayProgressBar: true,
+    loadChuckTip: true,
+    textureSelectorMode: false,
+    refreshChunk: false,
+    displayPos: null,
+    texture: {
+        a: null,
+        b: null
+    },
+    items: {
+        onUseItemOn: {},
+        onStartDestroyBlock: {}
+    },
+    area: null
 }
 
 export type Areas = Array<Array<Area3D>>
