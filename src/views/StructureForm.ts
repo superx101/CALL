@@ -53,7 +53,7 @@ export default class StructureForm extends Form {
         }
     }
 
-    private loadOpertionForm(stData: Data, callBack: ()=> void) {
+    private loadOpertionForm(stData: Data, callBack: () => void) {
         let plPos = Pos3D.fromPos(this.player.pos).calibration().floor();
         let degreeArr = ["0", "90", "180", "270"];
         let mirrorArr = [Tr._(this.player.langCode, "dynamic.StructureForm.loadOpertionForm.s4"), "x", "z", "xz"];
@@ -67,7 +67,7 @@ export default class StructureForm extends Form {
             .addLabel(Tr._(this.player.langCode, "dynamic.StructureForm.loadOpertionForm.s10"))
 
         this.player.sendForm(form, (pl, data) => {
-            if (data == null) {callBack(); return ;}
+            if (data == null) { callBack(); return; }
             let x, y, z;
             try {
                 let arr = data[1].split(" ");
@@ -86,7 +86,7 @@ export default class StructureForm extends Form {
             .addButton(Tr._(this.player.langCode, "dynamic.StructureForm.sendForm.s1"))
 
         let list = StructureOperation.getSaveList(1, this.caPlayer) as Array<Data>;
-        //倒序加入
+        //reverse add
         for (let i = list.length - 1; i >= 0; i--) {
             form.addButton(Tr._(this.player.langCode, "dynamic.StructureForm.publicForm.s13", list[i].name, data.xuid2name(list[i].author), list[i].id));
         }
@@ -96,8 +96,8 @@ export default class StructureForm extends Form {
                 this.sendForm();
             }
             else if (i != null) {
-                //倒序访问
-                this.loadOpertionForm(list[list.length - i], ()=>{this.publicForm()});
+                //reverse read
+                this.loadOpertionForm(list[list.length - i], () => { this.publicForm() });
             }
         });
     }
@@ -109,7 +109,7 @@ export default class StructureForm extends Form {
             .addButton(Tr._(this.player.langCode, "dynamic.StructureForm.sendForm.s1"), "")
             .addButton(Tr._(this.player.langCode, "dynamic.StructureForm.my_structureForm.s16"))
             .addButton(Tr._(this.player.langCode, "dynamic.StructureForm.my_structureForm.s17"))
-            .addButton(Tr._(this.player.langCode, "dynamic.StructureForm.my_structureForm.s18", StrFactory.on_off(data.isPublic, Tr._(this.player.langCode, 'word.unpublic'), Tr._(this.player.langCode,'word.public'))));
+            .addButton(Tr._(this.player.langCode, "dynamic.StructureForm.my_structureForm.s18", StrFactory.on_off(data.isPublic, Tr._(this.player.langCode, 'word.unpublic'), Tr._(this.player.langCode, 'word.public'))));
 
         this.player.sendForm(form, (pl, i) => {
             switch (i) {
@@ -117,7 +117,7 @@ export default class StructureForm extends Form {
                     this.myForm();
                     break;
                 case 1:
-                    this.loadOpertionForm(data, ()=>{this.my_structureForm(data)});
+                    this.loadOpertionForm(data, () => { this.my_structureForm(data) });
                     break;
                 case 2:
                     Players.silenceCmd(this.caPlayer, `ca de ${data.id}`);

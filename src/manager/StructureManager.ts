@@ -92,7 +92,9 @@ export default class StructureManager {
         let structids;
         for (let key of keys) {
             structids = pu[`${key}`];
-            for (let id of structids) {
+            for (let i = 0; i < structids.length; i++) {
+                let id = structids[i];
+                if(id == null) continue;
                 callback(id, key);
             }
         }
@@ -302,7 +304,7 @@ export default class StructureManager {
     public static getPublicArr(): [] {
         let arr: any = [];
         StructureManager.publicForEach((id: string, key: string) => {
-            let st = Config.get(Config.STRUCTURES, `private.${key}.saveList.${id}`);
+            let st: Structure = Config.get(Config.STRUCTURES, `private.${key}.saveList.${id}`);
             arr.push({ id: id, name: st.name, author: key, isPublic: st.isPublic });
         });
         return arr;
