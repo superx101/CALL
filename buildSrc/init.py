@@ -4,7 +4,7 @@ import shutil
 # copy CALL to ../CALL
 if os.path.exists("../CALL") == False:
     os.makedirs("../CALL")
-shutil.copytree('CALL', '../CALL', dirs_exist_ok=True)
+shutil.copytree('data', '../CALL', dirs_exist_ok=True)
 
 # run compile
 import compile as c
