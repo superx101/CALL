@@ -3,6 +3,7 @@ test.t1=test1
 test.args1= there are %1$s, %2$s, %3$s
 test.args2 = there are %d, %.2f, %s
 test.args3= there are %s, %s, %s
+test.param.error1= a b c, %T
 
 item.air.name=(MT)air
 item.apple.name=(MT)Apple

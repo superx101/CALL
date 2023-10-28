@@ -13,7 +13,7 @@ export default class JsonPatchTest {
             d: false
         }
 
-        test.check("delete file",
+        test.check("delete_file",
             () => {
                 fs.writeFileSync(root, JSON.stringify(obj));
                 JsonPatch.run({
@@ -75,7 +75,7 @@ export default class JsonPatchTest {
             else return { success: false, msg: "not remove c" };
         });
 
-        test.check("patchPlusAdd",
+        test.check("patchPlus_add",
             () => {
                 fs.writeFileSync(root, JSON.stringify(obj));
                 JsonPatch.run({

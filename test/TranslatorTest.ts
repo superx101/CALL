@@ -22,5 +22,14 @@ export default class TranslatorTest {
 
         test.equal("translator_en_US_args_3", () => {
             return Tr._("en_US", "test.args3", "a", "b", "c");
-        }, "there are a, b, c");    }
+        }, "there are a, b, c");    
+
+        test.equal("translator_not_exist", () => {
+            return Tr._("en_US", "test.null");
+        }, "");
+
+        // test.equal("translator_param_error1", () => {
+        //     return Tr._("en_US", "test.param.error1", "a");
+        // }, "");
+    }
 }
