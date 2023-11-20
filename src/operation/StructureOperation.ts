@@ -170,8 +170,9 @@ export default class StructureOperation {
         }
         let st = Config.get(Config.STRUCTURES, `private.${r.xuid}.saveList.${r.structid}`);
         if (st.isPublic) {
-            let arr = Config.get(Config.STRUCTURES, `public.${r.xuid}`);
+            let arr: string[] = Config.get(Config.STRUCTURES, `public.${r.xuid}`);
             arr.splice(arr.indexOf(r.structid), 1);
+            arr = arr.filter(e => e != null)
             if (arr.length == 0) {
                 Config.del(Config.STRUCTURES, `public.${r.xuid}`);
             }
