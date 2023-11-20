@@ -149,7 +149,7 @@ export default class StructureOperation {
         if (r.xuid != player.xuid) {
             throw new Error(Tr._(player.langCode, "dynamic.StructureOperation.public.s14"));
         }
-        let st = Config.get(Config.STRUCTURES, `private.${r.xuid}.saveList.${r.structid}`);
+        let st: Structure = Config.get(Config.STRUCTURES, `private.${r.xuid}.saveList.${r.structid}`);
         if (!st.isPublic) {
             let arr = Config.get(Config.STRUCTURES, `public.${r.xuid}`);
             if (arr == null) {
@@ -168,7 +168,7 @@ export default class StructureOperation {
         if (r.xuid != player.xuid) {
             throw new Error(Tr._(player.langCode, "dynamic.StructureOperation.public.s14"));
         }
-        let st = Config.get(Config.STRUCTURES, `private.${r.xuid}.saveList.${r.structid}`);
+        let st = Config.get(Config.STRUCTURES, `private.${r.xuid}.saveList.${r.structid}`);// get structure
         if (st.isPublic) {
             let arr: string[] = Config.get(Config.STRUCTURES, `public.${r.xuid}`);
             arr.splice(arr.indexOf(r.structid), 1);
