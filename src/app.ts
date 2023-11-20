@@ -48,7 +48,7 @@ namespace ListenerHandler {
         if (!Players.checkPermission(player)) return;
         const caPlayer = Players.getCAPlayer(player.xuid);
         if (!EnableOperation.isEnable(caPlayer)) return;
-        
+
         //logical
         try {
             ToolOperation.onClick(ToolType.RIGHT, caPlayer, item, block, pos);
@@ -184,45 +184,43 @@ namespace Other {
     }
 }
 
-export namespace Main {
-    function init() {
-        try {
-            Other.checkVersion();
-            //updateData
-            UpdateManager.updateData();
+function init() {
+    try {
+        Other.checkVersion();
+        //updateData
+        UpdateManager.updateData();
 
-            //unload
-            ReloadOperation.unload();
+        //unload
+        ReloadOperation.unload();
 
-            Other.checkConfig();//check config
-            if (!Config.get(Config.GLOBAL, "enable")) {
-                return false;
-            }
-            //set default settings
-            Config.set(Config.PLAYERS_SETTINGS, "default", Config.get(Config.GLOBAL, "default"));
-
-            Activity.onServerCreate();
-            
-            ListenerHandler.init(); //init listener
-            CACommand.register();//register command
-        }
-        catch (e) {
-            logger.error(e.message + "\nstack:" + e.stack);
+        Other.checkConfig();//check config
+        if (!Config.get(Config.GLOBAL, "enable")) {
             return false;
         }
-        return true;
-    }
+        //set default settings
+        Config.set(Config.PLAYERS_SETTINGS, "default", Config.get(Config.GLOBAL, "default"));
 
-    function loadPlugins() {
-        ShapeLoader.start();
-    }
+        Activity.onServerCreate();
 
-    export function main() {
-        if (Config.get(Config.GLOBAL, "enable") && init()) {
-            Other.setClock();
-            Other.displayLogo(Config.get(Config.GLOBAL, "displayLogo"));
-            loadPlugins();
-        }
+        ListenerHandler.init(); //init listener
+        CACommand.register();//register command
+    }
+    catch (e) {
+        logger.error(e.message + "\nstack:" + e.stack);
+        return false;
+    }
+    return true;
+}
+
+function loadPlugins() {
+    ShapeLoader.start();
+}
+
+export default function main() {
+    if (Config.get(Config.GLOBAL, "enable") && init()) {
+        Other.setClock();
+        Other.displayLogo(Config.get(Config.GLOBAL, "displayLogo"));
+        loadPlugins();
     }
 }
 

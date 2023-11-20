@@ -1,0 +1,4 @@
+[说明]
+    初次安装无法下载依赖时, 需手动下载该依赖包补充。
+[安装]
+    将里面的node_modules和package-lock.json文件解压到 plugins/nodejs/call 下即可

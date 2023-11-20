@@ -1,0 +1,4 @@
+[Note]
+    If you can't download the dependency for the first time, you need to download the dependency package manually.
+[Installation]
+    Extract the node_modules and package-lock.json files to plugins/nodejs/call.

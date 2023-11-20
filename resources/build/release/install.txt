@@ -1,0 +1,10 @@
+[Installation]
+    First time installation, you need to put CALL and CALL.llplugin into the plugins directory. 
+[Manual Update]
+    Manual update installation only needs to put CALL.llplugin into the plugins directory, and update and replace files under CALL/plugin/. 
+[Auto Update]
+    Check for updates automatically can be enabled in the configuration, or enter /call u in the background to check for updates automatically. 
+[Failure to load plugin after update]
+    This situation means the dependency is incomplete, please input ll load ". /plugins/nodejs/call/bin/CALL_Dependencise.js" to check and update the dependency 
+[Failure to install the solution]
+    When there is a message "Execute "npm install"... for plugin call", it means that the progress bar is not moving. when the progress bar has not been moving, it means that the current network environment can not download the dependencies, you need to manually download the dependency package and install, download address: https://gitee.com/superx101/CALL/releases

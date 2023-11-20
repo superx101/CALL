@@ -1,5 +1,5 @@
 {
-  "name": "call",
+  "name": "CALL",
   "version": "1.2.1",
   "description": "Construct Assistant for LiteLoaderBDS",
   "main": "index.js",
@@ -41,6 +41,13 @@
     "@types/node": "^18.11.17",
     "@types/properties-reader": "^2.1.1",
     "@types/sprintf-js": "^1.1.2",
-    "@types/unzipper": "^0.10.5"
+    "@types/unzipper": "^0.10.5",
+    "del": "^7.1.0",
+    "gulp": "^4.0.2",
+    "gulp-replace": "^1.1.4",
+    "gulp-sourcemaps": "^3.0.0",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "gulp-zip": "^6.0.0",
+    "typescript": "^5.2.2"
   }
 }

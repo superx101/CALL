@@ -1,5 +1,4 @@
-/nodejs
 /node_modules
 /package-lock.json
-/output/**
-__pycache__/
+/dist/**
+todo.md

@@ -65,11 +65,9 @@ The shapes of the current version are as follows:
 
 ## Run the Project
 This project is written in vscode, so it is recommended that you also use vscode to run the code. Once you have your IDE ready, follow the steps below to build the project.
-1. download python, nodejs, npm
-2. Install uglify-js with the command: `npm i -g uglify-js`
-3. Install typescript with the following command: `npm i -g typescript`
-4. Download the CALL source code and place it in the **plugins** folder.
-5. Run buildSrc/init.py.
-6. Write the code
-7. Run buildSrc/compile.py to compile the code to js
-8. Run runBDS.bat.
+1. Download [nodejs](https://nodejs.org/en/download)
+2. Download [HelperLib](https://github.com/LiteLDev/HelperLib/releases)
+3. Run `npm install` to install all dependencies
+4. Specify the BDS path in `gulpfile.mjs`
+5. Run `npx gulp init` to init data and HelperLib
+6. Run `npx gulp watch` and write code
