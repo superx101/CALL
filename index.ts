@@ -6,8 +6,8 @@
 */
 
 import { Main } from './src/app';
-import Test from './test/Test';
+// import Test from './test/Test';
 
-Test.preTest();
+// Test.preTest();
 Main.main();
-Test.postTest();
+// Test.postTest();
