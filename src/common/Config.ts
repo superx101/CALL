@@ -1,10 +1,11 @@
 import Version from "../util/Version";
 
-const ROOT = './plugins/nodejs/call';
-const DATAROOT = './plugins/CALL'
-const CONFIG = ROOT + "/config"
-const DATA = DATAROOT + '/data'
-const GLOBALPATH = DATAROOT + '/config';
+const ROOT = './plugins/call';
+const PROGRAM_ROOT = ROOT + 'program'
+const DATA_ROOT = './plugins/CALL'
+const CONFIG = PROGRAM_ROOT + "/config"
+const DATA = DATA_ROOT + '/data'
+const GLOBALPATH = DATA_ROOT + '/config';
 const URL = CONFIG + "/url.json";
 const GLOBAL = GLOBALPATH + "/configs.json";
 const PERMISSIONS = GLOBALPATH + "/userlist.json";
@@ -21,7 +22,7 @@ function getVersion(): Version {
 }
 
 function getDataVersion(): Version {
-    const path = DATAROOT + '/version';
+    const path = DATA_ROOT + '/version';
     if(File.exists(path)) {
         return Version.fromString(File.readFrom(path));
     }
@@ -35,14 +36,14 @@ export default class Config {
     public static readonly ROOT = ROOT;
     public static readonly CONFIG = CONFIG;
     public static readonly LANG = CONFIG + '/lang';
-    public static readonly DATAPATH = DATAROOT;
-    public static readonly BIN = ROOT + "/bin";
+    public static readonly DATAPATH = DATA_ROOT;
+    public static readonly BIN = PROGRAM_ROOT + "/bin";
     public static readonly DATA = DATA;
-    public static readonly BUILD = DATAROOT + '/build';
-    public static readonly PLUGINS = DATAROOT + '/plugins';
-    public static readonly TEMP = DATAROOT + '/temp';
-    public static readonly IMPORT = DATAROOT + '/import';
-    public static readonly EXPORT = DATAROOT + '/export';
+    public static readonly BUILD = DATA_ROOT + '/build';
+    public static readonly PLUGINS = DATA_ROOT + '/plugins';
+    public static readonly TEMP = DATA_ROOT + '/temp';
+    public static readonly IMPORT = DATA_ROOT + '/import';
+    public static readonly EXPORT = DATA_ROOT + '/export';
     public static readonly UPDATE = CONFIG +  '/update.json';
     public static readonly TEMPLATES = ROOT + '/templates'
     public static URL = new JsonConfigFile(URL);
