@@ -1,14 +1,14 @@
 import ImportService from "./ImportService";
 import StrFactory from "../util/StrFactory";
 import {Structure, Type} from "../common/Structure";
-import Area3 from "../common/Area3D";
-import Pos3 from "../common/Pos3D";
+import Area3 from "../common/Area3";
+import { Pos3 } from "../common/Pos3";
 import StructureService from "../structure/StructureService";
 import * as ProgressBar from "cli-progress"
 import Tr from "../util/Translator";
 
 export default class ImportOperation {
-    public static start(res: { file: string, playerName: string, includeEntity?: boolean, Name?: string }, output: CommandOutput) {
+    public static async start(res: { file: string, playerName: string, includeEntity?: boolean, Name?: string }, output: CommandOutput) {
         const xuid = ImportService.findXuidByName(res.playerName);
         const file = ImportService.readFile(res.file);
         const sid = StructureService.generateSid(xuid);
@@ -41,7 +41,7 @@ export default class ImportOperation {
         }
 
         //拆解结构
-        const comps = ImportService.separate(st, comp, (current: number) => {
+        const comps = await ImportService.separate(st, comp, (current: number) => {
             bar.update(current);//更新进度
         });
 

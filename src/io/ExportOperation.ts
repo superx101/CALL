@@ -7,7 +7,7 @@ import Tr from "../util/Translator";
 import { Type } from "../common/Structure";
 
 export default class ExportOperation {
-    public static start(res: {type: string, id: string, includeEntity?: boolean, Name?: string}, output: CommandOutput) {
+    public static async start(res: {type: string, id: string, includeEntity?: boolean, Name?: string}, output: CommandOutput) {
         let content: string | ByteBuffer;
         let isBinary = false;
         const st = ExportService.checkStructure(res.id);//检查结构存在
@@ -30,7 +30,7 @@ export default class ExportOperation {
         //转化为导出格式
         switch (res.type) {
             case Type.MCSTRUCTURE:
-                content = ExportService.toMcstructure(st, res.id, res.includeEntity, initProgress, updateProgres);
+                content = await ExportService.toMcstructure(st, res.id, res.includeEntity, initProgress, updateProgres);
                 isBinary = true;
                 break;
             default:
