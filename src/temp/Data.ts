@@ -1,4 +1,4 @@
-import Area3 from "../common/Area3D"
+import Area3 from "../common/Area3"
 
 export interface Settings {
     enable: boolean,

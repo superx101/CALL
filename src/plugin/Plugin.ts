@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import ShapeForm from "../view/ShapeForm";
 import Players from "../user/Players";
-import Pos3 from "../common/Pos3D";
+import { Pos3 } from "../common/Pos3";
 import StructureNBT from "../io/StructureNBT";
 
 export interface PluginInfo {

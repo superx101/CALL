@@ -5,7 +5,7 @@ import {
     PluginTool,
     ShapePlugin,
 } from "../../src/plugin/Plugin";
-import Pos3 from "../../src/common/Pos3D";
+import Pos3 from "../../src/common/Pos3";
 import StructureNBT from "../../src/io/StructureNBT";
 
 i18n.load(

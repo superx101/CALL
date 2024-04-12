@@ -1,7 +1,9 @@
 import { dimid } from '../temp/Pos';
 import { Matrix3D, Vector3D } from '../util/SimpleMatrix';
 
-export default class Pos3 {
+export type Vec3Tuple = [number, number, number]
+
+export class Pos3 {
     constructor(public x: number = 0, public y: number = 0, public z: number = 0, public dimid: dimid = 0) {}
 
     public static fromPos3(pos: Pos3) {

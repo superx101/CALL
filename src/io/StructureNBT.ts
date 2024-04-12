@@ -1,12 +1,14 @@
+import { Vec3Tuple } from "../common/Pos3";
+
 export default class StructureNBT extends NbtCompound {
     constructor(
         public format_version: number,
-        public size: [number, number, number],
+        public size: Vec3Tuple,
         public block_indices: NbtInt[][],
         public entities: NbtList,
         public block_palette: NbtList,
         public block_position_data: NbtCompound,
-        public structure_world_origin: [number, number, number]
+        public structure_world_origin: Vec3Tuple
     ) {
         super({
             format_version: new NbtInt(format_version),

@@ -1,6 +1,6 @@
 import { ShapeService } from "./ShapeService";
 import CAPlayer from "../user/CAPlayer";
-import Pos3 from "../common/Pos3D";
+import { Pos3 } from "../common/Pos3";
 import Tr from "../util/Translator";
 
 export default class ShapeOperation {

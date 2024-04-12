@@ -1,8 +1,8 @@
 import Config from "../common/Config";
 import Players from "../user/Players";
-import Area3 from "../common/Area3D";
+import Area3 from "../common/Area3";
 import CAPlayer from "../user/CAPlayer";
-import Pos3 from "../common/Pos3D";
+import { Pos3 } from "../common/Pos3";
 import { Complex, Data, Structure  } from "../common/Structure";
 import { Areas } from "../temp/Data";
 import StrFactory from "../util/StrFactory";

@@ -1,5 +1,5 @@
 import Players from "../user/Players";
-import Pos3 from "../common/Pos3D";
+import { Pos3 } from "../common/Pos3";
 import StructureOperation from "../structure/StructureOperation";
 import StrFactory from "../util/StrFactory";
 import Tr from "../util/Translator";

@@ -1,8 +1,8 @@
 import Config from "../common/Config";
 import Constant from "../temp/Constant";
 import Players from "../user/Players";
-import Area3 from "../common/Area3D";
-import Pos3 from "../common/Pos3D";
+import Area3 from "../common/Area3";
+import { Pos3 } from "../common/Pos3";
 import { Structure } from "../common/Structure";
 import { PluginLoader } from "./PluginLoader";
 import StrFactory from "../util/StrFactory";

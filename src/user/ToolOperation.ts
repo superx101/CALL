@@ -1,7 +1,7 @@
 import Config from "../common/Config";
 import Players from "./Players";
 import CAPlayer from "./CAPlayer";
-import Pos3 from "../common/Pos3D";
+import { Pos3 } from "../common/Pos3";
 import { ToolType } from "../temp/Tool";
 import StrFactory from "../util/StrFactory";
 import * as acorn from "acorn";

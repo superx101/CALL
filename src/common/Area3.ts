@@ -1,4 +1,4 @@
-import Pos3 from "./Pos3D";
+import { Pos3 } from "./Pos3";
 import { Matrix3D, Vector3D } from "../util/SimpleMatrix";
 
 export default class Area3 {

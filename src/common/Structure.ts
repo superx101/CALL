@@ -1,6 +1,6 @@
 import Constant from "../temp/Constant";
-import Area3 from "./Area3D";
-import Pos3 from "./Pos3D";
+import Area3 from "./Area3";
+import { Pos3 } from "./Pos3";
 
 export interface Complex {
     [x: string]: Structure

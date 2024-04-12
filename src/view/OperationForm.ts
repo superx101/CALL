@@ -1,8 +1,8 @@
 import Players from "../user/Players";
-import Area3 from "../common/Area3D";
+import Area3 from "../common/Area3";
 import BlockType from "../common/BlockType";
 import CAPlayer from "../user/CAPlayer";
-import Pos3 from "../common/Pos3D";
+import { Pos3 } from "../common/Pos3";
 import AreaOperation from "../structure/AreaOperation";
 import StrFactory from "../util/StrFactory";
 import Tr from "../util/Translator";

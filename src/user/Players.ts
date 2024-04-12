@@ -1,6 +1,6 @@
 import Activity from "../Activity";
 import CAPlayer from "./CAPlayer";
-import Pos3 from "../common/Pos3D";
+import { Pos3 } from "../common/Pos3";
 import PermissionOperation from "./PermissionOperation";
 import { PermissionsType } from "../common/Config";
 import StrFactory from "../util/StrFactory";
