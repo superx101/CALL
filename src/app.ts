@@ -1,18 +1,16 @@
-import Activity from "./activity/Activity";
+import Activity from "./Activity";
 import Config from "./common/Config";
-import Players from "./common/Players";
-import AreaDisplayerManager from "./manager/AreaDisplayerManager";
-import UpdateManager from "./manager/UpdateManager";
-import EnableOperation from "./operation/EnableOperation";
-import ReloadOperation from "./operation/ReloadOperation";
-import ToolOperation from "./operation/ToolOperation";
-import ShapeLoader from "./plugin/ShapeLoader";
-import { Compare } from "./type/Common";
-import { Pos } from "./type/Pos";
-import { ToolType } from "./type/Tool";
+import Players from "./user/Players";
+import AreaDisplayerService from "./structure/AreaDisplayerService";
+import EnableOperation from "./user/EnableOperation";
+import { ToolOperation } from "./user/ToolOperation";
+import { PluginLoader } from "./plugin/PluginLoader";
+import { Compare } from "./temp/Common";
+import { Pos } from "./temp/Pos";
+import { ToolType } from "./temp/Tool";
 import StrFactory from "./util/StrFactory";
 import Tr from "./util/Translator";
-import CACommand from "./command/CACommand";
+import CACommand from "./CACommand";
 
 /**
  * A temp namespace for listener handler
@@ -133,15 +131,9 @@ namespace Other {
                 xuid = singleMap[0];
                 caPlayer = singleMap[1];
                 //选区提示
-                AreaDisplayerManager.areaTextTip(caPlayer);
+                AreaDisplayerService.areaTextTip(caPlayer);
             }
         }, 300);
-
-        if (Config.get(Config.GLOBAL, "autoUpdate", true)) {
-            setInterval(() => {
-                UpdateManager.updatePlugin(true);
-            }, 10 * 1000);
-        }
     }
 
     export function checkConfig() {
@@ -187,11 +179,8 @@ namespace Other {
 function init() {
     try {
         Other.checkVersion();
-        //updateData
-        UpdateManager.updateData();
-
         //unload
-        ReloadOperation.unload();
+        // ReloadOperation.unload();
 
         Other.checkConfig();//check config
         if (!Config.get(Config.GLOBAL, "enable")) {
@@ -213,7 +202,8 @@ function init() {
 }
 
 function loadPlugins() {
-    ShapeLoader.start();
+    const loader = new PluginLoader();
+    loader.loadPlugins();
 }
 
 export default function main() {

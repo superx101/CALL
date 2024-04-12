@@ -1,4 +1,4 @@
-import { Compare } from "../type/Common";
+import { Compare } from "../temp/Common";
 
 export default class Version {
     public constructor(public major: number, public minor: number, public revision: number) {

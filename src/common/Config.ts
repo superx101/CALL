@@ -1,14 +1,19 @@
 import Version from "../util/Version";
 
+export enum PermissionsType {
+    ALL = "all",
+    OP = "op",
+    CUSTOMIZE = "customize"
+}
+
 const ROOT = './plugins/call';
-const PROGRAM_ROOT = ROOT + 'program'
-const DATA_ROOT = './plugins/CALL'
-const CONFIG = PROGRAM_ROOT + "/config"
-const DATA = DATA_ROOT + '/data'
-const GLOBALPATH = DATA_ROOT + '/config';
+const CONFIG = ROOT + "/config"
+const USER_DATA = ROOT + '/userdata';
+const DATA = USER_DATA + '/data'
 const URL = CONFIG + "/url.json";
-const GLOBAL = GLOBALPATH + "/configs.json";
-const PERMISSIONS = GLOBALPATH + "/userlist.json";
+const USER_CONFIG = USER_DATA + '/config';
+const GLOBAL = USER_CONFIG + "/configs.json";
+const PERMISSIONS = USER_CONFIG + "/userlist.json";
 const PLAYERS_SETTINGS = DATA + "/settings.json";
 const STRUCTURES = DATA + "/structures.json";
 const CHECK = CONFIG + "/check.json";
@@ -22,7 +27,7 @@ function getVersion(): Version {
 }
 
 function getDataVersion(): Version {
-    const path = DATA_ROOT + '/version';
+    const path = USER_DATA + '/version';
     if(File.exists(path)) {
         return Version.fromString(File.readFrom(path));
     }
@@ -32,18 +37,19 @@ function getDataVersion(): Version {
 }
 
 export default class Config {
+    static A = GLOBAL
     public static readonly MINVERSION = Version.fromArr([1, 20, 10]);
     public static readonly ROOT = ROOT;
     public static readonly CONFIG = CONFIG;
     public static readonly LANG = CONFIG + '/lang';
-    public static readonly DATAPATH = DATA_ROOT;
-    public static readonly BIN = PROGRAM_ROOT + "/bin";
+    public static readonly DATAPATH = USER_DATA;
+    public static readonly BIN = ROOT + "/bin";
     public static readonly DATA = DATA;
-    public static readonly BUILD = DATA_ROOT + '/build';
-    public static readonly PLUGINS = DATA_ROOT + '/plugins';
-    public static readonly TEMP = DATA_ROOT + '/temp';
-    public static readonly IMPORT = DATA_ROOT + '/import';
-    public static readonly EXPORT = DATA_ROOT + '/export';
+    public static readonly BUILD = USER_DATA + '/build';
+    public static readonly PLUGINS = USER_DATA + '/plugins';
+    public static readonly TEMP = USER_DATA + '/temp';
+    public static readonly IMPORT = USER_DATA + '/import';
+    public static readonly EXPORT = USER_DATA + '/export';
     public static readonly UPDATE = CONFIG +  '/update.json';
     public static readonly TEMPLATES = ROOT + '/templates'
     public static URL = new JsonConfigFile(URL);
@@ -54,7 +60,7 @@ export default class Config {
     public static CHECK = new JsonConfigFile(CHECK);
     public static ITEM_TEXTURES = new JsonConfigFile(CONFIG + "/item_texture.json");
     public static readonly ITEM_ICONS =  new Set<string>(JSON.parse(File.readFrom(CONFIG + "/icons.json")));
-    public static readonly LL_MINVERSION = Version.fromArr([2, 12, 1]);
+    public static readonly LL_MINVERSION = Version.fromArr([0, 9, 2]);
     public static readonly SERVER_VERSION = SERVER_VERSION;
     public static readonly PLUGIN_VERSION = getVersion();
     public static readonly DATA_VERSION = getDataVersion();

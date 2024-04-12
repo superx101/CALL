@@ -12,8 +12,8 @@ const srcProject = ts.createProject("tsconfig.json");
 
 const baseDir = path.join(buildConfig.bdsDir, "plugins/call")
 const distDir = "dist"
-const distDataDir = path.join(distDir, "data")
-const distCodeDir = path.join(distDir, "program")
+const distDataDir = path.join(distDir, "userdata")
+const distCodeDir = path.join(distDir)
 const depDir = path.join(distDir, "dependence")
 const releaseDir = path.join(distDir, "release")
 const buildDir = path.join("resources/build")
@@ -38,8 +38,8 @@ function setLib() {
 function makeManifest(cb) {
     const manifestJson = {
         name: packJson.name,
-        entry: "./program/index.js",
-        type: "lse-node",
+        entry: "index.js",
+        type: "lse-nodejs",
         description: packJson.description,
         author: packJson.author,
         version: packJson.version,
@@ -48,6 +48,9 @@ function makeManifest(cb) {
         }]
     }
     fs.writeFileSync(path.join(distDir, "manifest.json"), JSON.stringify(manifestJson, null, 2));
+    const newPackJson =  JSON.parse(JSON.stringify(packJson));
+    newPackJson.devDependencies = {};
+    fs.writeFileSync(path.join(distDir, "package.json"), JSON.stringify(newPackJson, null, 2));
     cb()
 }
 
@@ -85,9 +88,7 @@ function copyToDebug() {
 }
 
 function watch() {
-    gulp.watch(tsConfigs.include, (cb)=>{
-        return compile;
-    })
+    gulp.watch(tsConfigs.include, compile)
 }
 
 const init = gulp.series([

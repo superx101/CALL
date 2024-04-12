@@ -14,7 +14,7 @@
     "type": "git",
     "url": "git+https://github.com/superx101/CALL.git"
   },
-  "author": "",
+  "author": "superx101",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/superx101/CALL/issues"
@@ -31,6 +31,7 @@
     "fs-extra": "^11.1.0",
     "properties-reader": "^2.2.0",
     "sprintf-js": "^1.1.2",
+    "three": "^0.163.0",
     "unzipper": "^0.10.11"
   },
   "devDependencies": {
@@ -41,6 +42,7 @@
     "@types/node": "^18.11.17",
     "@types/properties-reader": "^2.1.1",
     "@types/sprintf-js": "^1.1.2",
+    "@types/three": "^0.163.0",
     "@types/unzipper": "^0.10.5",
     "del": "^7.1.0",
     "gulp": "^4.0.2",
