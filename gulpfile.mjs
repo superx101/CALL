@@ -1,21 +1,25 @@
 import path from "path";
 import * as fs from "fs"
 
-import {deleteSync} from "del";
+import { deleteSync } from "del";
 import gulp from "gulp";
 import ts from "gulp-typescript";
 import replace from "gulp-replace";
+import zip from "gulp-zip";
 
 const buildConfig = JSON.parse(
     fs.readFileSync("build.json", { encoding: "utf8" })
 );
+const packageJson = JSON.parse(
+    fs.readFileSync("package.json", { encoding: "utf8" })
+)
 const srcProject = ts.createProject("tsconfig.json");
 
-const baseDir = path.join(buildConfig.bdsDir, "plugins/call");
-const distDir = "dist";
+const baseDir = path.join(buildConfig.bdsDir, "plugins");
+const distRoot = "dist"
+const distDir = distRoot + "/call";
 const dataPath = path.join(distDir, "data");
 const distDataDir = path.join(distDir, "userdata");
-const distCodeDir = path.join(distDir);
 
 const tsConfigs = JSON.parse(
     fs.readFileSync("tsconfig.json", { encoding: "utf8" })
@@ -89,34 +93,39 @@ function makeEmptyFile(cb) {
 function makeConfig() {
     return gulp
         .src("./config/**/*", { base: "." })
-        .pipe(gulp.dest(distCodeDir));
+        .pipe(gulp.dest(distDir));
 }
 
 function compileMain() {
     return gulp
         .src(tsConfigs.include, { base: "." })
         .pipe(srcProject())
-        .pipe(gulp.dest(distCodeDir));
+        .pipe(gulp.dest(distDir));
 }
 
 function makePlugin() {
-    
     return gulp
         .src(path.join(dataPath, "plugins/**/*"), { base: dataPath })
         .pipe(gulp.dest(path.join(distDataDir)))
-        .on("end", ()=>{
+        .on("end", () => {
             deleteSync(dataPath)
         })
 }
 
 function copyToDebug() {
     return gulp
-        .src([distDir + "/**/*"], { base: distDir })
+        .src([distDir + "/**/*"], { base: "./dist" })
         .pipe(gulp.dest(baseDir));
 }
 
+function packToZip() {
+    return gulp.src([distDir + "/**/*"], { base: "./dist" })
+        .pipe(zip(`CALL-${packJson.version}.zip`))
+        .pipe(gulp.dest(distRoot))
+}
+
 function watchFunction() {
-    gulp.watch(tsConfigs.include, compileTask);
+    gulp.watch(tsConfigs.include, gulp.series(compileTask, copyToDebug));
 }
 
 const initTask = gulp.series([
@@ -127,12 +136,13 @@ const initTask = gulp.series([
     makeConfig,
 ]);
 
-const compileTask = gulp.series([compileMain, makePlugin, copyToDebug]);
+const compileTask = gulp.series([compileMain, makeConfig]);
 
-const watchTask = gulp.series([compileTask, watchFunction]);
+const devTask = gulp.series([compileTask, watchFunction]);
 
 export const init = initTask;
 export const compile = compileTask;
 export const c = compileTask;
-export const watch = watchTask;
-export const w = watchTask;
+export const watch = devTask;
+export const w = devTask;
+export const pack = packToZip;
