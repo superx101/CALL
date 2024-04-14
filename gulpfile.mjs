@@ -131,9 +131,11 @@ function watchFunction() {
 
 function setBuildJson() {
     return gulp.src("build.json")
-    .pipe(jeditor((obj)=>{
-        obj.libDir = "dist/types"
+    .pipe(jeditor({
+        bdsDir: "",
+        libDir: "dist/types"
     }))
+    .pipe(gulp.dest("./"))
 }
 
 const initTask = gulp.series([
