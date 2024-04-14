@@ -1,16 +1,27 @@
 {
   "compilerOptions": {
     "rootDir": "./",
+    "outDir": "./dist",
     "target": "ES6",
-    "lib": ["ES2021"],
+    "lib": [
+      "ES2021"
+    ],
     "resolveJsonModule": true,
     "noImplicitAny": true,
     "module": "CommonJS",
-    "removeComments": true
+    "removeComments": true,
+    "esModuleInterop": true
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "esModuleInterop": true,
+      "module": "CommonJS"
+    }
   },
   "include": [
     "./src/**/*.ts",
-    "bin/**/*.ts", 
-    "test/**/*.ts"  
-, "index.ts"  ]
+    "test/**/*.ts",
+    "data/plugins/*.ts",
+    "index.ts"
+  ]
 }

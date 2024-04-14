@@ -1,8 +1,8 @@
-import * as THREE from "three";
 import ShapeForm from "../view/ShapeForm";
 import Players from "../user/Players";
 import { Pos3 } from "../common/Pos3";
 import StructureNBT from "../io/StructureNBT";
+import { Euler, Matrix4 } from "../lib/three-math";
 
 export interface PluginInfo {
     name: string;
@@ -21,7 +21,7 @@ export interface IPlugin {
         index: number,
         intPos: Pos3,
         param: any
-    ): StructureNBT;  
+    ): StructureNBT;
     onMenu(player: LLSE_Player): void;
 }
 
@@ -30,12 +30,33 @@ export class ShapePlugin {
 }
 
 export class PluginTool {
-    message: {
-        warn(player: LLSE_Player, str: string, mode?: number): void;
-        error(player: LLSE_Player, str: string, mode?: number): void;
-        info(player: LLSE_Player, str: string, mode?: number): void;
-        success(player: LLSE_Player, str: string, mode?: number): void;
-    };
+    private plugin: IPlugin;
+
+    public setPlugin(plugin: IPlugin) {
+        this.plugin = plugin;
+    }
+
+    public warn(player: LLSE_Player, str: string, mode?: number): void {
+        player.sendText(
+            Format.Gold + `[${this.plugin.getId()}][warn] ` + str,
+            mode
+        );
+    }
+
+    public error(player: LLSE_Player, str: string, mode?: number): void {
+        player.sendText(
+            Format.Red + `[${this.plugin.getId()}][warn] ` + str,
+            mode
+        );
+    }
+
+    public info(player: LLSE_Player, str: string, mode?: number): void {
+        player.sendText(Format.White + `[${this.plugin.getId()}] ` + str, mode);
+    }
+
+    public success(player: LLSE_Player, str: string, mode?: number): void {
+        player.sendText(Format.Gold + `[${this.plugin.getId()}] ` + str, mode);
+    }
 
     public toListForm(player: LLSE_Player): void {
         const caPlayer = Players.getCAPlayer(player.xuid);
@@ -50,15 +71,14 @@ export class PluginTool {
         itemA: Item;
         itemB: Item;
     } {
-        let caPlayer = Players.getCAPlayer(player.xuid);
-        if (caPlayer == null) return null;
+        const caPlayer = Players.fetchCAPlayer(player.xuid)
 
         const ia = caPlayer.settings.area.start;
         const ib = caPlayer.settings.area.end;
 
-        let comp = player.getInventory();
-        let itemA = comp.getItem(ia);
-        let itemB = comp.getItem(ib);
+        const comp = player.getInventory();
+        const itemA = comp.getItem(ia);
+        const itemB = comp.getItem(ib);
 
         return {
             posA: caPlayer.settings.area.start,
@@ -75,9 +95,9 @@ export class PluginTool {
         y: number,
         z: number,
         order: "XYZ" | "XZY" | "YXZ" | "YZX" | "ZXY" | "ZYX"
-    ): THREE.Matrix4 {
-        return new THREE.Matrix4().makeRotationFromEuler(
-            new THREE.Euler(
+    ): Matrix4 {
+        return new Matrix4().makeRotationFromEuler(
+            new Euler(
                 (x * Math.PI) / 180,
                 (y * Math.PI) / 180,
                 (z * Math.PI) / 180,

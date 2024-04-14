@@ -1,11 +1,11 @@
-import { Box3, BoxGeometry, Matrix4, Vector3, Vector4 } from "three";
+import { Box3, Matrix4, Vector3, Vector4 } from "../../src/lib/three-math";
 import {
     IPlugin,
     PluginInfo,
     PluginTool,
     ShapePlugin,
 } from "../../src/plugin/Plugin";
-import Pos3 from "../../src/common/Pos3";
+import { Pos3, Vec3Tuple } from "../../src/common/Pos3";
 import StructureNBT from "../../src/io/StructureNBT";
 
 i18n.load(
@@ -611,11 +611,7 @@ abstract class ShapeManager {
 
     public abstract gen(param: any, pos: Pos3): Voxel;
 
-    public abstract form(
-        player: LLSE_Player,
-        index: number,
-        plData: any
-    ): void;
+    public abstract form(player: LLSE_Player, index: number, plData: any): void;
 
     protected runcmd(
         player: LLSE_Player,
@@ -677,18 +673,41 @@ abstract class ShapeManager {
         };
     }
 
-    public simpleCubeVoxelization(cube: BoxGeometry, m4: Matrix4): Voxel {
+    public getBlockSNBT(item: LLSE_Item, player: LLSE_Player) {
+        try {
+            return item.getNbt().getTag("Block")!.toString();
+        } catch (e) {
+            this.tool.warn(
+                player,
+                i18n.trl(player.langCode, "this.getBlockSNBT.warn")
+            );
+        }
+        return '{"name":"minecraft:concrete","states":{"color":"white"},"version":17959425}';
+    }
+}
+
+class CubeGeometry extends Geometry {
+    constructor(public x: number, public y: number, public z: number) {
+        super();
+    }
+
+    public isPointInsideGeometry: Vec3Callback = null;
+    public isPointOnSurface: Vec3Callback = null;
+
+    public getBoundingBox(): Box3 {
+        return new Box3(
+            new Vector3(-this.x / 2, -this.y / 2, -this.z / 2),
+            new Vector3(this.x / 2, this.y / 2, this.z / 2)
+        );
+    }
+
+    public voxelization(m4: Matrix4): Voxel {
         const arr: NbtInt[] = [];
 
-        cube.center();
-        cube.computeBoundingBox();
-        const pre_box = cube.boundingBox!.clone();
+        const pre_box = this.getBoundingBox();
+        const box = pre_box.clone().applyMatrix4(m4);
 
         const m4_i = m4.clone().invert();
-
-        cube.applyMatrix4(m4);
-        cube.computeBoundingBox();
-        const box = cube.boundingBox!;
 
         for (let x = box.min.x + 0.5; x < box.max.x; x++) {
             for (let y = box.min.y + 0.5; y < box.max.y; y++) {
@@ -705,18 +724,6 @@ abstract class ShapeManager {
             box,
         };
     }
-
-    public getBlockSNBT(item: LLSE_Item, player: LLSE_Player) {
-        try {
-            return item.getNbt().getTag("Block")!.toString();
-        } catch (e) {
-            this.tool.message.warn(
-                player,
-                i18n.trl(player.langCode, "this.getBlockSNBT.warn")
-            );
-        }
-        return '{"name":"minecraft:concrete","states":{"color":"white"},"version":17959425}';
-    }
 }
 
 class CubeManager extends ShapeManager {
@@ -727,21 +734,17 @@ class CubeManager extends ShapeManager {
         this.checker.checkNumber(param.zrote, false);
         this.checker.checkSNBT(param.snbt);
 
-        const cube = new BoxGeometry(param.x, param.y, param.z, 1, 1, 1);
+        const cube = new CubeGeometry(param.x, param.y, param.z);
         const m4 = this.tool.getRoteMAT4(
             param.xrote,
             param.yrote,
             param.zrote,
             param.order
         );
-        return this.simpleCubeVoxelization(cube, m4);
+        return cube.voxelization(m4);
     }
 
-    public form(
-        player: LLSE_Player,
-        index: number,
-        plData: any
-    ): void {
+    public form(player: LLSE_Player, index: number, plData: any): void {
         const orderArr = ["XYZ", "XZY", "YXZ", "YZX", "ZXY", "ZYX"];
         const itemStr = plData.itemA.isNull()
             ? ""
@@ -810,21 +813,17 @@ class PlaneManager extends ShapeManager {
         this.checker.checkNumber(param.z, false);
         this.checker.checkSNBT(param.snbt);
 
-        const cube = new BoxGeometry(param.x, 1, param.z, 1, 1, 1);
+        const cube = new CubeGeometry(param.x, 1, param.z);
         const va = new Vector3(0, 1, 0);
         const vb = new Vector3(param.v.x, param.v.y, param.v.z);
         const angle = va.angleTo(vb);
         va.cross(vb);
 
         const m4 = new Matrix4().makeRotationAxis(va.normalize(), angle);
-        return this.simpleCubeVoxelization(cube, m4);
+        return cube.voxelization(m4);
     }
 
-    public form(
-        player: LLSE_Player,
-        index: number,
-        plData: any
-    ): void {
+    public form(player: LLSE_Player, index: number, plData: any): void {
         let itemStr = plData.itemA.isNull()
             ? ""
             : `${plData.itemA.type} ${plData.itemA.aux}`;
@@ -894,12 +893,12 @@ class LineManager extends ShapeManager {
         let va = new Vector3(0, 0, 1);
         let v = new Vector3(param.x, param.y, param.z);
         v.sub(new Vector3(pos.x, pos.y, pos.z)); // line vector
-        let cube = new BoxGeometry(1, 1, v.length() + 1, 1, 1, 1);
+        let cube = new CubeGeometry(1, 1, v.length() + 1);
         let angle = va.angleTo(v); // angle between line and va
 
         let axisV = va.cross(v).normalize(); // get axis from va and v
         let m4 = new Matrix4().makeRotationAxis(axisV, angle); // get Rotation Matrix from axis and angle
-        return this.simpleCubeVoxelization(cube, m4);
+        return cube.voxelization(m4);
         // shape.pos = mc.newpos(
         //     Math.round((param.x + pos.x) / 2),
         //     Math.round((param.y + pos.y) / 2),
@@ -909,11 +908,7 @@ class LineManager extends ShapeManager {
         // return shape;
     }
 
-    public form(
-        player: LLSE_Player,
-        index: number,
-        plData: any
-    ): void {
+    public form(player: LLSE_Player, index: number, plData: any): void {
         let posAStr =
             plData.posA == null
                 ? ""
@@ -1019,11 +1014,7 @@ class SphereManager extends ShapeManager {
         );
     }
 
-    public form(
-        player: LLSE_Player,
-        index: number,
-        plData: any
-    ): void {
+    public form(player: LLSE_Player, index: number, plData: any): void {
         const itemStr = plData.itemA.isNull()
             ? ""
             : `${plData.itemA.type} ${plData.itemA.aux}`;
@@ -1162,11 +1153,7 @@ class EllipsiodManager extends ShapeManager {
         return this.getVoxel(param.isHollow, odd, m4_i, ellipsoid);
     }
 
-    public form(
-        player: LLSE_Player,
-        index: number,
-        plData: any
-    ): void {
+    public form(player: LLSE_Player, index: number, plData: any): void {
         let itemStr = plData.itemA.isNull()
             ? ""
             : `${plData.itemA.type} ${plData.itemA.aux}`;
@@ -1321,11 +1308,7 @@ class CylinderManager extends ShapeManager {
         );
     }
 
-    public form(
-        player: LLSE_Player,
-        index: number,
-        plData: any
-    ): void {
+    public form(player: LLSE_Player, index: number, plData: any): void {
         let itemStr = plData.itemA.isNull()
             ? ""
             : `${plData.itemA.type} ${plData.itemA.aux}`;
@@ -1489,11 +1472,7 @@ class ConeManager extends ShapeManager {
         );
     }
 
-    public form(
-        player: LLSE_Player,
-        index: number,
-        plData: any
-    ): void {
+    public form(player: LLSE_Player, index: number, plData: any): void {
         let itemStr = plData.itemA.isNull()
             ? ""
             : `${plData.itemA.type} ${plData.itemA.aux}`;
@@ -1627,7 +1606,7 @@ export default class BasicShapePlugin extends ShapePlugin implements IPlugin {
                 instance.form(player, index, plData);
             });
         } catch (e) {
-            this.tool.message.error(player, e.message);
+            this.tool.error(player, e.message);
         }
     }
 
@@ -1645,7 +1624,7 @@ export default class BasicShapePlugin extends ShapePlugin implements IPlugin {
         );
         const voxel = instance.gen(param, pos);
 
-        const size = voxel.box.getSize(new Vector3()).toArray();
+        const size = voxel.box.getSize(new Vector3()).toArray() as Vec3Tuple;
         const blockIndices = [
             voxel.blocks,
             voxel.blocks.map((v) => new NbtInt(-1)),

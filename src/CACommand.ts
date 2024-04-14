@@ -11,13 +11,11 @@ import HelpOperation from "./user/HelpOperation";
 import ImportOperation from "./io/ImportOperation";
 import MenuOperation from "./view/MenuOperation";
 import PermissionOperation from "./user/PermissionOperation";
-import ReloadOperation from "./structure/ReloadOperation";
 import SettingsOperation from "./user/SettingsOperation";
 import ShapeOperation from "./plugin/ShapeOperation";
 import StructureOperation from "./structure/StructureOperation";
 import TextureOperation from "./structure/TextureOperation";
 import { ToolOperation } from "./user/ToolOperation";
-import UpdateOperation from "./structure/UpdateOperation";
 import { Warn } from "./temp/Error";
 import StrFactory from "./util/StrFactory";
 import Tr from "./util/Translator";
@@ -28,7 +26,13 @@ import Tr from "./util/Translator";
  */
 export default class CACommand {
     public static register(): void {
-        let cmd = mc.newCommand("call", Tr._c("console.app.command.introduction"), PermType.Any, 0x80, "ca");
+        let cmd = mc.newCommand(
+            "call",
+            Tr._c("console.app.command.introduction"),
+            PermType.Any,
+            0x80,
+            "ca"
+        );
         //public param
         cmd.mandatory("player", ParamType.Player, "", "player_man");
         cmd.mandatory("id", ParamType.String, "id", "id_man");
@@ -70,7 +74,13 @@ export default class CACommand {
         cmd.setEnum("show", ["show", "sh"]);
         cmd.setEnum("view", ["view", "vi"]);
         cmd.mandatory("action", ParamType.Enum, "area", "area_man", 1);
-        cmd.mandatory("enum_1", ParamType.Enum, "start|end|a|b", "start-end_man", 1);
+        cmd.mandatory(
+            "enum_1",
+            ParamType.Enum,
+            "start|end|a|b",
+            "start-end_man",
+            1
+        );
         cmd.mandatory("enum_1", ParamType.Enum, "se", "se_man", 1);
         cmd.mandatory("enum_1", ParamType.Enum, "clear", "clear_par", 1);
         cmd.mandatory("enum_1", ParamType.Enum, "show", "show_man", 1);
@@ -84,7 +94,14 @@ export default class CACommand {
 
         //fill
         cmd.setEnum("fill", ["fill", "fi"]);
-        cmd.setEnum("fillMode", ["hollow", "outline", "null", "ho", "ou", "nu"]);
+        cmd.setEnum("fillMode", [
+            "hollow",
+            "outline",
+            "null",
+            "ho",
+            "ou",
+            "nu",
+        ]);
         cmd.mandatory("action", ParamType.Enum, "fill", "fill_man", 1);
         cmd.optional("FillMode", ParamType.Enum, "fillMode", "fillMode_opt", 1);
         cmd.overload(["fill_man", "block_man", "states_opt", "fillMode_opt"]);
@@ -99,7 +116,13 @@ export default class CACommand {
         cmd.mandatory("action", ParamType.Enum, "replace", "replace_man", 1);
         cmd.mandatory("block2", ParamType.Block, "", "block2_man");
         cmd.optional("states2", ParamType.String, "", "states2_opt");
-        cmd.overload(["replace_man", "block_man", "states_man", "block2_man", "states2_opt"])
+        cmd.overload([
+            "replace_man",
+            "block_man",
+            "states_man",
+            "block2_man",
+            "states2_opt",
+        ]);
 
         //save
         cmd.setEnum("save", ["save", "sa"]);
@@ -114,16 +137,32 @@ export default class CACommand {
         //load
         cmd.setEnum("load", ["load", "lo"]);
         cmd.setEnum("mirror", ["none", "x", "z", "xz"]);
-        cmd.setEnum("degrees", ["0_degrees", "90_degrees", "180_degrees", "270_degrees"]);
+        cmd.setEnum("degrees", [
+            "0_degrees",
+            "90_degrees",
+            "180_degrees",
+            "270_degrees",
+        ]);
         cmd.mandatory("action", ParamType.Enum, "load", "load_man", 1);
         cmd.optional("Mirror", ParamType.Enum, "mirror", "mirror_opt");
         cmd.optional("Degrees", ParamType.Enum, "degrees", "degrees_opt");
-        cmd.optional("IncludeEntities", ParamType.Bool, "", "includeEntities_opt");
+        cmd.optional(
+            "IncludeEntities",
+            ParamType.Bool,
+            "",
+            "includeEntities_opt"
+        );
         cmd.optional("IncludeBlocks", ParamType.Bool, "", "includeBlocks_opt");
         cmd.optional("Waterlogged", ParamType.Bool, "", "waterlogged_opt");
         cmd.optional("Integrity", ParamType.Float, "", "integrity_opt");
         cmd.optional("Seed", ParamType.String, "", "seed_opt");
-        cmd.overload(["load_man", "id_man", "intPos_opt", "degrees_opt", "mirror_opt"]);
+        cmd.overload([
+            "load_man",
+            "id_man",
+            "intPos_opt",
+            "degrees_opt",
+            "mirror_opt",
+        ]);
 
         //delete
         cmd.setEnum("delete", ["delete", "de"]);
@@ -154,14 +193,28 @@ export default class CACommand {
         cmd.setEnum("mirror_act", ["mirror", "mi"]);
         cmd.setEnum("mirror_notNull", ["x", "z", "xz"]);
         cmd.mandatory("action", ParamType.Enum, "mirror_act", "mirror_act");
-        cmd.mandatory("mirror", ParamType.Enum, "mirror_notNull", "mirror_notNull_man");
+        cmd.mandatory(
+            "mirror",
+            ParamType.Enum,
+            "mirror_notNull",
+            "mirror_notNull_man"
+        );
         cmd.overload(["mirror_act", "mirror_notNull_man", "axisPos_opt"]);
 
         //rote
         cmd.setEnum("rote", ["rote", "ro"]);
-        cmd.setEnum("degrees_notNull", ["90_degrees", "180_degrees", "270_degrees"]);
+        cmd.setEnum("degrees_notNull", [
+            "90_degrees",
+            "180_degrees",
+            "270_degrees",
+        ]);
         cmd.mandatory("action", ParamType.Enum, "rote", "rote_man");
-        cmd.mandatory("degrees", ParamType.Enum, "degrees_notNull", "degrees_notNull_man");
+        cmd.mandatory(
+            "degrees",
+            ParamType.Enum,
+            "degrees_notNull",
+            "degrees_notNull_man"
+        );
         cmd.overload(["rote_man", "degrees_notNull_man", "axisPos_opt"]);
 
         //stack
@@ -170,13 +223,23 @@ export default class CACommand {
         cmd.mandatory("xMultiple", ParamType.Int, "", "xMultiple_man");
         cmd.mandatory("yMultiple", ParamType.Int, "", "yMultiple_man");
         cmd.mandatory("zMultiple", ParamType.Int, "", "zMultiple_man");
-        cmd.overload(["stack_man", "xMultiple_man", "yMultiple_man", "zMultiple_man"]);
+        cmd.overload([
+            "stack_man",
+            "xMultiple_man",
+            "yMultiple_man",
+            "zMultiple_man",
+        ]);
 
         //block
         cmd.setEnum("block", ["block", "bl"]);
         cmd.mandatory("action", ParamType.Enum, "block", "block_enum_man");
         cmd.mandatory("enum_1", ParamType.Enum, "menu", "menu_man");
-        cmd.overload(["block_enum_man", "intPos_man", "nbt_man", "blockEntity_man"]);
+        cmd.overload([
+            "block_enum_man",
+            "intPos_man",
+            "nbt_man",
+            "blockEntity_man",
+        ]);
         cmd.overload(["block_enum_man", "intPos_man", "menu_man"]);
 
         //texture
@@ -193,7 +256,14 @@ export default class CACommand {
         cmd.mandatory("enum_1", ParamType.Enum, "list", "enum1_list_man");
         cmd.mandatory("enum_1", ParamType.Enum, "load", "enum1_load_man");
         cmd.optional("Json", ParamType.JsonValue, "", "json_opt");
-        cmd.overload(["shape_man", "enum1_load_man", "package_man", "index_man", "json_opt", "intPos_opt"]);
+        cmd.overload([
+            "shape_man",
+            "enum1_load_man",
+            "package_man",
+            "index_man",
+            "json_opt",
+            "intPos_opt",
+        ]);
         cmd.overload(["shape_man", "enum1_list_man"]);
 
         //undo
@@ -218,8 +288,22 @@ export default class CACommand {
         cmd.mandatory("cmd", ParamType.String, "", "cmd_man");
         cmd.mandatory("describe", ParamType.String, "", "describe_man");
         cmd.overload(["tool_man", "enum1_list_man"]);
-        cmd.overload(["tool_man", "bind_man", "item_man", "type_man", "cmd_man", "describe_man", "name_opt"]);
-        cmd.overload(["tool_man", "unbind_man", "item_man", "type_man", "name_opt"]);
+        cmd.overload([
+            "tool_man",
+            "bind_man",
+            "item_man",
+            "type_man",
+            "cmd_man",
+            "describe_man",
+            "name_opt",
+        ]);
+        cmd.overload([
+            "tool_man",
+            "unbind_man",
+            "item_man",
+            "type_man",
+            "name_opt",
+        ]);
 
         //setting
         cmd.setEnum("setting", ["setting"]);
@@ -239,7 +323,12 @@ export default class CACommand {
 
         //add-ban
         cmd.setEnum("add|ban", ["ban", "add"]);
-        cmd.mandatory("playerName", ParamType.String, "playerName", "playerName_man");
+        cmd.mandatory(
+            "playerName",
+            ParamType.String,
+            "playerName",
+            "playerName_man"
+        );
         cmd.mandatory("action", ParamType.Enum, "add|ban", "add-ban_man", 1);
         cmd.overload(["add-ban_man", "playerName_man"]);
 
@@ -258,60 +347,98 @@ export default class CACommand {
         cmd.mandatory("action", ParamType.Enum, "import", "import_man");
         cmd.mandatory("file", ParamType.String, "", "file_man");
         cmd.optional("includeEntity", ParamType.Bool, "", "includeEntity_opt");
-        cmd.overload(["import_man", "file_man", "playerName_man", "includeEntity_opt", "name_opt"]);
+        cmd.overload([
+            "import_man",
+            "file_man",
+            "playerName_man",
+            "includeEntity_opt",
+            "name_opt",
+        ]);
 
         //export
         cmd.setEnum("export", ["export", "ex"]);
-        cmd.setEnum("fileType", ["mcstructure"])
+        cmd.setEnum("fileType", ["mcstructure"]);
         cmd.mandatory("action", ParamType.Enum, "export", "export_man");
         cmd.mandatory("type", ParamType.Enum, "fileType", "fileType_man");
-        cmd.overload(["export_man", "fileType_man", "id_man", "includeEntity_opt", "name_opt"]);
+        cmd.overload([
+            "export_man",
+            "fileType_man",
+            "id_man",
+            "includeEntity_opt",
+            "name_opt",
+        ]);
 
         // cmd.setEnum("brush", ["brush", "br"]);
         // cmd.setEnum("texture", ["texture", "te"]);
         // cmd.mandatory("action", ParamType.Enum, "brush");
 
-        cmd.setCallback((cmd: Command, ori: CommandOrigin, output: CommandOutput, res: any) => {
-            try {
-                switch (ori.type) {
-                    case OriginType.Player:
-                        CACommand.command_playerCallback(ori, output, res);
-                        break;
-                    case OriginType.Server:
-                        CACommand.command_consoleCallback(output, res);
-                    case OriginType.Virtual:
-                        //use command: execute
-                        if(ori.player == undefined) break;
-                        CACommand.command_playerCallback(ori, output, res);
-                        break;
-                    default:
-                        logger.error(Tr._c("console.app.command.unknowType", ori.type));
-                        break;
-                }
+        cmd.setCallback(
+            (
+                cmd: Command,
+                ori: CommandOrigin,
+                output: CommandOutput,
+                res: any
+            ) => {
+                try {
+                    switch (ori.type) {
+                        case OriginType.Player:
+                            CACommand.command_playerCallback(ori, output, res);
+                            break;
+                        case OriginType.Server:
+                            CACommand.command_consoleCallback(output, res);
+                        case OriginType.Virtual:
+                            //use command: execute
+                            if (ori.player == undefined) break;
+                            CACommand.command_playerCallback(ori, output, res);
+                            break;
+                        default:
+                            logger.error(
+                                Tr._c(
+                                    "console.app.command.unknowType",
+                                    ori.type
+                                )
+                            );
+                            break;
+                    }
+                } catch (e) {
+                    const text = e.message;
+                    if (e instanceof Warn)
+                        output.error(StrFactory.cmdWarn(text));
+                    else output.error(StrFactory.cmdErr(text));
 
-            } catch (e) {
-                const text = e.message;
-                if (e instanceof Warn)
-                    output.error(StrFactory.cmdWarn(text));
-                else
-                    output.error(StrFactory.cmdErr(text));
-
-                if (Config.get(Config.GLOBAL, "debugMod")) {
-                    logger.error("msg:", e.message, "\ntr:", text + "\nstack:" + e.stack);
+                    if (Config.get(Config.GLOBAL, "debugMod")) {
+                        logger.error(
+                            "msg:",
+                            e.message,
+                            "\ntr:",
+                            text + "\nstack:" + e.stack
+                        );
+                    }
                 }
             }
-        });
+        );
         cmd.setup();
     }
 
-    private static command_playerCallback(ori: CommandOrigin, output: CommandOutput, res: any) {
+    private static command_playerCallback(
+        ori: CommandOrigin,
+        output: CommandOutput,
+        res: any
+    ) {
         const player = ori.player;
-        if (!Players.checkPermission(player)) {
-            throw new Error(Tr._(ori.player.langCode, "dynamic.app.command_playerCallback.notHasPermission"));
+        if (!Players.hasPermission(player)) {
+            throw new Error(
+                Tr._(
+                    ori.player.langCode,
+                    "dynamic.app.command_playerCallback.notHasPermission"
+                )
+            );
         }
         const caPlayer = Players.getCAPlayer(ori.player.xuid);
         if (caPlayer.forbidCmd) {
-            throw new Error(Tr._(player.langCode, "dynamic.app.command_playerCallback.wait"));
+            throw new Error(
+                Tr._(player.langCode, "dynamic.app.command_playerCallback.wait")
+            );
         }
 
         switch (res.action) {
@@ -325,7 +452,12 @@ export default class CACommand {
         }
 
         if (!caPlayer.settings.enable) {
-            throw new Error(Tr._(player.langCode, "dynamic.app.command_playerCallback.close"));
+            throw new Error(
+                Tr._(
+                    player.langCode,
+                    "dynamic.app.command_playerCallback.close"
+                )
+            );
         }
 
         switch (res.action) {
@@ -443,7 +575,12 @@ export default class CACommand {
             case "im":
             case "export":
             case "ex":
-                throw new Error(Tr._(player.langCode, "dynamic.app.command_playerCallback.consoleCmd"));
+                throw new Error(
+                    Tr._(
+                        player.langCode,
+                        "dynamic.app.command_playerCallback.consoleCmd"
+                    )
+                );
         }
     }
 
@@ -459,17 +596,9 @@ export default class CACommand {
             case "li":
                 PermissionOperation.list(output);
                 break;
-            case "reload":
-            case "r":
-                ReloadOperation.start();
-                break;
             case "shape":
             case "sh":
                 ShapeOperation.consoleStart(output);
-                break;
-            case "update":
-            case "u":
-                UpdateOperation.start(output);
                 break;
             case "import":
             case "im":
@@ -480,7 +609,9 @@ export default class CACommand {
                 ExportOperation.start(res, output);
                 break;
             default:
-                throw new Error(Tr._c("console.app.command_consoleCallback.cmdError"));
+                throw new Error(
+                    Tr._c("console.app.command_consoleCallback.cmdError")
+                );
         }
     }
 }

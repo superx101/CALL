@@ -35,7 +35,7 @@ export default class ShapeForm extends Form {
             }
             else {
                 const plugin = PluginLoader.pluginsMap.get(list[i - 1])!;
-                plugin.onMenu(this.player, )
+                plugin.onMenu(this.player)
             }
         });
     }

@@ -5,12 +5,12 @@ import PermissionOperation from "./PermissionOperation";
 import { PermissionsType } from "../common/Config";
 import StrFactory from "../util/StrFactory";
 import Config from "../common/Config";
-import * as os from "os"
+import * as os from "os";
 
 export default class Players {
     public static dataMap = new Map<string, CAPlayer>();
 
-    private static hasPermission(player: LLSE_Player) {
+    public static hasPermission(player: LLSE_Player) {
         switch (Config.get(Config.GLOBAL, "permission")) {
             case PermissionsType.ALL:
                 return true;
@@ -23,20 +23,17 @@ export default class Players {
         }
     }
 
-    public static checkPermission(player: LLSE_Player) {
-        let caPlayer = Players.getCAPlayer(player.xuid);
-        const hasPermission = Players.hasPermission(player);
-        if(hasPermission && caPlayer == null) {
-                Activity.onCreate(player.xuid);
-        }
-        else if (!hasPermission && caPlayer != null) {
-            Activity.onDestroy(caPlayer);
-        }
-        return hasPermission;
+    public static createCAPlayer(xuid: string) {
+        const caPlayer = new CAPlayer(xuid);
+        Players.dataMap.set(xuid, caPlayer);
+        return caPlayer;
     }
 
-    public static createCAPlayer(xuid: string) {
-        Players.dataMap.set(xuid, new CAPlayer(xuid));
+    public static fetchCAPlayer(xuid: string) {
+        if (!Players.dataMap.has(xuid)) {
+            Players.createCAPlayer(xuid);
+        }
+        return Players.getCAPlayer(xuid);
     }
 
     public static setCAPlayer(xuid: string, data: CAPlayer) {
@@ -51,14 +48,14 @@ export default class Players {
         caPlayer.$.runcmd(cmd);
         if (!Config.get(Config.GLOBAL, "outputCmd", true)) {
             //控制台清除输出 (密集输出时删除错误)
-            process.stdout.write('\x1B[1A');
+            process.stdout.write("\x1B[1A");
             switch (os.platform()) {
                 case "win32":
-                    process.stdout.write('\x1b[K');
+                    process.stdout.write("\x1b[K");
                     break;
                 case "darwin":
                 case "linux":
-                    process.stdout.write('\x20');
+                    process.stdout.write("\x20");
                 default:
                     break;
             }
@@ -84,15 +81,21 @@ export default class Players {
         return res;
     }
 
-    public static async tpAsync(caPlayer: CAPlayer, x: number, y: number, z: number, dimid: 0 | 1 | 2, waitTime = 0): Promise<boolean> {
+    public static async tpAsync(
+        caPlayer: CAPlayer,
+        x: number,
+        y: number,
+        z: number,
+        dimid: 0 | 1 | 2,
+        waitTime = 0
+    ): Promise<boolean> {
         let max = 15;
-        return new Promise(resolve => {
+        return new Promise((resolve) => {
             let id = setInterval(() => {
                 if (caPlayer.$.teleport(x, y, z, dimid)) {
                     resolve(true);
                     clearInterval(id);
-                }
-                else {
+                } else {
                     if (max <= 0) {
                         resolve(false);
                         clearInterval(id);
@@ -100,7 +103,7 @@ export default class Players {
                     }
                     --max;
                 }
-            }, 50)
-        })
+            }, 50);
+        });
     }
 }

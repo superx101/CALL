@@ -1,31 +1,34 @@
 import Config from "../common/Config";
 import * as path from "path";
 import * as fs from "fs";
-import { IPlugin } from "./Plugin";
-
-const pluginPath = Config.PLUGINS + "/shape";
+import { IPlugin, PluginTool } from "./Plugin";
 
 export class PluginLoader {
-    public static idList: string[] = []
+    public static idList: string[] = [];
     public static pluginsMap = new Map<string, IPlugin>();
 
     public loadPlugins() {
-        const files = fs.readdirSync(pluginPath);
+        const files = fs.readdirSync(Config.PLUGINS);
 
-        for (const file of files) {
-            const fullPath = path.join(pluginPath, file);
+        for (const fileName of files) {
+            const fullPath = "../../userdata/plugins/" + fileName;
 
-            if (file.endsWith(".js")) continue;
+            if (!fileName.endsWith(".js")) continue;
 
             try {
-                const plugin: IPlugin = require(fullPath);
-                const id = plugin.getId();
-                PluginLoader.pluginsMap.set(id, plugin);
+                const PluginClass: new (tool: PluginTool) => IPlugin = require(fullPath).default;
+                
+                const tool = new PluginTool()
+                const instance = new PluginClass(tool);
+                tool.setPlugin(instance);
+
+                const id = instance.getId();
+                PluginLoader.pluginsMap.set(id, instance);
                 PluginLoader.idList.push(id);
 
-                logger.log(`Module loaded: ${file}`, module);
+                logger.log(`Module loaded: ${fileName}`);
             } catch (error) {
-                logger.error(`Error loading module: ${file}`, error);
+                logger.error(`Error loading module: ${fileName}`, error);
             }
         }
     }

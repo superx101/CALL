@@ -14,10 +14,10 @@ export default class ExportService {
         let isFind = false;
         let st;
 
-        loop: for (const xuidT of Object.keys(obj)) {
-            for (const sidT of Object.keys(obj[xuidT].saveList)) {
+        loop: for (const xuid of Object.keys(obj)) {
+            for (const sidT of Object.keys(obj[xuid].saveList)) {
                 if (sidT == sid) {
-                    st = obj[xuidT].saveList[sidT];
+                    st = obj[xuid].saveList[sidT];
                     isFind = true;
                     break loop;
                 }
@@ -195,13 +195,13 @@ export default class ExportService {
         isBinary: boolean
     ): boolean {
         // @ts-ignore
-        let file = new File(
+        let fileObject = new file(
             `${Config.EXPORT}/${name}.${type}`,
             FileMode.WriteMode,
             isBinary
         );
-        let res = file.writeSync(text);
-        file.close();
+        let res = fileObject.writeSync(text);
+        fileObject.close();
         return res;
     }
 }

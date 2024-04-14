@@ -31,7 +31,6 @@
     "fs-extra": "^11.1.0",
     "properties-reader": "^2.2.0",
     "sprintf-js": "^1.1.2",
-    "three": "^0.163.0",
     "unzipper": "^0.10.11"
   },
   "devDependencies": {
@@ -39,17 +38,19 @@
     "@types/escodegen": "^0.0.7",
     "@types/estraverse": "^5.1.2",
     "@types/fs-extra": "^11.0.1",
+    "@types/gulp": "^4.0.17",
     "@types/node": "^18.11.17",
     "@types/properties-reader": "^2.1.1",
     "@types/sprintf-js": "^1.1.2",
-    "@types/three": "^0.163.0",
     "@types/unzipper": "^0.10.5",
     "del": "^7.1.0",
     "gulp": "^4.0.2",
+    "gulp-ignore": "^3.0.0",
     "gulp-replace": "^1.1.4",
     "gulp-sourcemaps": "^3.0.0",
     "gulp-typescript": "^6.0.0-alpha.1",
     "gulp-zip": "^6.0.0",
+    "ts-node": "^10.9.2",
     "typescript": "^5.2.2"
   }
 }

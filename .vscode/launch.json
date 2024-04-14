@@ -2,10 +2,20 @@
     "version": "0.2.0",
     "configurations": [
       {
+        "name": "Start BDS",
         "type": "f5anything",
         "request": "launch",
-        "name": "Launch .bat Script",
-        "command": "start runBDS.bat"
+        "command": "start startBDS.bat"
+      },
+      {
+        "name": "Launch Program",
+        "program": "${workspaceFolder}/test.js",
+        "request": "launch",
+        "skipFiles": [
+          "<node_internals>/**"
+        ],
+        "type": "node"
       }
+
     ]
   }

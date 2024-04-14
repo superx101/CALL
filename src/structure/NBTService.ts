@@ -12,31 +12,28 @@ export default class NBTService {
     // static SAVEPOOL = [];
 
     public static save(saveid: string, area: Area3, ignoreBlocks = false, ignoreEntities = false) {
-        let start = mc.newIntPos(area.start.x, area.start.y, area.start.z, area.start.dimid);
-        let end = mc.newIntPos(area.end.x, area.end.y, area.end.z, area.end.dimid);
-        let comp = mc.getStructure(start, end, ignoreBlocks, ignoreEntities);
-        //@ts-ignore
-        let file = new File(NBTService.PATH + `/${saveid}.mcstructure`, FileMode.WriteMode, true);
+        const start = mc.newIntPos(area.start.x, area.start.y, area.start.z, area.start.dimid);
+        const end = mc.newIntPos(area.end.x, area.end.y, area.end.z, area.end.dimid);
+        const comp = mc.getStructure(start, end, ignoreBlocks, ignoreEntities);
+        const file = new File(NBTService.PATH + `/${saveid}.mcstructure`, FileMode.WriteMode, true);
         file.write(comp.toBinaryNBT(), () => {
             file.close();
         });
     }
 
     public static saveFromNBT(saveid: string, comp: NbtCompound): boolean {
-        //@ts-ignore
-        let file = new File(NBTService.PATH + `/${saveid}.mcstructure`, FileMode.WriteMode, true);
-        let res = file.writeSync(comp.toBinaryNBT());
+        const file = new File(NBTService.PATH + `/${saveid}.mcstructure`, FileMode.WriteMode, true);
+        const res = file.writeSync(comp.toBinaryNBT());
         file.close();
         return res;
     }
 
     public static load(caPlayer: CAPlayer, saveid: string, pos: Pos3, mirror = "None", rataion = 0) {
+        const file = new File(NBTService.PATH + `/${saveid}.mcstructure`, FileMode.ReadMode, true);
+        const bnbt = file.readAllSync();
         //@ts-ignore
-        let file = new File(NBTService.PATH + `/${saveid}.mcstructure`, FileMode.ReadMode, true);
-        let bnbt = file.readAllSync();
-        //@ts-ignore
-        let nbtObj = NBT.parseBinaryNBT(bnbt);
-        let intPos = mc.newIntPos(pos.x, pos.y, pos.z, pos.dimid);
+        const nbtObj = NBT.parseBinaryNBT(bnbt);
+        const intPos = mc.newIntPos(pos.x, pos.y, pos.z, pos.dimid);
         let mir: e = 0;
         file.close();
         switch (mirror) {

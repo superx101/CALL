@@ -1,5 +1,5 @@
 import path = require("path");
-import * as PropertiesReader from 'properties-reader';
+import PropertiesReader from 'properties-reader';
 import * as sprintf from 'sprintf-js'
 import Config from "../common/Config";
 

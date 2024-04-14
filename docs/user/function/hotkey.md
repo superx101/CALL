@@ -98,7 +98,7 @@
     >    | me.lastDeathPos | 玩家上次死亡的坐标 | IntPos |
     >    | me.realName | 玩家的真实名字 | String |
     >    | me.xuid | 玩家XUID字符串 | String |
-    >    | me.uuid | 玩家Uuid字符串 | String |
+    >    | me.xuid | 玩家Uuid字符串 | String |
     >    | me.permLevel | 玩家的操作权限等级（0 - 4） | Integer |
     >    | me.gameMode | 玩家的游戏模式（0 - 3） | Integer |
     >    | me.canFly | 玩家是否可以飞行 | Boolean |

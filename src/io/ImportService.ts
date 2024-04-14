@@ -26,24 +26,24 @@ export default class ImportService {
     }
 
     public static readFile(name: string): { type: Type; data: any } {
-        const file = path.parse(name);
+        const fileName = path.parse(name);
         let type;
         let data;
 
-        if (!File.exists(`${Config.IMPORT}/${file.base}`))
+        if (!file.exists(`${Config.IMPORT}/${fileName.base}`))
             throw new Error(
                 Tr._c(
                     "console.ImportManager.readFile.notFind",
-                    `${path.join(process.cwd(), Config.IMPORT)}/${file.base}`
+                    `${path.join(process.cwd(), Config.IMPORT)}/${fileName.base}`
                 )
             );
 
-        switch (file.ext.substring(1)) {
+        switch (fileName.ext.substring(1)) {
             case Type.MCSTRUCTURE:
                 type = Type.MCSTRUCTURE;
                 //@ts-ignore
-                let f = new File(
-                    `${Config.IMPORT}/${file.base}`,
+                let f = new file(
+                    `${Config.IMPORT}/${fileName.base}`,
                     FileMode.ReadMode,
                     true
                 );
@@ -58,7 +58,7 @@ export default class ImportService {
                 throw new Error(
                     Tr._c(
                         "console.ImportManager.readFile.notSupport",
-                        `${file.ext}`
+                        `${fileName.ext}`
                     )
                 );
         }
@@ -250,7 +250,7 @@ export default class ImportService {
             loop1: for (let i = 0; i < mx; i++) {
                 for (let j = 0; j < mz; j++) {
                     if (i == x && j == z) break loop1;
-                    File.delete(`${NBTService.PATH}/${sid}_${x}_${z}`);
+                    file.delete(`${NBTService.PATH}/${sid}_${x}_${z}`);
                 }
             }
         }
