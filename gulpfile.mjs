@@ -6,7 +6,6 @@ import gulp from "gulp";
 import ts from "gulp-typescript";
 import replace from "gulp-replace";
 import zip from "gulp-zip";
-import jeditor from "gulp-json-editor";
 
 const buildConfig = JSON.parse(
     fs.readFileSync("build.json", { encoding: "utf8" })
@@ -42,6 +41,19 @@ function setLib() {
                     "src",
                     "index.d.ts"
                 )}"/>`
+            )
+        )
+        .pipe(gulp.dest("./"));
+}
+
+function setBuildLib() {
+    const file = "index.ts";
+    return gulp
+        .src(file)
+        .pipe(
+            replace(
+                /^\/\/\/ <reference path=".*"\/>/g,
+                `\/\/\/ <reference path="./dist/types/src/index.d.ts"/>`
             )
         )
         .pipe(gulp.dest("./"));
@@ -98,6 +110,9 @@ function makeConfig() {
 }
 
 function compileMain() {
+    const content = fs.readFileSync("./index.ts", { encoding: "utf8" })
+    console.log(content)
+
     return gulp
         .src(tsConfigs.include, { base: "." })
         .pipe(srcProject())
@@ -120,7 +135,7 @@ function copyToDebug() {
 }
 
 function packToZip() {
-    return gulp.src([distDir + "/**/*"], { base:  "./dist" })
+    return gulp.src([distDir + "/**/*"], { base: "./dist" })
         .pipe(zip(`CALL-${packJson.version}.zip`))
         .pipe(gulp.dest(distRoot))
 }
@@ -129,21 +144,20 @@ function watchFunction() {
     gulp.watch(tsConfigs.include, gulp.series(compileTask, copyToDebug));
 }
 
-function setBuildJson() {
-    return gulp.src("build.json")
-    .pipe(jeditor({
-        bdsDir: "",
-        libDir: "dist/types"
-    }))
-    .pipe(gulp.dest("./"))
-}
-
 const initTask = gulp.series([
     setLib,
     makeEmptyFile,
     makeManifest,
     makeDataFile,
     makeConfig,
+]);
+
+const buildInitTask = gulp.series([
+    setBuildLib,
+    makeEmptyFile,
+    makeManifest,
+    makeDataFile,
+    makeConfig
 ]);
 
 const compileTask = gulp.series([compileMain, makeConfig, makePlugin]);
@@ -156,4 +170,4 @@ export const c = compileTask;
 export const watch = devTask;
 export const w = devTask;
 export const pack = packToZip;
-export const build = gulp.series([setBuildJson, initTask, compileTask, packToZip])
+export const build = gulp.series([buildInitTask, compileTask, packToZip])
