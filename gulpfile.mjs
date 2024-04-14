@@ -110,9 +110,6 @@ function makeConfig() {
 }
 
 function compileMain() {
-    const content = fs.readFileSync("./index.ts", { encoding: "utf8" })
-    console.log(content)
-
     return gulp
         .src(tsConfigs.include, { base: "." })
         .pipe(srcProject())
