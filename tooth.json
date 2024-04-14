@@ -10,11 +10,11 @@
         "avatar_url": "https://github.com/superx101/CALL/blob/main/docs/image/CALL_light_ico.png",
         "tags": ["building", "lse", "plugin"]
     },
-    "asset_url": "",
+    "asset_url": "https://github.com/superx101/CALL/releases/download/v1.3.0/CALL-1.3.0.zip",
     "files": {
         "place": [
             {
-                "src": "call/**/*",
+                "src": "call/*",
                 "dest": "plugins/call"
             }
         ]
