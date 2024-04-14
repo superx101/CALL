@@ -6,6 +6,7 @@ import gulp from "gulp";
 import ts from "gulp-typescript";
 import replace from "gulp-replace";
 import zip from "gulp-zip";
+import jeditor from "gulp-json-editor";
 
 const buildConfig = JSON.parse(
     fs.readFileSync("build.json", { encoding: "utf8" })
@@ -119,13 +120,20 @@ function copyToDebug() {
 }
 
 function packToZip() {
-    return gulp.src([distDir + "/**/*"], { base: "./dist" })
+    return gulp.src([distDir + "/**/*"], { base:  "./dist" })
         .pipe(zip(`CALL-${packJson.version}.zip`))
         .pipe(gulp.dest(distRoot))
 }
 
 function watchFunction() {
     gulp.watch(tsConfigs.include, gulp.series(compileTask, copyToDebug));
+}
+
+function setBuildJson() {
+    return gulp.src("build.json")
+    .pipe(jeditor((obj)=>{
+        obj.libDir = "dist/types"
+    }))
 }
 
 const initTask = gulp.series([
@@ -136,7 +144,7 @@ const initTask = gulp.series([
     makeConfig,
 ]);
 
-const compileTask = gulp.series([compileMain, makeConfig]);
+const compileTask = gulp.series([compileMain, makeConfig, makePlugin]);
 
 const devTask = gulp.series([compileTask, watchFunction]);
 
@@ -146,3 +154,4 @@ export const c = compileTask;
 export const watch = devTask;
 export const w = devTask;
 export const pack = packToZip;
+export const build = gulp.series([setBuildJson, initTask, compileTask, packToZip])

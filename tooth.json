@@ -1,0 +1,22 @@
+{
+    "$schema": "https://raw.githubusercontent.com/lippkg/lip/main/schemas/tooth.v2.schema.json",
+    "format_version": 2,
+    "tooth": "github.com/superx101/CALL",
+    "version": "1.3.0",
+    "info": {
+        "name": "CALL",
+        "description": "A simple building aid tool",
+        "author": "superx101",
+        "avatar_url": "https://github.com/superx101/CALL/blob/main/docs/image/CALL_light_ico.png",
+        "tags": ["building", "lse", "plugin"]
+    },
+    "asset_url": "",
+    "files": {
+        "place": [
+            {
+                "src": "call/**/*",
+                "dest": "plugins/call"
+            }
+        ]
+    }
+}

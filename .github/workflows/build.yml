@@ -1,0 +1,63 @@
+name: Build and Publish
+
+on:
+  workflow_dispatch:
+
+jobs:
+    build-and-publish:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+
+            - name: Copy HelperLib
+              run: |
+                  git clone https://github.com/LiteLDev/HelperLib HelperLib_temp
+                  mkdir -p dist
+                  cp -r HelperLib_temp/* dist/types
+                  rm -rf HelperLib_temp
+
+            - name: Install dependencies and build
+              run: |
+                  npm install
+                  gulp build
+
+            - name: Read package.json
+              uses: tyankatsu0105/read-package-version-actions@v1
+              with:
+                  path: "./package/vitevui"
+              id: package-version
+
+            - name: Extract commit messages
+              id: extract-commits
+              run: |
+                git log --pretty=format:"%s" > commit_messages.txt
+      
+            - name: Generate release body
+              id: generate-body
+              run: |
+                echo "## Changelog" > dist/body.md
+                cat commit_messages.txt >> dist/body.md
+
+            - name: Create Release
+              id: release_tag
+              uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tag_name: v${{ steps.package-version.outputs.version }}
+                  release_name: v${{ steps.package-version.outputs.version }}
+                  draft: false
+                  prerelease: false
+                  body_path: dist/body.md
+
+            - name: Upload release asset
+              uses: actions/upload-release-asset@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  upload_url: ${{ steps.release_tag.outputs.upload_url }}
+                  asset_path: dist/CALL-${{ steps.package-version.outputs.version }}.zip
+                  asset_name: CALL-${{ steps.package-version.outputs.version }}.zip
+                  asset_content_type: application/zip
