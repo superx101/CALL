@@ -13,10 +13,8 @@ jobs:
 
             - name: Copy HelperLib
               run: |
-                  git clone https://github.com/LiteLDev/HelperLib HelperLib_temp
                   mkdir -p dist/types
-                  cp -r HelperLib_temp/* dist/types
-                  rm -rf HelperLib_temp
+                  git clone https://github.com/LiteLDev/HelperLib.git dist/types
 
             - name: Install dependencies and build
               run: |
@@ -26,7 +24,7 @@ jobs:
             - name: Read package.json
               uses: tyankatsu0105/read-package-version-actions@v1
               with:
-                  path: "./package/vitevui"
+                  path: "./package.json"
               id: package-version
 
             - name: Extract commit messages
