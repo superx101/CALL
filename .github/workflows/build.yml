@@ -6,6 +6,7 @@ on:
 jobs:
     build-and-publish:
         runs-on: ubuntu-latest
+        permissions: write-all
 
         steps:
             - name: Checkout repository
@@ -24,7 +25,7 @@ jobs:
             - name: Read package.json
               uses: tyankatsu0105/read-package-version-actions@v1
               with:
-                  path: "./package.json"
+                  path: "./"
               id: package-version
 
             - name: Extract commit messages
