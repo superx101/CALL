@@ -36,7 +36,7 @@ function setLib() {
         .src(file)
         .pipe(
             replace(
-                /^\/\/\/ <reference path=".+"\/>/g,
+                /^\/\/\/ <reference path=".*"\/>/g,
                 `\/\/\/ <reference path="${path.posix.join(
                     buildConfig.libDir,
                     "src",
