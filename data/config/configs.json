@@ -125,19 +125,6 @@
     * false [Explanation] do not show
     */
    "displayLogo": true,
-
-    /*
-    *    ###是否显示玩家执行的指令到控制台###
-    *    [参数](如下)
-    *    true  [解析] 显示
-    *    false [解析] 不显示
-    *
-    * ### Whether or not to display player-executed commands to the console###
-    * [Parameters] (below)
-    * true [Explanation] show
-    * false [Explanation] do not show
-    */
-    "outputCmd": false,
    
     /*
     *   ###一个玩家最多可以保存的结构数量###

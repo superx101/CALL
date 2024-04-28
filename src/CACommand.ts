@@ -608,6 +608,9 @@ export default class CACommand {
             case "ex":
                 ExportOperation.start(res, output);
                 break;
+            case "reload":
+                case "r":
+                    throw new Error("this command is deprecated")
             default:
                 throw new Error(
                     Tr._c("console.app.command_consoleCallback.cmdError")

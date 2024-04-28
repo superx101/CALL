@@ -44,22 +44,11 @@ export default class Players {
         return Players.dataMap.get(xuid);
     }
 
+    /**
+     * @deprecated
+     */
     public static silenceCmd(caPlayer: CAPlayer, cmd: string) {
         caPlayer.$.runcmd(cmd);
-        if (!Config.get(Config.GLOBAL, "outputCmd", true)) {
-            //控制台清除输出 (密集输出时删除错误)
-            process.stdout.write("\x1B[1A");
-            switch (os.platform()) {
-                case "win32":
-                    process.stdout.write("\x1b[K");
-                    break;
-                case "darwin":
-                case "linux":
-                    process.stdout.write("\x20");
-                default:
-                    break;
-            }
-        }
     }
 
     public static cmd(caPlayer: CAPlayer, cmd: string, isTell: boolean = true) {

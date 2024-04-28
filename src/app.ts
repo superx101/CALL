@@ -51,7 +51,7 @@ namespace ListenerHandler {
         pos: Pos
     ) {
         if (!Players.hasPermission(player)) return;
-        const caPlayer = Players.getCAPlayer(player.xuid);
+        const caPlayer = Players.fetchCAPlayer(player.xuid);
         if (!EnableOperation.isEnable(caPlayer)) return;
 
         //logical
@@ -67,7 +67,7 @@ namespace ListenerHandler {
 
     function onStartDestroyBlockHandler(player: LLSE_Player, block: Block) {
         if (!Players.hasPermission(player)) return;
-        const caPlayer = Players.getCAPlayer(player.xuid);
+        const caPlayer = Players.fetchCAPlayer(player.xuid);
         if (!EnableOperation.isEnable(caPlayer)) return;
 
         //logical
