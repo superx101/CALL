@@ -36,9 +36,6 @@
         "displayLogo": {
             "type": "boolean"
         },
-        "outputCmd": {
-            "type": "boolean"
-        },
         "maxSaveStructure": {
             "type": "number",
             "min": 0,
