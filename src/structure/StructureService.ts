@@ -167,12 +167,15 @@ export default class StructureService {
     }
 
     public static generateSid(xuid: string): string {
-        return "c" + StructureService.getData(xuid).pid + system.getTimeStr()
-            .replaceAll(" ", "")
-            .replaceAll("-", "")
-            .replaceAll(":", "")
-            .substring(2)
-            + ("000" + StructureService.getId().toString(16)).slice(-3);
+        // return "c" + StructureService.getData(xuid).pid + system.getTimeStr()
+        //     .replaceAll(" ", "")
+        //     .replaceAll("-", "")
+        //     .replaceAll(":", "")
+        //     .substring(2)
+        //     + ("000" + StructureService.getId().toString(16)).slice(-3);
+        const timestamp = Date.now().toString(36);
+        const randomString = Math.random().toString(36).substring(2, 4);
+        return timestamp + randomString;
     }
 
     public static async save(caPlayer: CAPlayer, structure: Structure, index: number, total: number, overCallback: (structid: string, data: any) => void) {
