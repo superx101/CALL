@@ -31,7 +31,7 @@ jobs:
             - name: Extract commit messages
               id: extract-commits
               run: |
-                git log --pretty=format:"%s" > commit_messages.txt
+                git log --pretty=format:"%s" $(git describe --tags --abbrev=0 HEAD^)..HEAD > commit_messages.txt
       
             - name: Generate release body
               id: generate-body
