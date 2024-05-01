@@ -1,4 +1,14 @@
 ![CALL](../image/introduction_1.0.0.png)
+
+
+# ⚠️不要参考和学习这个项目⚠️
+在项目开始时，作者甚至不会JavaScript，并且完全不知道什么是TypeScript。
+因此，这个项目充满了一些邪恶的语法和组织。
+
+如果你是个LSE的新手，并且想通过学习一些现成的项目来提高自己的开发能力，
+
+🚨❗🚫🙅‍♂️请不要参考这个项目🙅‍♂️🚫❗🚨。
+
 # 插件介绍
 ## 简介
 &emsp;&emsp;Construct Assistant for LiteLoaderBDS, 简称CALL、建造助手，是针对**基岩版服务器（BDS）**的辅助建造工具，且提供API支持其他插件开发者拓展CALL的功能。

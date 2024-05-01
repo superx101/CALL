@@ -1,11 +1,21 @@
 ![CALL](./docs/image/introduction_1.0.0.png)
 
+# ⚠️Do not refer to and learn from this project⚠️
+
+At the start of the project, the author didn't even know JavaScript 
+and had no idea what TypeScript was.
+So, this project is full of some wicked syntax and organization.
+
+If you're a beginner in LSE and want to improve your development skills by studying some existing projects, 
+
+🚨❗🚫🙅‍♂️please don't refer to this one🙅‍♂️🚫❗🚨.
+
 # Introduction to plug-ins
 
 English | [简体中文](./docs/user/introduction.md)
 
 ## Introduction
-Construct Assistant for LiteLoaderBDS, abbreviated as CALL, is an auxiliary construction tool for BDS, and provides API to support other plug-in developers to expand the functions of CALL.
+Construct Assistant for LeviLamina, abbreviated as CALL, is an auxiliary construction tool for BDS, and provides API to support other plug-in developers to expand the functions of CALL.
 
 **Why CALL?**
 - ___Command operation___  

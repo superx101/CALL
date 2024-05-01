@@ -24,6 +24,14 @@ import Tr from "./util/Translator";
  * this a temp class for register command
  * standard command should consist of single command object and callback
  */
+
+/**
+ * If you are a beginner in LL plugin development, please do not imitate the structure of this class
+ * Please use sub modules to register and callback a sub command separately
+ * rather than writing them together
+ * 
+ * This project is doing this because of laziness
+ */
 export default class CACommand {
     public static register(): void {
         let cmd = mc.newCommand(
