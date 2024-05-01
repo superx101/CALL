@@ -94,9 +94,9 @@ export default class AreaOperation {
             if (caPlayer.settings.area.start.dimid == caPlayer.settings.area.end.dimid) {
                 let area = Area3.fromArea3D(caPlayer.settings.area);
                 let lens = area.getLens();
-                if (lens[0] > Constant.AREA.MAX_LENGTH || lens[1] > Constant.AREA.MAX_HIGHT || lens[2] > Constant.AREA.MAX_LENGTH) {
-                    throw new Error(Tr._(caPlayer.$.langCode, "dynamic.AreaOperation.hasSetArea.overRange", `${Constant.AREA.MAX_LENGTH} ${Constant.AREA.MAX_HIGHT} ${Constant.AREA.MAX_LENGTH}`));
-                }
+                // if (lens[0] > Constant.AREA.MAX_LENGTH || lens[1] > Constant.AREA.MAX_HIGHT || lens[2] > Constant.AREA.MAX_LENGTH) {
+                //     throw new Error(Tr._(caPlayer.$.langCode, "dynamic.AreaOperation.hasSetArea.overRange", `${Constant.AREA.MAX_LENGTH} ${Constant.AREA.MAX_HIGHT} ${Constant.AREA.MAX_LENGTH}`));
+                // }
                 caPlayer.hasSetArea = true;
                 return true;
             }
@@ -121,10 +121,10 @@ export default class AreaOperation {
         if (AreaOperation.hasSetArea(caPlayer)) {
             let area = Area3.fromArea3D(caPlayer.settings.area);
             //检查area
-            let lens = area.getLens();
-            if (lens[0] > Constant.AREA.MAX_LENGTH || lens[2] > Constant.AREA.MAX_LENGTH) {
-                throw new Error(Tr._(player.langCode, "dynamic.AreaOperation.setPos.max", `${Constant.AREA.MAX_LENGTH} ${Constant.AREA.MAX_HIGHT} ${Constant.AREA.MAX_LENGTH}`));
-            }
+            // let lens = area.getLens();
+            // if (lens[0] > Constant.AREA.MAX_LENGTH || lens[2] > Constant.AREA.MAX_LENGTH) {
+            //     throw new Error(Tr._(player.langCode, "dynamic.AreaOperation.setPos.max", `${Constant.AREA.MAX_LENGTH} ${Constant.AREA.MAX_HIGHT} ${Constant.AREA.MAX_LENGTH}`));
+            // }
             player.sendText(StrFactory.cmdTip(Tr._(player.langCode, "dynamic.AreaOperation.setPos.setArea", `${caPlayer.settings.area.start}->${caPlayer.settings.area.end}`, area.getLensStr())), Enums.msg.RAW);
             AreaOperation.hideArea(caPlayer);
             AreaOperation.showArea(caPlayer);

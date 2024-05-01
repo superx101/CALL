@@ -9,10 +9,10 @@ export default class Constant {
         MAX_LENGTH: 64,
         MAX_HIGHT: 64
     }
-    public static AREA = {
-        MAX_LENGTH: 64 * 1000,
-        MAX_HIGHT: 320 + 64
-    }
+    // public static AREA = {
+    //     MAX_LENGTH: 64 * 1000,
+    //     MAX_HIGHT: 320 + 64
+    // }
     public static FILL = {
         MAX_HIGHT: 8
     }
