@@ -392,7 +392,7 @@ export default class CACommand {
                         case OriginType.Player:
                             CACommand.command_playerCallback(ori, output, res);
                             break;
-                        case OriginType.Server:
+                        case OriginType.DedicatedServer:
                             CACommand.command_consoleCallback(output, res);
                         case OriginType.Virtual:
                             //use command: execute
