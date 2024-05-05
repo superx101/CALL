@@ -195,7 +195,7 @@ export default class ExportService {
         isBinary: boolean
     ): boolean {
         // @ts-ignore
-        let fileObject = new file(
+        let fileObject = new File(
             `${Config.EXPORT}/${name}.${type}`,
             FileMode.WriteMode,
             isBinary

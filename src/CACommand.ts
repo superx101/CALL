@@ -442,7 +442,7 @@ export default class CACommand {
                 )
             );
         }
-        const caPlayer = Players.getCAPlayer(ori.player.xuid);
+        const caPlayer = Players.fetchCAPlayer(ori.player.xuid);
         if (caPlayer.forbidCmd) {
             throw new Error(
                 Tr._(player.langCode, "dynamic.app.command_playerCallback.wait")

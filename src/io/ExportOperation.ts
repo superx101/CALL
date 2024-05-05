@@ -37,8 +37,10 @@ export default class ExportOperation {
                 bar.stop();
                 throw new Error(Tr._c("console.ExportOperation.start.notFind"));
         }
+        log(1)
         //写入文件
         if(ExportService.writeFile(content, fileName, res.type, isBinary)) {
+            logger.log(Tr._c("console.ExportOperation.start.success", `${res.id}`, `${path.join(process.cwd(), Config.EXPORT)}/${fileName}.${res.type}`))
             output.success(StrFactory.cmdSuccess(Tr._c("console.ExportOperation.start.success", `${res.id}`, `${path.join(process.cwd(), Config.EXPORT)}/${fileName}.${res.type}`)))
         }
         else {

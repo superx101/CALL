@@ -166,7 +166,7 @@ export default class StructureService {
         return StructureService.uid++;
     }
 
-    public static generateSid(xuid: string): string {
+    public static generateSid(): string {
         // return "c" + StructureService.getData(xuid).pid + system.getTimeStr()
         //     .replaceAll(" ", "")
         //     .replaceAll("-", "")
@@ -183,7 +183,7 @@ export default class StructureService {
         let data = StructureService.getData(player.xuid);
         let areas = structure.getAreas();
 
-        let structid = StructureService.generateSid(player.xuid);
+        let structid = StructureService.generateSid();
 
         //保存所有分结构
         await StructureService.traversal(caPlayer, areas, Tr._(player.langCode, "dynamic.StructureManager.save.saving", `${index + 1}/${total}`) , 1, (x: number, z: number) => {
