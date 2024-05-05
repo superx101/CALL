@@ -157,7 +157,7 @@ const buildInitTask = gulp.series([
     makeConfig
 ]);
 
-const compileTask = gulp.series([compileMain, makeConfig, makePlugin]);
+const compileTask = gulp.series([compileMain, makePlugin]);
 
 const devTask = gulp.series([compileTask, watchFunction]);
 
