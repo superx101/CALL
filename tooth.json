@@ -2,7 +2,7 @@
     "$schema": "https://raw.githubusercontent.com/lippkg/lip/main/schemas/tooth.v2.schema.json",
     "format_version": 2,
     "tooth": "github.com/superx101/CALL",
-    "version": "1.3.5",
+    "version": "1.3.6",
     "info": {
         "name": "CALL",
         "description": "A simple building aid tool",
@@ -10,7 +10,7 @@
         "avatar_url": "https://github.com/superx101/CALL/blob/main/docs/image/CALL_light_ico.png",
         "tags": ["building", "lse", "plugin"]
     },
-    "asset_url": "https://github.com/superx101/CALL/releases/download/v1.3.5/CALL-1.3.5.zip",
+    "asset_url": "https://github.com/superx101/CALL/releases/download/v1.3.6/CALL-1.3.6.zip",
     "dependencies": {
         "github.com/LiteLDev/LeviLamina": ">=0.11.1",
         "gitea.litebds.com/LiteLDev/legacy-script-engine-nodejs": ">=0.6.2"
