@@ -18,7 +18,7 @@ export default class ImportOperation {
         output: CommandOutput
     ) {
         let xuid;
-        if (res.playerName.startsWith("xuid-")) xuid = res.playerName.slice(4);
+        if (res.playerName.startsWith("xuid-")) xuid = res.playerName.slice(5);
         else xuid = ImportService.findXuidByName(res.playerName);
         const file = ImportService.readFile(res.file);
         const sid = StructureService.generateSid();

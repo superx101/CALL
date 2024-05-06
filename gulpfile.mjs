@@ -31,6 +31,8 @@ const packJson = JSON.parse(
 
 function setLib() {
     const file = "index.ts";
+    if(buildConfig.libDir === "")
+        buildConfig.libDir = "./dist/types"
     return gulp
         .src(file)
         .pipe(
@@ -147,6 +149,7 @@ const initTask = gulp.series([
     makeManifest,
     makeDataFile,
     makeConfig,
+    copyToDebug
 ]);
 
 const buildInitTask = gulp.series([
