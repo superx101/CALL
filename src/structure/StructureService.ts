@@ -404,11 +404,11 @@ export default class StructureService {
 
     /**普通操作调用入口*/
     public static undoSave(caPlayer: CAPlayer, structArr: Array<Structure>, overCallback: (complex: Complex) => void) {
-        function overCallback2(complex: Complex) {
+        function undoOverCallback(complex: Complex) {
             StructureService.clearRedoList(caPlayer);//清空redoList
             overCallback(complex);
         }
-        StructureService.undoPush(caPlayer, structArr, overCallback2);
+        StructureService.undoPush(caPlayer, structArr, undoOverCallback);
     }
 
     /**undo调用入口*/

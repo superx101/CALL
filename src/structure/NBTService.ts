@@ -33,7 +33,8 @@ export default class NBTService {
         const bnbt = file.readAllSync();
         //@ts-ignore
         const nbtObj = NBT.parseBinaryNBT(bnbt);
-        const intPos = mc.newIntPos(pos.x, pos.y, pos.z, pos.dimid);
+        // TOFIX: pos.y - 1 is a compromise to setStructure's error
+        const intPos = mc.newIntPos(pos.x, pos.y - 1, pos.z, pos.dimid);
         let mir: e = 0;
         file.close();
         switch (mirror) {

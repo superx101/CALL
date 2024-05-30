@@ -446,6 +446,7 @@ export default class StructureOperation {
             dellast = true;
         }
         let area = Area3.fromArea3D(caPlayer.settings.area);
+
         let st = new Structure(area);
         //copy
         StructureService.copy(
@@ -494,6 +495,7 @@ export default class StructureOperation {
         } else {
             pos = Pos3.fromPos(player.pos).calibration().floor();
         }
+
         keys.forEach((sid) => {
             StructureOperation.checkTargetStruct(
                 data.copy[sid].area,

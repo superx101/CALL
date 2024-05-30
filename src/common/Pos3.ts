@@ -38,7 +38,7 @@ export class Pos3 {
      * @deprecated
      */
     public calibration() {
-        return this;
+        return this.add(0, -1, 0);
     }
 
     public floor() {
