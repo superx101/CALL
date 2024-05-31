@@ -10,7 +10,7 @@ export default class HelpOperation {
 
     public static readFile() {
         //@ts-ignore
-        let file = new File(Config.CONFIG + "/help.json", FileMode.ReadMode, false);
+        let file = new File(Config.CONFIG_PATH + "/help.json", FileMode.ReadMode, false);
         let help = JSON.parse(file.readAllSync() as string);
         return help;
     }

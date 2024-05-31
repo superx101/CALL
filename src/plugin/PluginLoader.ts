@@ -8,7 +8,7 @@ export class PluginLoader {
     public static pluginsMap = new Map<string, IPlugin>();
 
     public loadPlugins() {
-        const files = fs.readdirSync(Config.PLUGINS);
+        const files = fs.readdirSync(Config.PLUGINS_PATH);
 
         for (const fileName of files) {
             const fullPath = "../../userdata/plugins/" + fileName;

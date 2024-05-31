@@ -30,11 +30,11 @@ export default class ImportService {
         let type;
         let data;
 
-        if (!File.exists(`${Config.IMPORT}/${fileName.base}`))
+        if (!File.exists(`${Config.IMPORT_PATH}/${fileName.base}`))
             throw new Error(
                 Tr._c(
                     "console.ImportManager.readFile.notFind",
-                    `${path.join(process.cwd(), Config.IMPORT)}/${fileName.base}`
+                    `${path.join(process.cwd(), Config.IMPORT_PATH)}/${fileName.base}`
                 )
             );
 
@@ -43,7 +43,7 @@ export default class ImportService {
                 type = Type.MCSTRUCTURE;
                 //@ts-ignore
                 let f = new File(
-                    `${Config.IMPORT}/${fileName.base}`,
+                    `${Config.IMPORT_PATH}/${fileName.base}`,
                     FileMode.ReadMode,
                     true
                 );

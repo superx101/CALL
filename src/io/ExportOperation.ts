@@ -40,8 +40,8 @@ export default class ExportOperation {
   
         //写入文件
         if(ExportService.writeFile(content, fileName, res.type, isBinary)) {
-            logger.log(Tr._c("console.ExportOperation.start.success", `${res.id}`, `${path.join(process.cwd(), Config.EXPORT)}/${fileName}.${res.type}`))
-            output.success(StrFactory.cmdSuccess(Tr._c("console.ExportOperation.start.success", `${res.id}`, `${path.join(process.cwd(), Config.EXPORT)}/${fileName}.${res.type}`)))
+            logger.log(Tr._c("console.ExportOperation.start.success", `${res.id}`, `${path.join(process.cwd(), Config.EXPORT_PATH)}/${fileName}.${res.type}`))
+            output.success(StrFactory.cmdSuccess(Tr._c("console.ExportOperation.start.success", `${res.id}`, `${path.join(process.cwd(), Config.EXPORT_PATH)}/${fileName}.${res.type}`)))
         }
         else {
             bar.stop();

@@ -378,6 +378,19 @@
         {
             "type": "delete",
             "path": "./plugins/CALL/plugins/shape/call.superx101.basicShape_2.1.0.js"
-        }  
+        }
+    ],
+    "1.4.0": [
+        {
+            "type": "patch",
+            "path": "./plugins/call/userdata/config/configs.json",
+            "patch": [
+                {
+                    "op": "add",
+                    "path": "/suvivalModeActive",
+                    "value": "false"
+                }
+            ]
+        }
     ]
 }

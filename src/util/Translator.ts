@@ -3,7 +3,7 @@ import PropertiesReader from 'properties-reader';
 import * as sprintf from 'sprintf-js'
 import Config from "../common/Config";
 
-const langListSet: Set<string> = getListSet(Config.LANG);
+const langListSet: Set<string> = getListSet(Config.LANG_PATH);
 const readerMap: Map<string, PropertiesReader.Reader> = new Map();
 
 function getListSet(p: string): Set<string> {
@@ -29,7 +29,7 @@ export default class Tr {
 
         //first load reader
         if (reader == null) {
-            readerMap.set(lang, PropertiesReader(`${Config.LANG}/${lang}.lang`));
+            readerMap.set(lang, PropertiesReader(`${Config.LANG_PATH}/${lang}.lang`));
             reader = readerMap.get(lang);
         }
 

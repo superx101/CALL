@@ -7,7 +7,7 @@ import { FileMode } from "../temp/Common";
 type e = 0 | 1 | 2 | 3;
 
 export default class NBTService {
-    public static PATH = Config.DATA + "/nbt";
+    public static PATH = Config.DATA_PATH + "/nbt";
     // static LOADPOOL = [];
     // static SAVEPOOL = [];
 

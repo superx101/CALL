@@ -5,12 +5,14 @@ import PermissionOperation from "./PermissionOperation";
 import { PermissionsType } from "../common/Config";
 import StrFactory from "../util/StrFactory";
 import Config from "../common/Config";
-import * as os from "os";
 
 export default class Players {
     public static dataMap = new Map<string, CAPlayer>();
 
     public static hasPermission(player: LLSE_Player) {
+        if(!Config.get(Config.GLOBAL, "suvivalModeActive", false))
+            return false;
+
         switch (Config.get(Config.GLOBAL, "permission")) {
             case PermissionsType.ALL:
                 return true;
@@ -18,6 +20,10 @@ export default class Players {
                 return player.isOP();
             case PermissionsType.CUSTOMIZE:
                 return PermissionOperation.find(player.realName);
+            case PermissionsType.FROM_FILE:
+                return PermissionOperation.findByFile(player.realName);
+            case PermissionsType.FROM_TAG:
+                return PermissionOperation.checkTag(player);
             default:
                 return false;
         }

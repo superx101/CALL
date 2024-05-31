@@ -5,6 +5,8 @@ import CAPlayer from "./CAPlayer";
 import StrFactory from "../util/StrFactory";
 import Tr from "../util/Translator";
 
+import * as fs from "fs";
+
 export default class PermissionOperation {
     /*** private */
     private static check(name: string) {
@@ -26,6 +28,19 @@ export default class PermissionOperation {
             return true;
         }
         return false;
+    }
+
+    /**
+     * warning: this is a bad way to check permission, but simple
+     */
+    public static findByFile(name: string) {
+        const content = fs.readFileSync(Config.STUPID_PERMISSION_FILE_PATH, {encoding:"utf8"});
+        const list: string[] = JSON.parse(content);
+        return list.includes(name);
+    }
+
+    public static checkTag(player: LLSE_Player) {
+        return player.hasTag("call_permission")
     }
 
     public static list(output: CommandOutput) {

@@ -22,6 +22,8 @@
     *   "all"       [解析] 所有玩家都可以使用CALL
     *   "op"        [解析] 仅管理员可以使用CALL
     *   "customize" [解析] 自定义可使用CALL的玩家
+    *   "file"      [解析] 每次从文件读取权限列表
+    *   "tag"       [解析] 游戏内用标签:call_permission指定
     *   [其他]
     *   当选择"customize"时请到userlist.json文件中指定可使用CALL的玩家
     *   或
@@ -47,6 +49,8 @@
     */
     "permission": "op",
     
+    "suvivalModeActive": true,
+
     /*
     *   ###控制台输出的语言###
     *   [参数](如下)
