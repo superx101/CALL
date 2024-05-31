@@ -10,7 +10,7 @@
         "avatar_url": "https://github.com/superx101/CALL/blob/main/docs/image/CALL_light_ico.png",
         "tags": ["building", "lse", "plugin"]
     },
-    "asset_url": "https://github.com/superx101/CALL/releases/download/v1.4.0/CALL-1.4.0.zip",
+    "asset_url": "https://github.com/superx101/CALL/releases/download/v1.4.1/CALL-1.4.1.zip",
     "dependencies": {
         "github.com/LiteLDev/LeviLamina": ">=0.11.1",
         "gitea.litebds.com/LiteLDev/legacy-script-engine-nodejs": ">=0.6.2"

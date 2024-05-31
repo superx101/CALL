@@ -10,7 +10,8 @@ export default class Players {
     public static dataMap = new Map<string, CAPlayer>();
 
     public static hasPermission(player: LLSE_Player) {
-        if(!Config.get(Config.GLOBAL, "suvivalModeActive", false))
+        const suvialActive = Config.get(Config.GLOBAL, "suvivalModeActive", false);
+        if (!suvialActive && player.gameMode != 1)
             return false;
 
         switch (Config.get(Config.GLOBAL, "permission")) {
