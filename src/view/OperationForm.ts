@@ -37,7 +37,7 @@ export default class OperationForm extends Form {
                 this.fillForm(OperationForm.MODE.OUTLINE);
                 break;
             case 4:
-                Players.silenceCmd(this.caPlayer, "ca cl");
+                Players.silenceCmd(this.caPlayer, "call clear");
                 break;
             case 5:
                 this.fillForm(OperationForm.MODE.REPLACE);
@@ -96,16 +96,16 @@ export default class OperationForm extends Form {
         function run(caPlayer: CAPlayer, blockTypeA: BlockType, blockTypeB: BlockType) {
             switch (mode) {
                 case OperationForm.MODE.NULL:
-                    Players.silenceCmd(caPlayer, `ca fi ${blockTypeA.toFormatString()} nu`);
+                    Players.silenceCmd(caPlayer, `call fill ${blockTypeA.toFormatString()} null`);
                     break;
                 case OperationForm.MODE.HOLLOW:
-                    Players.silenceCmd(caPlayer, `ca fi ${blockTypeA.toFormatString()} ho`);
+                    Players.silenceCmd(caPlayer, `call fill ${blockTypeA.toFormatString()} hollow`);
                     break;
                 case OperationForm.MODE.OUTLINE:
-                    Players.silenceCmd(caPlayer, `ca fi ${blockTypeA.toFormatString()} ou`);
+                    Players.silenceCmd(caPlayer, `call fill ${blockTypeA.toFormatString()} outline`);
                     break;
                 case OperationForm.MODE.REPLACE:
-                    Players.silenceCmd(caPlayer, `ca re ${blockTypeA.toFormatString()} ${blockTypeB.toFormatString()}`);
+                    Players.silenceCmd(caPlayer, `call replace ${blockTypeA.toFormatString()} ${blockTypeB.toFormatString()}`);
                     break;
             }
         }

@@ -128,4 +128,9 @@ export default class StrFactory {
         else 
             return Format.DarkRed + text + Format.Clear;
     }
+
+    public static firstUpper(str: string): string {
+        if (!str) return str;
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    }
 }

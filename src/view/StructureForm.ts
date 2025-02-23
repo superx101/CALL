@@ -138,7 +138,7 @@ export default class StructureForm extends Form {
             } catch (e) {}
             Players.silenceCmd(
                 this.caPlayer,
-                `ca lo ${stData.id} ${x} ${y} ${z} ${
+                `call load ${stData.id} ${x} ${y} ${z} ${
                     degreeArr[data[2]]
                 }_degrees ${mirrorArr_select[data[3]]}`
             );
@@ -234,13 +234,13 @@ export default class StructureForm extends Form {
                     });
                     break;
                 case 2:
-                    Players.silenceCmd(this.caPlayer, `ca de ${data.id}`);
+                    Players.silenceCmd(this.caPlayer, `call delete ${data.id}`);
                     break;
                 case 3:
                     if (data.isPublic) {
-                        Players.silenceCmd(this.caPlayer, `ca pr ${data.id}`);
+                        Players.silenceCmd(this.caPlayer, `ca private ${data.id}`);
                     } else {
-                        Players.silenceCmd(this.caPlayer, `ca pu ${data.id}`);
+                        Players.silenceCmd(this.caPlayer, `ca public ${data.id}`);
                     }
                     break;
                 default:

@@ -540,7 +540,7 @@ i18n.load(
 );
 
 class Checker {
-    constructor(private langCode: string) {}
+    constructor(private langCode: string) { }
 
     public checkVec3(v3: Vector3, negative = true) {
         if (v3 != null) {
@@ -574,7 +574,7 @@ class Checker {
 abstract class Geometry {
     public boundingBox: Box3;
 
-    constructor() {
+    public computeBoudingBox() {
         this.boundingBox = this.getBoundingBox();
     }
 
@@ -607,7 +607,7 @@ abstract class ShapeManager {
         protected plugin: IPlugin,
         protected tool: PluginTool,
         protected checker: Checker
-    ) {}
+    ) { }
 
     public abstract gen(param: any, pos: Pos3): Voxel;
 
@@ -629,22 +629,32 @@ abstract class ShapeManager {
     private boxForeach(
         box: Box3,
         odd: Odd,
-        callback: (x: number, y: number, z: number) => boolean
+        callback: (v: Vector3) => boolean
     ): NbtInt[] {
-        const arr: NbtInt[] = [];
-        const nx = odd.x ? 0 : 0.5;
-        const ny = odd.y ? 0 : 0.5;
-        const nz = odd.z ? 0 : 0.5;
-
-        for (let x = box.min.x + nx; x <= box.max.x + nx; x++) {
-            for (let y = box.min.y + ny; y <= box.max.y + ny; y++) {
-                for (let z = box.min.z + nz; z <= box.max.z + nz; z++) {
-                    if (callback(x, y, z)) arr.push(new NbtInt(0));
-                    else arr.push(new NbtInt(-1));
+        const size = box.getSize(new Vector3()).round()
+        const arr: NbtInt[] = Array(size.x * size.y * size.z).fill(new NbtInt(-1));
+        // const nx = odd.x ? 0 : 0.5;
+        // const ny = odd.y ? 0 : 0.5;
+        // const nz = odd.z ? 0 : 0.5;
+        const zeroRef = new NbtInt(0)
+ 
+        const vector = new Vector3()
+        for (let x = 0; x < size.x; ++x) {
+            for (let y = 0; y < size.y; ++y) {
+                const offset = x * size.y * size.z + y * size.z
+                for (let z = 0; z < size.z; ++z) {
+                    vector.set(x + box.min.x, y + box.min.y, z + box.min.z);
+                    if (callback(vector)) {
+                        arr[offset + z] = zeroRef;
+                    }
                 }
             }
         }
         return arr;
+    }
+
+    protected getPosIntString(pos: FloatPos): string {
+        return `${Math.trunc(pos.x)} ${Math.trunc(pos.y)} ${Math.trunc(pos.z)}`;
     }
 
     public getVoxel(
@@ -653,18 +663,17 @@ abstract class ShapeManager {
         m4: Matrix4,
         geometry: Geometry
     ): Voxel {
+        geometry.computeBoudingBox()
         geometry.transformedBoundingBox(m4);
         const im4 = m4.clone().invert();
         let blocks: NbtInt[] = [];
         if (isHollow) {
-            blocks = this.boxForeach(geometry.boundingBox!, odd, (x, y, z) => {
-                const v3 = new Vector3(x, y, z).applyMatrix4(im4);
-                return geometry.isPointOnSurface(v3);
+            blocks = this.boxForeach(geometry.boundingBox!, odd, (v) => {
+                return geometry.isPointOnSurface(v.applyMatrix4(im4));
             });
         } else {
-            blocks = this.boxForeach(geometry.boundingBox!, odd, (x, y, z) => {
-                const v3 = new Vector3(x, y, z).applyMatrix4(im4);
-                return geometry.isPointInsideGeometry(v3);
+            blocks = this.boxForeach(geometry.boundingBox!, odd, (v) => {
+                return geometry.isPointInsideGeometry(v.applyMatrix4(im4));
             });
         }
         return {
@@ -684,6 +693,7 @@ abstract class ShapeManager {
         }
         return '{"name":"minecraft:concrete","states":{"color":"white"},"version":17959425}';
     }
+
 }
 
 class CubeGeometry extends Geometry {
@@ -767,7 +777,7 @@ class CubeManager extends ShapeManager {
             .addInput(
                 i18n.trl(player.langCode, "form.s4"),
                 i18n.trl(player.langCode, "form.s5"),
-                `${player.pos.x} ${player.pos.y} ${player.pos.z}`
+                this.getPosIntString(player.pos)
             )
             .addStepSlider(i18n.trl(player.langCode, "form.s6"), orderArr)
             .addSlider(i18n.trl(player.langCode, "form.s7"), 0, 360, 1, 0)
@@ -850,7 +860,7 @@ class PlaneManager extends ShapeManager {
             .addInput(
                 i18n.trl(player.langCode, "form.s15"),
                 i18n.trl(player.langCode, "form.s16"),
-                `${player.pos.x} ${player.pos.y} ${player.pos.z}`
+                this.getPosIntString(player.pos)
             );
 
         player.sendForm(form, (pl, data) => {
@@ -967,7 +977,7 @@ class LineManager extends ShapeManager {
     }
 }
 
-class ShpereGeometry extends Geometry {
+class SphereGeometry extends Geometry {
     public r2: number;
     public rn: number;
 
@@ -999,7 +1009,7 @@ class SphereManager extends ShapeManager {
         this.checker.checkNumber(param.r, false);
         this.checker.checkSNBT(param.snbt);
 
-        const sphere = new ShpereGeometry(param.r);
+        const sphere = new SphereGeometry(param.r);
         const isOdd = sphere.r % 2 != 0;
 
         return this.getVoxel(
@@ -1018,7 +1028,6 @@ class SphereManager extends ShapeManager {
         const itemStr = plData.itemA.isNull()
             ? ""
             : `${plData.itemA.type} ${plData.itemA.aux}`;
-
         const form = mc
             .newCustomForm()
             .setTitle(i18n.trl(player.langCode, "form.s23"))
@@ -1039,28 +1048,28 @@ class SphereManager extends ShapeManager {
             .addInput(
                 i18n.trl(player.langCode, "form.s28"),
                 i18n.trl(player.langCode, "form.s29"),
-                `${player.pos.x} ${player.pos.y} ${player.pos.z}`
+                this.getPosIntString(player.pos)
             );
 
         player.sendForm(form, (pl, data) => {
-            if (data != null) {
-                let json: any = {};
-                let pos: any = {};
-                let strs: string;
-
-                json.r = parseInt(data[1]);
-                json.isHollow = data[2];
-                json.snbt = this.getBlockSNBT(plData.itemA, player);
-
-                strs = data[3].split(" ");
-                pos.x = parseInt(strs[0]);
-                pos.y = parseInt(strs[1]);
-                pos.z = parseInt(strs[2]);
-
-                this.runcmd(pl, index, json, pos);
-            } else {
+            if (data == null) {
                 this.plugin.onMenu(player);
+                return
             }
+            let json: any = {};
+            let pos: any = {};
+            let strs: string;
+
+            json.r = parseInt(data[1]);
+            json.isHollow = data[2];
+            json.snbt = this.getBlockSNBT(plData.itemA, player);
+
+            strs = data[3].split(" ");
+            pos.x = parseInt(strs[0]);
+            pos.y = parseInt(strs[1]);
+            pos.z = parseInt(strs[2]);
+
+            this.runcmd(pl, index, json, pos);
         });
     }
 }
@@ -1179,7 +1188,7 @@ class EllipsiodManager extends ShapeManager {
             .addInput(
                 i18n.trl(player.langCode, "form.s35"),
                 i18n.trl(player.langCode, "form.s36"),
-                `${player.pos.x} ${player.pos.y} ${player.pos.z}`
+                this.getPosIntString(player.pos)
             )
             .addLabel(i18n.trl(player.langCode, "form.s37"))
             .addStepSlider(i18n.trl(player.langCode, "form.s38"), orderArr)
@@ -1339,7 +1348,7 @@ class CylinderManager extends ShapeManager {
             .addInput(
                 i18n.trl(player.langCode, "form.s49"),
                 i18n.trl(player.langCode, "form.s50"),
-                `${player.pos.x} ${player.pos.y} ${player.pos.z}`
+                this.getPosIntString(player.pos)
             )
             .addLabel(i18n.trl(player.langCode, "form.s51"))
             .addStepSlider(i18n.trl(player.langCode, "form.s52"), orderArr)
@@ -1428,14 +1437,14 @@ class ConeGeometry extends Geometry {
         if (v.y >= this.h_)
             return (
                 ((x2 / this.a2 + z2 / this.b2) * this.h) / (this.h - v.y) <=
-                    1 && v.y <= this.h
+                1 && v.y <= this.h
             );
         else
             return (
                 ((x2 / this.a2 + z2 / this.b2) * this.h) / (this.h - v.y) <=
-                    1 &&
+                1 &&
                 ((x2 / this.a_2 + z2 / this.b_2) * this.h_) / (this.h_ - v.y) >=
-                    1 &&
+                1 &&
                 v.y <= this.h &&
                 v.y >= 0
             );
@@ -1503,7 +1512,7 @@ class ConeManager extends ShapeManager {
             .addInput(
                 i18n.trl(player.langCode, "form.s63"),
                 i18n.trl(player.langCode, "form.s64"),
-                `${player.pos.x} ${player.pos.y} ${player.pos.z}`
+                this.getPosIntString(player.pos)
             )
             .addLabel(i18n.trl(player.langCode, "form.s65"))
             .addStepSlider(i18n.trl(player.langCode, "form.s66"), orderArr)
@@ -1551,14 +1560,14 @@ export default class BasicShapePlugin extends ShapePlugin implements IPlugin {
             checker: Checker
         ) => ShapeManager;
     } = {
-        0: CubeManager,
-        1: PlaneManager,
-        2: LineManager,
-        3: SphereManager,
-        4: EllipsiodManager,
-        5: CylinderManager,
-        6: ConeManager,
-    };
+            0: CubeManager,
+            1: PlaneManager,
+            2: LineManager,
+            3: SphereManager,
+            4: EllipsiodManager,
+            5: CylinderManager,
+            6: ConeManager,
+        };
 
     public getId(): string {
         return "basicshape";
@@ -1577,7 +1586,6 @@ export default class BasicShapePlugin extends ShapePlugin implements IPlugin {
 
     public onMenu(player: LLSE_Player): void {
         try {
-            let plData = this.tool.getData(player);
             let lang = player.langCode;
             let form = mc
                 .newSimpleForm()
@@ -1593,16 +1601,19 @@ export default class BasicShapePlugin extends ShapePlugin implements IPlugin {
                 .addButton(i18n.trl(lang, "title.cone"), "");
 
             player.sendForm(form, (pl, index) => {
-                if (!index) {
+                if (index == null) {
+                    return;
+                } else if (!index) {
                     this.tool.toListForm(player);
                     return;
                 }
-                const constructor = this.map[index];
+                const constructor = this.map[index - 1];
                 const instance = new constructor(
                     this,
                     this.tool,
                     new Checker(player.langCode)
                 );
+                const plData = this.tool.getData(player);
                 instance.form(player, index, plData);
             });
         } catch (e) {
@@ -1616,7 +1627,7 @@ export default class BasicShapePlugin extends ShapePlugin implements IPlugin {
         pos: Pos3,
         param: any
     ): StructureNBT {
-        const constructor = this.map[index];
+        const constructor = this.map[index - 1];
         const instance = new constructor(
             this,
             this.tool,
@@ -1624,17 +1635,19 @@ export default class BasicShapePlugin extends ShapePlugin implements IPlugin {
         );
         const voxel = instance.gen(param, pos);
 
-        const size = voxel.box.getSize(new Vector3()).toArray() as Vec3Tuple;
+        const numberNbt = new NbtInt(-1)
+        const size = voxel.box.getSize(new Vector3()).round().toArray() as Vec3Tuple;
         const blockIndices = [
             voxel.blocks,
-            voxel.blocks.map((v) => new NbtInt(-1)),
+            voxel.blocks.map((v) => numberNbt),
         ];
+        const palette = NBT.parseSNBT(param.snbt);
         return new StructureNBT(
             1,
             size,
             blockIndices,
             new NbtList([]),
-            new NbtList(),
+            new NbtList([palette]),
             new NbtCompound(),
             [0, 0, 0]
         );

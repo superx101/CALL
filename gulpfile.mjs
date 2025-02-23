@@ -4,7 +4,6 @@ import * as fs from "fs"
 import { deleteSync } from "del";
 import gulp from "gulp";
 import ts from "gulp-typescript";
-import replace from "gulp-replace";
 import zip from "gulp-zip";
 
 const buildConfig = JSON.parse(
@@ -28,38 +27,6 @@ const tsConfigs = JSON.parse(
 const packJson = JSON.parse(
     fs.readFileSync("package.json", { encoding: "utf8" })
 );
-
-function setLib() {
-    const file = "index.ts";
-    if(buildConfig.libDir === "")
-        buildConfig.libDir = "./dist/types"
-    return gulp
-        .src(file)
-        .pipe(
-            replace(
-                /^\/\/\/ <reference path=".*"\/>/g,
-                `\/\/\/ <reference path="${path.posix.join(
-                    buildConfig.libDir,
-                    "src",
-                    "index.d.ts"
-                )}"/>`
-            )
-        )
-        .pipe(gulp.dest("./"));
-}
-
-function setBuildLib() {
-    const file = "index.ts";
-    return gulp
-        .src(file)
-        .pipe(
-            replace(
-                /^\/\/\/ <reference path=".*"\/>/g,
-                `\/\/\/ <reference path="./dist/types/src/index.d.ts"/>`
-            )
-        )
-        .pipe(gulp.dest("./"));
-}
 
 function makeManifest(cb) {
     const manifestJson = {
@@ -144,7 +111,6 @@ function watchFunction() {
 }
 
 const initTask = gulp.series([
-    setLib,
     makeEmptyFile,
     makeManifest,
     makeDataFile,
@@ -153,7 +119,6 @@ const initTask = gulp.series([
 ]);
 
 const buildInitTask = gulp.series([
-    setBuildLib,
     makeEmptyFile,
     makeManifest,
     makeDataFile,

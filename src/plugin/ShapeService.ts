@@ -1,17 +1,12 @@
 import Config from "../common/Config";
-import Constant from "../temp/Constant";
-import Players from "../user/Players";
 import Area3 from "../common/Area3";
 import { Pos3 } from "../common/Pos3";
 import { Structure } from "../common/Structure";
 import { PluginLoader } from "./PluginLoader";
 import StrFactory from "../util/StrFactory";
 import StructureService from "../structure/StructureService";
-import { Pos } from "../temp/Pos";
 import CAPlayer from "../user/CAPlayer";
-import Version from "../util/Version";
 import Tr from "../util/Translator";
-import ShapeForm from "../view/ShapeForm";
 import StructureNBT from "../io/StructureNBT";
 
 export interface BlockData {
@@ -57,16 +52,29 @@ export class ShapeService {
                     Tr._(player.langCode, "dynamic.ShapeManager.run.creating")
                 )
             );
-
             const pos1 = pos.clone();
             const pos2 = pos.clone().add(nbt.size[0], nbt.size[1], nbt.size[2]);
             const structure = new Structure(new Area3(pos1, pos2));
 
             StructureService.undoSave(caPlayer, [structure], () => {
-                mc.setStructure(
+                const res = mc.setStructure(
                     nbt,
                     new IntPos(pos.x, pos.y, pos.z, pos.dimid)
                 );
+                if (res) {
+                    player.sendText(
+                        StrFactory.cmdSuccess(
+                            Tr._(player.langCode, "dynamic.ShapeManager.run.success")
+                        )
+                    );
+                }
+                else {
+                    player.sendText(
+                        StrFactory.cmdErr(
+                            Tr._(player.langCode, "dynamic.ShapeManager.run.fail")
+                        )
+                    );
+                }
             });
         } catch (e) {
             if (ShapeService.debugMod) {

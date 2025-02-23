@@ -56,8 +56,8 @@ export default class AreaOperation {
                     AreaOperation.setPosB(caPlayer, Pos3.fromPos(player.pos).calibration());
                 }
                 break;
-            case "clear":
-            case "cl":
+            case "cancel":
+            case "cc":
                 AreaOperation.clearArea(caPlayer);
                 output.success(StrFactory.cmdMsg(Tr._(player.langCode, "dynamic.AreaOperation.start.clear")));
                 break;
@@ -73,15 +73,16 @@ export default class AreaOperation {
                     output.success(StrFactory.cmdSuccess(Tr._(player.langCode, "dynamic.AreaOperation.start.showOff")));
                 }
                 break;
+            case "set":
             case "se":
                 let pos3d = (pos == null ? Pos3.fromPos(player.pos).floor().calibration() : Pos3.fromPos(pos));
                 if (caPlayer.isSetPosA) {
-                    Players.silenceCmd(caPlayer, `ca ar cl`);
-                    Players.silenceCmd(caPlayer, `ca ar a ${pos3d.formatStr()}`);
+                    Players.silenceCmd(caPlayer, `call area cancel`);
+                    Players.silenceCmd(caPlayer, `call area a ${pos3d.formatStr()}`);
                     caPlayer.isSetPosA = false;
                 }
                 else {
-                    Players.silenceCmd(caPlayer, `ca ar b ${pos3d.formatStr()}`);
+                    Players.silenceCmd(caPlayer, `call area b ${pos3d.formatStr()}`);
                     caPlayer.isSetPosA = true;
                 }
                 break;

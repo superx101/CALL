@@ -2,7 +2,7 @@ import Constant from "../temp/Constant";
 import Area3 from "../common/Area3";
 import CAPlayer from "../user/CAPlayer";
 import { Pos3 } from "../common/Pos3";
-import { Warn } from "../temp/Error";
+import { Warn } from "../util/Error";
 import StrFactory from "../util/StrFactory";
 import StructureService from "./StructureService";
 import Enums from "../temp/Enums";

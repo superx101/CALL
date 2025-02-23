@@ -57,19 +57,19 @@ export default class Menu extends Form {
                 new AreaForm(this).sendForm(opts);
                 break;
             case 1:
-                Players.silenceCmd(this.caPlayer, "ca ud");
+                Players.silenceCmd(this.caPlayer, "call undo");
                 break;
             case 2:
-                Players.silenceCmd(this.caPlayer, "ca rd");
+                Players.silenceCmd(this.caPlayer, "call redo");
                 break;
             case 3:
                 new OperationForm(this).sendForm(opts);
                 break;
             case 4:
-                Players.silenceCmd(this.caPlayer, "ca co");
+                Players.silenceCmd(this.caPlayer, "call copy");
                 break;
             case 5:
-                Players.silenceCmd(this.caPlayer, "ca pa");
+                Players.silenceCmd(this.caPlayer, "call paste");
                 break;
             case 6:
                 new SaveForm(this).sendForm(opts);
@@ -84,7 +84,7 @@ export default class Menu extends Form {
                 new BlockEditerForm(this.caPlayer).sendForm(opts);
                 break;
             case 10:
-                Players.silenceCmd(this.caPlayer, "ca rf");
+                Players.silenceCmd(this.caPlayer, "ca refresh");
                 break;
             case 11:
                 new SettingForm(this).sendForm(opts);

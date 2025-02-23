@@ -14,7 +14,7 @@ export default class SettingForm extends Form {
     }
 
     private deleteHotkey(itemType: string, type: ToolType, name: string) {
-        Players.silenceCmd(this.caPlayer, `ca to un ${itemType} ${type} "${name}"`);
+        Players.silenceCmd(this.caPlayer, `call tool unbind ${itemType} ${type} "${name}"`);
     }
 
     private updateHotkey(preArr: any[], itemType: string, type: ToolType, name: string, describe: string, cmds: string) {
@@ -23,7 +23,7 @@ export default class SettingForm extends Form {
     }
 
     private addHotkey(itemType: string, type: ToolType, name: string = "", describe: string, cmds: string) {
-        Players.silenceCmd(this.caPlayer, `ca to bi ${itemType} ${type} "${cmds}" "${describe}" "${name}"`);
+        Players.silenceCmd(this.caPlayer, `call tool bind ${itemType} ${type} "${cmds}" "${describe}" "${name}"`);
     }
 
     private getItem(itemType: string, name: string, describe: string) {
@@ -216,7 +216,7 @@ export default class SettingForm extends Form {
                 }
             });
             if (Object.keys(json).length > 0) {
-                Players.silenceCmd(this.caPlayer, "ca setting set " + JSON.stringify(json));
+                Players.silenceCmd(this.caPlayer, "call setting set " + JSON.stringify(json));
             }
         });
 
@@ -235,10 +235,10 @@ export default class SettingForm extends Form {
                 break;
             case 3:
                 if (this.settings.enable) {
-                    Players.silenceCmd(this.caPlayer, `ca off`);
+                    Players.silenceCmd(this.caPlayer, `call off`);
                 }
                 else {
-                    Players.silenceCmd(this.caPlayer, `ca on`);
+                    Players.silenceCmd(this.caPlayer, `call on`);
                 }
                 break;
             default:

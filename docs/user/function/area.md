@@ -43,7 +43,7 @@ CALL中的选区是一个三维立方体，需要指定同一维度内的两点�
 ## 清除选区
 #### 指令
 
-> /call \<area | ar :enum\> \<clear | cl :enum\>
+> /call \<area | ar :enum\> \<cancel | cc :enum\>
 
 ## 显示选区范围
 CALL使用结构方块的三维线条展示一个选区

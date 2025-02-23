@@ -17,19 +17,19 @@ export default class AreaForm extends Form {
                 new Menu(this.caPlayer).sendForm();
                 break;
             case 1:
-                Players.silenceCmd(this.caPlayer, `ca ar st ${Pos3.fromPos(this.player.pos).calibration().floor().formatStr()}`);
+                Players.silenceCmd(this.caPlayer, `call area a ${Pos3.fromPos(this.player.pos).calibration().floor().formatStr()}`);
                 break;
             case 2:
-                Players.silenceCmd(this.caPlayer, `ca ar en ${Pos3.fromPos(this.player.pos).calibration().floor().formatStr()}`);
+                Players.silenceCmd(this.caPlayer, `call area b ${Pos3.fromPos(this.player.pos).calibration().floor().formatStr()}`);
                 break;
             case 3:
-                Players.silenceCmd(this.caPlayer, "ca ar cl");
+                Players.silenceCmd(this.caPlayer, "call area cancel");
                 break;
             case 4:
-                Players.silenceCmd(this.caPlayer, `ca setting set {"areaTextShow":${this.settings.areaTextShow ? false : true}}`);
+                Players.silenceCmd(this.caPlayer, `call setting set {"areaTextShow":${this.settings.areaTextShow ? false : true}}`);
                 break;
             case 5:
-                Players.silenceCmd(this.caPlayer, `ca ar sh ${this.settings.displayArea ? "off" : "on"}`);
+                Players.silenceCmd(this.caPlayer, `call area show ${this.settings.displayArea ? "off" : "on"}`);
                 break;
             default:
                 break;

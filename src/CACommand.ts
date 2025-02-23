@@ -16,7 +16,7 @@ import ShapeOperation from "./plugin/ShapeOperation";
 import StructureOperation from "./structure/StructureOperation";
 import TextureOperation from "./structure/TextureOperation";
 import { ToolOperation } from "./user/ToolOperation";
-import { Warn } from "./temp/Error";
+import { Warn } from "./util/Error";
 import StrFactory from "./util/StrFactory";
 import Tr from "./util/Translator";
 
@@ -77,8 +77,8 @@ export default class CACommand {
         //area
         cmd.setEnum("area", ["area", "ar"]);
         cmd.setEnum("se", ["set", "se"]);
+        cmd.setEnum("cancel", ["cancel", "cc"])
         cmd.setEnum("start|end|a|b", ["start", "st", "end", "en", "a", "b"]);
-        cmd.setEnum("clear", ["clear", "cl"]);
         cmd.setEnum("show", ["show", "sh"]);
         cmd.setEnum("view", ["view", "vi"]);
         cmd.mandatory("action", ParamType.Enum, "area", "area_man", 1);
@@ -90,18 +90,18 @@ export default class CACommand {
             1
         );
         cmd.mandatory("enum_1", ParamType.Enum, "se", "se_man", 1);
-        cmd.mandatory("enum_1", ParamType.Enum, "clear", "clear_par", 1);
+        cmd.mandatory("enum_1", ParamType.Enum, "cancel", "cancel_man", 1);
         cmd.mandatory("enum_1", ParamType.Enum, "show", "show_man", 1);
         cmd.mandatory("enum_2", ParamType.Enum, "view", "view_man", 1);
         cmd.optional("enum_2", ParamType.Enum, "on|off", "on-off_opt", 1);
         cmd.overload(["area_man", "start-end_man", "intPos_opt"]);
         cmd.overload(["area_man", "start-end_man", "view_man"]);
         cmd.overload(["area_man", "se_man", "intPos_opt"]);
-        cmd.overload(["area_man", "clear_par"]);
+        cmd.overload(["area_man", "cancel_man"]);
         cmd.overload(["area_man", "show_man", "on-off_opt"]);
 
         //fill
-        cmd.setEnum("fill", ["fill", "fi"]);
+        cmd.setEnum("fill_enum", ["fillo", "fi"]);
         cmd.setEnum("fillMode", [
             "hollow",
             "outline",
@@ -110,7 +110,7 @@ export default class CACommand {
             "ou",
             "nu",
         ]);
-        cmd.mandatory("action", ParamType.Enum, "fill", "fill_man", 1);
+        cmd.mandatory("action", ParamType.Enum, "fill_enum", "fill_man", 1);
         cmd.optional("FillMode", ParamType.Enum, "fillMode", "fillMode_opt", 1);
         cmd.overload(["fill_man", "block_man", "states_opt", "fillMode_opt"]);
 
@@ -388,26 +388,7 @@ export default class CACommand {
                 res: any
             ) => {
                 try {
-                    switch (ori.type) {
-                        case OriginType.Player:
-                            CACommand.command_playerCallback(ori, output, res);
-                            break;
-                        case OriginType.DedicatedServer:
-                            CACommand.command_consoleCallback(output, res);
-                        case OriginType.Virtual:
-                            //use command: execute
-                            if (ori.player == undefined) break;
-                            CACommand.command_playerCallback(ori, output, res);
-                            break;
-                        default:
-                            logger.error(
-                                Tr._c(
-                                    "console.app.command.unknowType",
-                                    ori.type
-                                )
-                            );
-                            break;
-                    }
+                    CACommand.command_callback(cmd, ori, output, res);
                 } catch (e) {
                     const text = e.message;
                     if (e instanceof Warn)
@@ -426,6 +407,39 @@ export default class CACommand {
             }
         );
         cmd.setup();
+    }
+
+    private static command_callback(
+        cmd: Command,
+        ori: CommandOrigin,
+        output: CommandOutput,
+        res: any
+    ) {
+        switch (ori.type) {
+            case OriginType.Player:
+                CACommand.command_playerCallback(ori, output, res);
+                return;
+            case OriginType.DedicatedServer:
+                try {
+                    CACommand.command_consoleCallback(output, res);
+                } catch (error) {
+                   logger.error(error);
+                }
+                return;
+            case OriginType.Virtual:
+                //use command: execute
+                if (ori.player == undefined) break;
+                CACommand.command_playerCallback(ori, output, res);
+                break;
+            default:
+                logger.error(
+                    Tr._c(
+                        "console.app.command.unknowType",
+                        ori.type
+                    )
+                );
+                break;
+        }
     }
 
     private static command_playerCallback(
@@ -452,7 +466,7 @@ export default class CACommand {
         switch (res.action) {
             case "on":
                 EnableOperation.on(output, caPlayer);
-                break;
+                return;
             case "off":
             case "of":
                 EnableOperation.off(output, caPlayer);
@@ -473,106 +487,106 @@ export default class CACommand {
             case "me":
             case "menu":
                 MenuOperation.start(output, caPlayer, res);
-                break;
+                return
             case "area":
             case "ar":
                 AreaOperation.start(output, caPlayer, res);
-                break;
+                return;
             case "refresh":
             case "rf":
                 ChunkOperation.start(output, caPlayer);
-                break;
+                return;
             case "fill":
             case "fi":
                 FillOperation.fill(output, caPlayer, res);
-                break;
+                return;
             case "clear":
             case "cl":
                 FillOperation.clear(output, caPlayer);
-                break;
+                return;
             case "replace":
             case "re":
                 FillOperation.replace(output, caPlayer, res);
-                break;
+                return;
             case "move":
             case "mo":
                 BasicTranslOperation.move(output, caPlayer, res);
-                break;
+                return;
             case "stack":
             case "st":
                 BasicTranslOperation.stack(output, caPlayer, res);
-                break;
+                return;
             case "mirror":
             case "mi":
                 BasicTranslOperation.mirror(output, caPlayer, res);
-                break;
+                return;
             case "rote":
             case "ro":
                 BasicTranslOperation.rote(output, caPlayer, res);
-                break;
+                return;
             case "shape":
             case "sh":
                 ShapeOperation.start(output, caPlayer, res);
-                break;
+                return;
             case "texture":
             case "te":
                 TextureOperation.start(output, caPlayer, res);
-                break;
+                return;
             case "block":
             case "bl":
                 BlockEditerOperation.start(output, caPlayer, res);
-                break;
+                return;
             case "copy":
             case "co":
                 StructureOperation.copy(output, caPlayer);
-                break;
+                return;
             case "paste":
             case "pa":
                 StructureOperation.paste(output, caPlayer, res);
-                break;
+                return;
             case "save":
             case "sa":
                 StructureOperation.save(output, caPlayer, res);
-                break;
+                return;
             case "list":
             case "li":
                 StructureOperation.list(output, caPlayer);
-                break;
+                return;
             case "load":
             case "lo":
                 StructureOperation.load(output, caPlayer, res);
-                break;
+                return;
             case "delete":
             case "de":
                 StructureOperation.delete(output, caPlayer, res);
-                break;
+                return;
             case "public":
             case "pu":
                 StructureOperation.public(output, caPlayer, res);
-                break;
+                return;
             case "private":
             case "pr":
                 StructureOperation.private(output, caPlayer, res);
-                break;
+                return;
             case "undo":
             case "ud":
                 StructureOperation.undo(output, caPlayer);
-                break;
+                return;
             case "redo":
             case "rd":
                 StructureOperation.redo(output, caPlayer);
-                break;
+                return;
             case "tool":
             case "to":
                 ToolOperation.start(output, caPlayer, res);
             case "setting":
                 SettingsOperation.start(output, caPlayer, res);
-                break;
+                return;
             case "help":
             case "he":
             case "?":
                 HelpOperation.start(output, caPlayer);
-                break;
+                return;
             case "ban":
             case "add":
             case "reload":
@@ -590,32 +604,38 @@ export default class CACommand {
                     )
                 );
         }
+
+        // [To Adapt Bug]
+        if(Object.keys(res).includes("FillMode")) {
+            FillOperation.fill(output, caPlayer, res);
+        }
     }
 
     private static command_consoleCallback(output: CommandOutput, res: any) {
+
         switch (res.action) {
             case "ban":
                 PermissionOperation.ban(res.playerName, output);
-                break;
+                return;
             case "add":
                 PermissionOperation.add(res.playerName, output);
-                break;
+                return;
             case "list":
             case "li":
                 PermissionOperation.list(output);
-                break;
+                return;
             case "shape":
             case "sh":
                 ShapeOperation.consoleStart(output);
-                break;
+                return;
             case "import":
             case "im":
                 ImportOperation.start(res, output);
-                break;
+                return;
             case "export":
             case "ex":
                 ExportOperation.start(res, output);
-                break;
+                return;
             case "reload":
                 case "r":
                     throw new Error("this command is deprecated")

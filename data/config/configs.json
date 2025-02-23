@@ -279,7 +279,7 @@
                 "minecraft:clock": {
                     "": {
                         "cmds": [
-                            "ca"
+                            "call"
                         ],
                         "describe": "打开菜单工具\nOpen menu tool"
                     }
@@ -287,7 +287,7 @@
                 "minecraft:wooden_axe": {
                     "": {
                         "cmds": [
-                            "ca ar se ${block.pos.x} ${block.pos.y} ${block.pos.z}"
+                            "call area set ${block.pos.x} ${block.pos.y} ${block.pos.z}"
                         ],
                         "describe": "选区工具\nSelection tool"
                     }
@@ -295,7 +295,7 @@
                 "minecraft:shears": {
                     "": {
                         "cmds": [
-                            "ca ar cl"
+                            "call area cancel"
                         ],
                         "describe": "取消选区工具\nCancel selection tool"
                     }
@@ -303,7 +303,7 @@
                 "minecraft:stick": {
                     "": {
                         "cmds": [
-                            "ca ar b ${block.pos.x} ${block.pos.y} ${block.pos.z}"
+                            "call area b ${block.pos.x} ${block.pos.y} ${block.pos.z}"
                         ],
                         "describe": "B点选区工具\nB point selection tool"
                     }
@@ -311,7 +311,7 @@
                 "minecraft:arrow": {
                     "": {
                         "cmds": [
-                            "ca ar a ${block.pos.x} ${block.pos.y} ${block.pos.z}"
+                            "call area a ${block.pos.x} ${block.pos.y} ${block.pos.z}"
                         ],
                         "describe": "A点选区工具\nA point selection tool"
                     }
@@ -319,7 +319,7 @@
                 "minecraft:trident": {
                     "": {
                         "cmds": [
-                            "ca te a ${block.pos.x} ${block.pos.y} ${block.pos.z}"
+                            "call texture a ${block.pos.x} ${block.pos.y} ${block.pos.z}"
                         ],
                         "describe": "材质a选择工具\nTexture a selection tool"
                     }
@@ -327,7 +327,7 @@
                 "minecraft:blaze_rod": {
                     "": {
                         "cmds": [
-                            "ca co"
+                            "call copy"
                         ],
                         "describe": "复制快捷键工具\nCopy tool"
                     }
@@ -335,7 +335,7 @@
                 "minecraft:bone": {
                     "": {
                         "cmds": [
-                            "ca pa ${block.pos.x} ${block.pos.y} ${block.pos.z}"
+                            "call paste ${block.pos.x} ${block.pos.y} ${block.pos.z}"
                         ],
                         "describe": "粘贴到点击的位置工具\nPaste to click position tool"
                     }
@@ -351,7 +351,7 @@
                 "minecraft:emerald": {
                     "": {
                         "cmds": [
-                            "ca bl ${block.pos.x} ${block.pos.y} ${block.pos.z} me"
+                            "call block ${block.pos.x} ${block.pos.y} ${block.pos.z} me"
                         ],
                         "describe": "编辑点击的方块\nEdit block tool"
                     }
@@ -361,7 +361,7 @@
                 "minecraft:trident": {
                     "": {
                         "cmds": [
-                            "ca te b ${block.pos.x} ${block.pos.y} ${block.pos.z}"
+                            "call texture b ${block.pos.x} ${block.pos.y} ${block.pos.z}"
                         ],
                         "describe": "材质b选择工具\nTexture b selection tool"
                     }

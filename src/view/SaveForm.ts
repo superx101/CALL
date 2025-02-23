@@ -29,7 +29,7 @@ export default class SaveForm extends Form {
                 new Menu(this.caPlayer).sendForm();
                 return;
             }
-            Players.silenceCmd(this.caPlayer, `ca sa "${data[0]}"`);
+            Players.silenceCmd(this.caPlayer, `call save "${data[0]}"`);
         });
     }
 }

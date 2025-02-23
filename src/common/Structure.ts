@@ -92,8 +92,9 @@ export class Structure {
         start.x = this.area.start.x + ix * Constant.STRUCTURE.MAX_LENGTH;
         end.x = this.area.end.x;
         end.z = this.area.end.z;
-        areas[this.xSize - 1][this.zSize - 1] = areas[ix][iz] = new Area3(new Pos3(start.x, this.area.start.y, start.z, this.area.start.dimid), new Pos3(end.x, this.area.end.y, end.z, this.area.start.dimid));
-
+        areas[ix][iz] = new Area3(new Pos3(start.x, this.area.start.y, start.z, this.area.start.dimid), new Pos3(end.x, this.area.end.y, end.z, this.area.start.dimid));
+        areas[this.xSize - 1][this.zSize - 1] = areas[ix][iz]
+        
         return areas;
     }
 };

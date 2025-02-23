@@ -73,8 +73,8 @@ export class PluginTool {
     } {
         const caPlayer = Players.fetchCAPlayer(player.xuid)
 
-        const ia = caPlayer.settings.area.start;
-        const ib = caPlayer.settings.area.end;
+        const ia = caPlayer.settings.barReplace;
+        const ib = caPlayer.settings.barReplaced;
 
         const comp = player.getInventory();
         const itemA = comp.getItem(ia);
