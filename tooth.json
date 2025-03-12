@@ -7,7 +7,7 @@
         "name": "CALL",
         "description": "A simple building tool",
         "author": "superx101",
-        "avatar_url": "https://github.com/superx101/CALL/blob/main/docs/image/CALL_light_ico.png",
+        "avatar_url": "https://github.com/superx101/CALL/blob/main/docs/image/CALL_dark.png",
         "tags": ["building", "lse", "plugin"]
     },
     "asset_url": "https://github.com/superx101/CALL/releases/download/v1.5.0/CALL-1.5.0.zip",
