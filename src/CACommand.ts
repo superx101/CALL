@@ -101,7 +101,7 @@ export default class CACommand {
         cmd.overload(["area_man", "show_man", "on-off_opt"]);
 
         //fill
-        cmd.setEnum("fill_enum", ["fillo", "fi"]);
+        cmd.setEnum("fill_enum", ["fill", "fi"]);
         cmd.setEnum("fillMode", [
             "hollow",
             "outline",
