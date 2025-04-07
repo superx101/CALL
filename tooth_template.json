@@ -1,0 +1,40 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema#",
+    "format_version": 3,
+    "format_uuid": "289f771f-2c9a-4d73-9f3f-8492495a924d",
+    "tooth": "github.com/superx101/CALL",
+    "version": "{{VERSION}}",
+    "info": {
+        "name": "CALL",
+        "description": "A simple building tool",
+        "author": "superx101",
+        "avatar_url": "https://github.com/superx101/CALL/blob/main/docs/image/CALL_dark.png",
+        "tags": [
+            "building",
+            "lse",
+            "plugin"
+        ]
+    },
+    "variants": [
+        {
+            "dependencies": {
+                "github.com/LiteLDev/LeviLamina": ">=1.1.1",
+                "github.com/LiteLDev/LegacyScriptEngine#nodejs": ">=0.10.3"
+            },
+            "assets": [
+                {
+                    "urls": [
+                        "https://github.com/superx101/CALL/releases/download/v{{VERSION}}/CALL-{{VERSION}}.zip"
+                    ],
+                    "placements": [
+                        {
+                            "type": "dir",
+                            "src": "call/",
+                            "dest": "plugins/call"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

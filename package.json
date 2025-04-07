@@ -19,6 +19,7 @@
   "bugs": {
     "url": "https://github.com/superx101/CALL/issues"
   },
+  "types": "./dist/types/src/index.d.ts",
   "homepage": "https://github.com/superx101/CALL#readme",
   "dependencies": {
     "acorn": "^8.8.1",

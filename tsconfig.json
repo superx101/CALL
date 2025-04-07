@@ -18,6 +18,9 @@
       "module": "CommonJS"
     }
   },
+  "files": [
+    "./dist/types/src/index.d.ts"
+  ],
   "include": [
     "./src/**/*.ts",
     "test/**/*.ts",

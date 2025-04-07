@@ -110,12 +110,31 @@ function watchFunction() {
     gulp.watch(tsConfigs.include, gulp.series(compileTask, copyToDebug));
 }
 
+function generateToothFile(cb) {
+    const toothTemplate = JSON.parse(
+        fs.readFileSync("tooth_template.json", { encoding: "utf8" })
+    );
+    
+    const version = packageJson.version;
+    let toothJsonStr = JSON.stringify(toothTemplate, null, 2);
+    
+    toothJsonStr = toothJsonStr.replace(/{{VERSION}}/g, version);
+    
+    fs.writeFileSync(
+        "tooth.json",
+        toothJsonStr
+    );
+
+    cb();
+}
+
 const initTask = gulp.series([
     makeEmptyFile,
     makeManifest,
     makeDataFile,
     makeConfig,
-    copyToDebug
+    copyToDebug,
+    generateToothFile
 ]);
 
 const buildInitTask = gulp.series([
