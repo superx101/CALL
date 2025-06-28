@@ -1,7 +1,7 @@
 {
   "name": "call",
-  "version": "1.5.1",
-  "description": "Construct Assistant for LiteLoaderBDS",
+  "version": "1.6.0",
+  "description": "Construct Assistant for LeviLamina",
   "main": "index.js",
   "directories": {
     "doc": "docs",

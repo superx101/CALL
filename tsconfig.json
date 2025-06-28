@@ -18,13 +18,10 @@
       "module": "CommonJS"
     }
   },
-  "files": [
-    "./dist/types/src/index.d.ts"
-  ],
   "include": [
-    "./src/**/*.ts",
-    "test/**/*.ts",
+    "core/src/**/*.ts",
+    "core/test/**/*.ts",
     "data/plugins/*.ts",
-    "index.ts"
+    "core/index.ts"
   ]
 }

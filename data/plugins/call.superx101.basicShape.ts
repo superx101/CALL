@@ -1,12 +1,12 @@
-import { Box3, Matrix4, Vector3, Vector4 } from "../../src/lib/three-math";
+import { Box3, Matrix4, Vector3, Vector4 } from "../../core/src/lib/three-math";
 import {
     IPlugin,
     PluginInfo,
     PluginTool,
     ShapePlugin,
-} from "../../src/plugin/Plugin";
-import { Pos3, Vec3Tuple } from "../../src/common/Pos3";
-import StructureNBT from "../../src/io/StructureNBT";
+} from "../../core/src/plugin/Plugin";
+import { Pos3, Vec3Tuple } from "../../core/src/common/Pos3";
+import StructureNBT from "../../core/src/io/StructureNBT";
 
 i18n.load(
     "plugins/CALL/plugins/shape/call.superx101.basicShape/lang.json",
