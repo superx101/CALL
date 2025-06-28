@@ -1,5 +1,9 @@
 /node_modules
-/package-lock.json
+
+cli/.idea
+cli/CALL-CLI/obj
+cli/CALL-CLI/bin
+
 /dist/**
 todo.md
 start.bat
