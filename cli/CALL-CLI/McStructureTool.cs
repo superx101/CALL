@@ -1,5 +1,6 @@
 using CALL_CLI.math;
 using CALL_CLI.util;
+using Console = CALL_CLI.util.Console;
 
 namespace CALL_CLI;
 
@@ -7,11 +8,12 @@ public class McStructureTool
 {
     public void Import(ImportOptions options)
     {
+        Console.Log("Start importing...");
         SetChunkSize(options);
 
         if (!Path.Exists(options.SourcePath))
         {
-            Console.WriteLine($"Source path '{options.SourcePath}' does not exist.");
+            Console.Log($"Source path '{options.SourcePath}' does not exist.");
             return;
         }
 
@@ -23,16 +25,17 @@ public class McStructureTool
 
         if (!Directory.Exists(options.OutputDir))
         {
-            Console.Write("Output directory does not exist. Creating it...");
+            Console.Log("Output directory does not exist. Creating it...");
             Directory.CreateDirectory(options.OutputDir);
         }
 
         splitter.SaveAll(options.OutputDir, options.StructureName);
-        Console.WriteLine($"Import success! saved: {options.OutputDir}");
+        Console.Log($"Import success! saved: {options.OutputDir}");
     }
 
     public void Export(ExportOptions options)
     {
+        Console.Log("Start exporting...");
         SetChunkSize(options);
 
         var sizeParts = options.Size.Split(',');
@@ -43,7 +46,7 @@ public class McStructureTool
 
         if (!Directory.Exists(options.SourceDir))
         {
-            Console.WriteLine($"Source directory '{options.SourceDir}' does not exist.");
+            Console.Log($"Source directory '{options.SourceDir}' does not exist.");
             return;
         }
 
@@ -57,12 +60,12 @@ public class McStructureTool
 
         if (!Directory.Exists(Path.GetDirectoryName(options.OutputFile)))
         {
-            Console.Write("Output directory does not exist. Creating it...");
+            Console.Log("Output directory does not exist. Creating it...");
             Directory.CreateDirectory(Path.GetDirectoryName(options.OutputFile)!);
         }
 
         merger.Save(options.OutputFile);
-        Console.WriteLine($"Export success! saved: {options.OutputFile}");
+        Console.Log($"Export success! saved: {options.OutputFile}");
     }
 
     private void SetChunkSize(BaseOptions options)

@@ -25,7 +25,7 @@ public class McStructureSplitter
         var tasks = new List<Task<Tuple<Vec2, McStructure>>>();
         var currentStep = 0;
 
-        Console.WriteLine($"Splitting structure into {chuckSize.X}x{chuckSize.Y} partitions, total size: {size.X}x{size.Z}");
+        Console.Log($"Splitting structure into {chuckSize.X}x{chuckSize.Y} partitions, total size: {size.X}x{size.Y}x{size.Z}");
         for (var ix = 0; ix < chuckSize.X; ix++)
         {
             for (var iz = 0; iz < chuckSize.Y; iz++)
@@ -45,14 +45,14 @@ public class McStructureSplitter
                     var result = SplitChunk(bound, chunkPos);
                     
                     var step = Interlocked.Increment(ref currentStep);
-                    Console.WriteLine($"Processing partition {step}/{chuckCount} ({(step * 100.0 / chuckCount)}%) at position {chunkPos}");
+                    Console.Log($"Processing partition {step} of {chuckCount} at position {chunkPos}");
 
                     return result;
                 }));
             }
         }
         Task.WaitAll(tasks.ToList());
-        Console.WriteLine("All partitions processed");
+        Console.Log("All partitions processed");
         
         _dists = tasks.Select(t => t.Result).ToArray();
         return _dists;

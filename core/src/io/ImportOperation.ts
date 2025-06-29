@@ -6,9 +6,19 @@ import { Pos3 } from "../common/Pos3";
 import StructureService from "../structure/StructureService";
 import * as ProgressBar from "cli-progress";
 import Tr from "../util/Translator";
+import NBTService from "../structure/NBTService";
+import path from "path";
+import Config from "../common/Config";
+import { CLI_EXE_PATH } from "./Utils";
+import { spawn } from "child_process";
+import Constant from "../temp/Constant";
+import { FileMode } from "../temp/Common";
 
 export default class ImportOperation {
-    public static async start(
+    /**
+     * @deprecated
+     */
+    public static async oldStart(
         res: {
             file: string;
             playerName: string;
@@ -41,7 +51,6 @@ export default class ImportOperation {
             res.Name
         );
 
-        //初始化进度条
         const bar = new ProgressBar.Bar(
             {
                 format: "{title}: {bar} | {percentage}% | {value}/{total} | {duration_formatted}",
@@ -52,25 +61,22 @@ export default class ImportOperation {
             title: Tr._c("console.ImportOperation.start.importing"),
         });
 
-        //去除实体
         if (res.includeEntity == null || !res.includeEntity) {
             let structure = comp.getData("structure") as NbtCompound;
             structure.setTag("entities", new NbtList());
             comp.setTag("structure", structure);
         }
 
-        //拆解结构
         const comps = await ImportService.separate(
             st,
             comp,
             (current: number) => {
-                bar.update(current); //更新进度
+                bar.update(current);
             }
         );
 
         bar.stop();
 
-        //保存
         if (ImportService.save(st, xuid, sid, comps)) {
             output.success(
                 StrFactory.cmdSuccess(
@@ -99,5 +105,105 @@ export default class ImportOperation {
         } else {
             throw new Error(Tr._c("console.ImportOperation.start.fail"));
         }
+    }
+
+    public static async start(
+        options: {
+            file: string;
+            playerName: string;
+            includeEntity?: boolean;
+            Name?: string;
+        },
+        output: CommandOutput
+    ) {
+        let xuid: string;
+        if (options.playerName.startsWith("xuid-"))
+            xuid = options.playerName.slice(5);
+        else xuid = ImportService.findXuidByName(options.playerName);
+
+        const sid = StructureService.generateSid();
+        const sourcePath = path.join(
+            process.cwd(),
+            Config.IMPORT_PATH,
+            options.file
+        );
+
+        const file = new File(sourcePath, FileMode.ReadMode, true);
+        const bnbt = file.readAllSync();
+        //@ts-ignore
+        const nbt = NBT.parseBinaryNBT(bnbt);
+
+        const size = (nbt.getData("size") as NbtList).toArray();
+
+        const params = [
+            "import",
+            `${sourcePath}`,
+            sid,
+            `${NBTService.PATH}`,
+            "--entities",
+            options.includeEntity ? "true" : "false",
+            "--chunk-size",
+            `${Constant.STRUCTURE.MAX_LENGTH},${Constant.STRUCTURE.MAX_HIGHT}`,
+        ];
+
+        const child = spawn(CLI_EXE_PATH, params);
+        child.stdout.on("data", (data) => {
+            const output: string = data.toString();
+
+            output.split("--LOG--").forEach((v) => {
+                const tirm = v.trim();
+                if (tirm === "") return;
+
+                logger.info(tirm);
+
+                if (tirm.startsWith("Import success"))
+                    ImportOperation.onSuccess(
+                        options,
+                        size,
+                        sid,
+                        xuid,
+                        options.Name
+                    );
+            });
+        });
+        child.stderr.on("data", (data) => {
+            logger.error(data.toString());
+        });
+    }
+
+    private static onSuccess(
+        options: {
+            file: string;
+            playerName: string;
+            includeEntity?: boolean;
+            Name?: string;
+        },
+        size: number[],
+        sid: string,
+        xuid: string,
+        name?: string
+    ) {
+        const structure = new Structure(
+            new Area3(
+                new Pos3(0, 0, 0, 0),
+                new Pos3(size[0] - 1, size[1] - 1, size[2] - 1, 0)
+            ),
+            name
+        );
+
+        // save player's reference
+        const data = StructureService.getData(xuid);
+        data.saveList[sid] = structure;
+        StructureService.setData(xuid, data);
+
+        logger.info(
+            Tr._c(
+                "console.ImportOperation.start.success",
+                options.file,
+                options.playerName,
+                sid,
+                name
+            )
+        );
     }
 }

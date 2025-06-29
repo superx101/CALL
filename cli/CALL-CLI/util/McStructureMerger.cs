@@ -44,27 +44,27 @@ public class McStructureMerger
 
     public McStructure Merge()
     {
-        Console.WriteLine("Starting pre-build...");
+        Console.Log("Starting pre-build...");
         foreach (var subStructure in _subStructures)
         {
             PreBuild(subStructure.Item2);
         }
-        Console.WriteLine("Pre-build completed, starting parallel build...");
+        Console.Log("Pre-build completed, starting parallel build...");
         
-        Console.WriteLine("Building indices and entities in parallel...");
+        Console.Log("Building indices and entities in parallel...");
         var currentStep = 0;
         var tasks = _subStructures.Select(meta =>
             Task.Run(() =>
             {
                 ParallelBuildStructure(meta.Item1, meta.Item2);
                 int step = Interlocked.Increment(ref currentStep);
-                Console.WriteLine($"Progress: {step}/{_subStructures.Count} ({(step * 100.0 / _subStructures.Count):F2}%)");
+                Console.Log($"Progress: {step} of {_subStructures.Count}");
             }));
         Task.WaitAll(tasks.ToList());
         
-        Console.WriteLine("Parallel build completed, merging all builds...");
+        Console.Log("Parallel build completed, merging all builds...");
         MergeAllBuild();
-        Console.WriteLine("All builds merged successfully.");
+        Console.Log("All builds merged successfully.");
 
         return _dist;
     }
