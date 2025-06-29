@@ -1,20 +1,14 @@
+using System.Collections.Concurrent;
 using SharpNBT;
 
 namespace CALL_CLI.util;
 
-public class TagUtil
+public class TagUtil : Singleton<TagUtil>
 {
-    private static Dictionary<int, IntTag> _intTagBucket = [];
-    
-    public static IntTag IntTagBucket(int n)
+    private readonly ConcurrentDictionary<int, IntTag> _intTagBucket = [];
+
+    public IntTag IntTagBucket(int n)
     {
-        if(_intTagBucket.TryGetValue(n, out var tag))
-        {
-            return tag;
-        }
-        
-        tag = new IntTag(null, n);
-        _intTagBucket[n] = tag;
-        return tag;
+        return _intTagBucket.GetOrAdd(n, key => new IntTag(null, key));
     }
 }

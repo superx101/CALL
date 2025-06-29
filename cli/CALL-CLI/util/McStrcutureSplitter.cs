@@ -20,10 +20,7 @@ class McStrcutureSplitter
     public Tuple<Vec2, McStructure>[] Split()
     {
         var size = _source.Size;
-        var chuckSize = new Vec2(
-            size.X / 64 + size.X % 64 > 0 ? 1 : 0,
-            size.Z / 64 + size.Z % 64 > 0 ? 1 : 0
-        );
+        var chuckSize = TransfromUtil.Instance.GetChunkSizeByGlobalSize(size.X, size.Z);
 
         var tasks = new List<Task<Tuple<Vec2, McStructure>>>();
 
@@ -69,9 +66,8 @@ class McStrcutureSplitter
                 {
                     v.Set(x, y, z);
 
-                    var localSize = tag.Size;
-                    var local = TransfromUtil.PosToIndex(v, localSize);
-                    var global = TransfromUtil.LocalPosToGlobalIndex(chunkPos, v);
+                    var local = TransfromUtil.Instance.PosToIndex(v, tag.Size);
+                    var global = TransfromUtil.Instance.LocalPosToGlobalIndex(chunkPos, v, _source.Size);
                     ProcessBlock(global, local, tag);
                 }
             }

@@ -7,42 +7,48 @@ namespace CALL_CLI.util;
 public class McStructureMerger
 {
     private readonly List<Tuple<Vec2, McStructure>> _subStructures = [];
+    private readonly Dictionary<McStructure, Dictionary<int, int>> _lv2GvDict = new();
     private readonly McStructure _dist;
     private readonly bool _includeEntity;
 
-    private readonly ConcurrentDictionary<string, int> _blockPaletteDict;
-    private readonly ConcurrentBag<CompoundTag> _blockPaletteList;
-    private readonly ConcurrentDictionary<string, CompoundTag> _blockPositionDataDict;
-    private readonly ConcurrentBag<CompoundTag> _entityList;
+    private readonly Dictionary<string, int> _blockPaletteDict = new();
+    private readonly List<CompoundTag> _blockPaletteList = [];
+    private readonly ConcurrentDictionary<string, CompoundTag> _blockPositionDataDict = new();
+    private readonly ConcurrentBag<CompoundTag> _entityList = [];
 
-    public McStructureMerger(string path, string name, Vec3 size, bool includeEntity)
+    public McStructureMerger(string path, string name, Vec2 chunkSize, bool includeEntity)
     {
-        _includeEntity = includeEntity;
-
-        _dist = new McStructure(size);
-        _blockPaletteDict = new ConcurrentDictionary<string, int>();
-        _blockPaletteList = [];
-        _blockPositionDataDict = new ConcurrentDictionary<string, CompoundTag>();
-        _entityList = [];
-
-        var chuckSize = new Vec2(
-            size.X / 64 + size.X % 64 > 0 ? 1 : 0,
-            size.Z / 64 + size.Z % 64 > 0 ? 1 : 0
-        );
-        for (var x = 0; x < chuckSize.X; x++)
+        McStructure? lastStructure = null;
+        for (var x = 0; x < chunkSize.X; x++)
         {
-            for (var z = 0; z < chuckSize.Y; z++)
+            for (var z = 0; z < chunkSize.Y; z++)
             {
                 var filePath = $"{path}/{name}_{x}_{z}.mcstructure";
                 var tag = NbtFile.Read<CompoundTag>(filePath, FormatOptions.BedrockFile);
                 var subStructure = new McStructure(tag);
+                lastStructure = subStructure;
+
                 _subStructures.Add(new Tuple<Vec2, McStructure>(new Vec2(x, z), subStructure));
             }
         }
+
+        var size = new Vec3(
+            (chunkSize.X - 1) * TransfromUtil.Instance.SingleChunkSize.X + lastStructure!.Size.X,
+            lastStructure!.Size.Y,
+            (chunkSize.Y - 1) * TransfromUtil.Instance.SingleChunkSize.Y + lastStructure.Size.Z
+        );
+        _dist = new McStructure(size);
+
+        _includeEntity = includeEntity;
     }
 
     public McStructure Merge()
     {
+        foreach (var subStructure in _subStructures)
+        {
+            PreBuild(subStructure.Item2);
+        }
+        
         var tasks = _subStructures.Select(meta =>
             Task.Run(() => ParallelBuildStructure(meta.Item1, meta.Item2)));
         Task.WaitAll(tasks.ToList());
@@ -52,31 +58,41 @@ public class McStructureMerger
         return _dist;
     }
 
+    private void PreBuild(McStructure child)
+    {
+        // merge entity
+        if (_includeEntity)
+        {
+            foreach (var entity in child.Entities)
+            {
+                _dist.Entities.Add((CompoundTag)entity);
+            }
+        }
+        
+        // merge block palette
+        var localVarToGlobalVar = new Dictionary<int, int>();
+        for (var i = 0; i < child.BlockPalette.Count; i++)
+        {
+            var blockPalette = (CompoundTag)child.BlockPalette[i];
+            var key = blockPalette.ToJson();
+            if (!_blockPaletteDict.TryGetValue(key, out var globalPaletteIndex))
+            {
+                globalPaletteIndex = _blockPaletteList.Count;
+                _blockPaletteList.Add(blockPalette);
+                _blockPaletteDict[key] = globalPaletteIndex;
+            }
+            localVarToGlobalVar[i] = globalPaletteIndex;
+        }
+        _lv2GvDict[child] = localVarToGlobalVar;
+    }
+    
     private void ParallelBuildStructure(Vec2 chunkPos, McStructure child)
     {
-        // local value id to global value id
-        var localVarToGlobalVar = new Dictionary<int, int>();
-
-        for (var localValue = 0; localValue < child.BlockPalette.Count; localValue++)
-        {
-            var blockPalette = (CompoundTag)child.BlockPalette[localValue];
-            var blockType = ((StringTag)blockPalette["name"]).Value;
-
-            if (!_blockPaletteDict.TryGetValue(blockType, out var globalValue))
-            {
-                _blockPaletteDict[blockType] = _blockPaletteDict.Count;
-                globalValue = _blockPaletteDict.Count;
-
-                _blockPaletteList.Add(blockPalette);
-            }
-
-            localVarToGlobalVar.Add(localValue, globalValue);
-        }
-
-        BuildIndices(chunkPos, child, localVarToGlobalVar);
+        BuildIndices(chunkPos, child);
+        BuildEntity(child);
     }
 
-    private void BuildIndices(Vec2 chunkPos, McStructure child, Dictionary<int, int> lv2Gv)
+    private void BuildIndices(Vec2 chunkPos, McStructure child)
     {
         var pos = new Vec3(0, 0, 0);
         var localSize = child.Size;
@@ -87,41 +103,45 @@ public class McStructureMerger
                 for (var z = 0; z < localSize.Z; z++)
                 {
                     pos.Set(x, y, z);
-                    var local = TransfromUtil.PosToIndex(pos, localSize);
-                    var global = TransfromUtil.LocalPosToGlobalIndex(chunkPos, pos);
-                    ProcessBlock(local, global, child, lv2Gv);
+
+                    var local = TransfromUtil.Instance.PosToIndex(pos, localSize);
+                    var global = TransfromUtil.Instance.LocalPosToGlobalIndex(chunkPos, pos, _dist.Size);
+                    ProcessBlock(local, global, child);
                 }
             }
         }
     }
 
-    private void ProcessBlock(int local, int global, McStructure tag, Dictionary<int, int> lv2Gv)
+    private void ProcessBlock(int local, int global, McStructure child)
     {
         // build index
-        var localPrimaryValue = ((IntTag)tag.PrimaryIndices[local]).Value;
-        var localSecondaryValue = ((IntTag)tag.SecondaryIndices[local]).Value;
+        var localPrimaryValue = ((IntTag)child.PrimaryIndices[local]).Value;
+        var localSecondaryValue = ((IntTag)child.SecondaryIndices[local]).Value;
 
-        _dist.PrimaryIndices[global] = TagUtil.IntTagBucket(lv2Gv[localPrimaryValue]);
+        var lv2Gv = _lv2GvDict[child];
+        
+        _dist.PrimaryIndices[global] = TagUtil.Instance.IntTagBucket(lv2Gv[localPrimaryValue]);
         if (localSecondaryValue > 0)
         {
-            _dist.SecondaryIndices[global] = TagUtil.IntTagBucket(lv2Gv[localSecondaryValue]);
+            _dist.SecondaryIndices[global] = TagUtil.Instance.IntTagBucket(lv2Gv[localSecondaryValue]);
         }
 
         // build block_position_data
-        if (tag.BlockPositionData.ContainsKey(local.ToString()))
-        {
-            var data = tag.BlockPositionData[local.ToString()];
-            _blockPositionDataDict.TryAdd(global.ToString(), (CompoundTag)data);
-        }
+        if (!child.BlockPositionData.ContainsKey(local.ToString())) return;
+        
+        var data = child.BlockPositionData[local.ToString()];
+        _blockPositionDataDict.TryAdd(global.ToString(), (CompoundTag)data);
+    }
 
-        // build entity
+    private void BuildEntity(McStructure child)
+    {
         if (!_includeEntity) return;
-        foreach (var entity in tag.Entities)
+        foreach (var entity in child.Entities)
         {
             _entityList.Add((CompoundTag)entity);
         }
     }
-
+    
     private void MergeAllBuild()
     {
         foreach (var palette in _blockPaletteList)
@@ -133,7 +153,7 @@ public class McStructureMerger
         {
             _dist.BlockPositionData[pair.Key] = pair.Value;
         }
-
+        
         foreach (var entity in _entityList)
         {
             _dist.Entities.Add(entity);

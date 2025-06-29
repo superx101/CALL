@@ -4,8 +4,11 @@ namespace CALL_CLI;
 
 public abstract class BaseOptions
 {
-    [Option('e', "include-entities", Default = true, HelpText = "Exclude entities from processing")]
-    public bool ExcludeEntities { get; set; }
+    [Option('e', "entities", Default = true, HelpText = "Exclude entities from processing")]
+    public bool IncludeEntities { get; set; }
+    
+    [Option('c', "chunk-size", Default = "64,64", HelpText = "Single Chunk size in X,Y format (default: 64,64)")]
+    public string ChunkSize { get; set; }
 }
 
 [Verb("import", HelpText = "Import .mcstructure file to Minecraft structure")]

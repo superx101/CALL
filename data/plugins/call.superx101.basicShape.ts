@@ -9,7 +9,7 @@ import { Pos3, Vec3Tuple } from "../../core/src/common/Pos3";
 import StructureNBT from "../../core/src/io/StructureNBT";
 
 i18n.load(
-    "plugins/CALL/plugins/shape/call.superx101.basicShape/lang.json",
+    "plugins/call/plugins/shape/call.superx101.basicShape/lang.json",
     "zh_CN",
     {
         zh_CN: {
