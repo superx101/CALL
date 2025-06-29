@@ -9,13 +9,13 @@ public class McStructureTool
     {
         SetChunkSize(options);
 
-        if (!Directory.Exists(options.SourcePath))
+        if (!Path.Exists(options.SourcePath))
         {
             Console.WriteLine($"Source path '{options.SourcePath}' does not exist.");
             return;
         }
 
-        var splitter = new McStrcutureSplitter(
+        var splitter = new McStructureSplitter(
             options.SourcePath,
             options.IncludeEntities
         );

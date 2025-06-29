@@ -15,15 +15,20 @@ public class Vec3(int x, int y, int z)
     }
     
     public int Volume => (int)X * Y * Z;
+    
+    public override string ToString()
+    {
+        return $"({X}, {Y}, {Z})";
+    }
 }
 
-public class Vec3f(double x, double y, double z)
+public class Vec3f(float x, float y, float z)
 {
-    public double X = x;
-    public double Y = y;
-    public double Z = z;
+    public float X = x;
+    public float Y = y;
+    public float Z = z;
 
-    public Vec3f Set(double x, double y, double z)
+    public Vec3f Set(float x, float y, float z)
     {
         this.X = x;
         this.Y = y;

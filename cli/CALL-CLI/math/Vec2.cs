@@ -23,11 +23,18 @@ public class Vec2(int x, int y)
     {
     }
 
+    public int Area => X * Y;
+
     public Vec2 Set(int x, int y)
     {
         this.X = x;
         this.Y = y;
         return this;
+    }
+    
+    public override string ToString()
+    {
+        return $"({X}, {Y})";
     }
 }
 
