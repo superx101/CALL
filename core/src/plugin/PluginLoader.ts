@@ -1,5 +1,4 @@
 import Config from "../common/Config";
-import * as path from "path";
 import * as fs from "fs";
 import { IPlugin, PluginTool } from "./Plugin";
 
@@ -11,7 +10,7 @@ export class PluginLoader {
         const files = fs.readdirSync(Config.PLUGINS_PATH);
 
         for (const fileName of files) {
-            const fullPath = "../../userdata/plugins/" + fileName;
+            const fullPath = "../../../userdata/plugins/" + fileName;
 
             if (!fileName.endsWith(".js")) continue;
 

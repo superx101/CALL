@@ -73,7 +73,7 @@ export default class StructureService {
         return data;
     }
 
-    public static getData(xuid: string) {
+    public static getData(xuid: string): Data {
         let data = Config.get(Config.STRUCTURES, `private.${xuid}`);
         if (data == null) {
             data = StructureService.register(xuid);

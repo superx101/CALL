@@ -482,7 +482,6 @@ export default class CACommand {
             );
         }
 
-        console.debug("comand", res)
         switch (res.action) {
             case undefined:
             case "me":
@@ -635,7 +634,7 @@ export default class CACommand {
                 return;
             case "export":
             case "ex":
-                ExportOperation.start(res, output);
+                ExportOperation.start(res);
                 return;
             case "reload":
                 case "r":

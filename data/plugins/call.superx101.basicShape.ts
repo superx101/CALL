@@ -788,25 +788,25 @@ class CubeManager extends ShapeManager {
             if (data != null) {
                 const json: any = {};
                 const pos: any = {};
-                let strs: string;
+                let strs: string[];
 
                 json.snbt = this.getBlockSNBT(plData.itemA, player);
 
-                strs = data[1].split(" ");
+                strs = (data[1] as string).split(" ");
                 json.x = parseInt(strs[0]);
                 json.y = parseInt(strs[1]);
                 json.z = parseInt(strs[2]);
 
-                strs = data[2].split(" ");
+                strs = (data[2] as string).split(" ");
                 pos.x = parseInt(strs[0]);
                 pos.y = parseInt(strs[1]);
                 pos.z = parseInt(strs[2]);
 
-                json.order = orderArr[data[3]];
+                json.order = orderArr[(data[3] as number)];
 
-                json.xrote = parseFloat(data[4]);
-                json.yrote = parseFloat(data[5]);
-                json.zrote = parseFloat(data[6]);
+                json.xrote = parseFloat((data[4] as string));
+                json.yrote = parseFloat((data[5] as string));
+                json.zrote = parseFloat((data[6] as string));
 
                 this.runcmd(pl, index, json, pos);
             } else {
@@ -867,20 +867,20 @@ class PlaneManager extends ShapeManager {
             if (data != null) {
                 const json: any = {};
                 const pos: any = {};
-                let strs: string;
+                let strs: string[];
 
-                strs = data[1].split(" ");
+                strs = (data[1] as string).split(" ");
                 json.v = {};
                 json.v.x = parseInt(strs[0]);
                 json.v.y = parseInt(strs[1]);
                 json.v.z = parseInt(strs[2]);
                 json.snbt = this.getBlockSNBT(plData.itemA, player);
 
-                strs = data[2].split(" ");
+                strs = (data[2] as string).split(" ");
                 json.x = parseInt(strs[0]);
                 json.z = parseInt(strs[1]);
 
-                strs = data[3].split(" ");
+                strs = (data[3] as string).split(" ");
                 pos.x = parseInt(strs[0]);
                 pos.y = parseInt(strs[1]);
                 pos.z = parseInt(strs[2]);
@@ -956,15 +956,15 @@ class LineManager extends ShapeManager {
             if (data != null) {
                 let json: any = {};
                 let pos: any = {};
-                let strs: string;
+                let strs: string[];
 
-                strs = data[1].split(" ");
+                strs = (data[1] as string).split(" ");
                 json.x = parseInt(strs[0]);
                 json.y = parseInt(strs[1]);
                 json.z = parseInt(strs[2]);
                 json.snbt = this.getBlockSNBT(plData.itemA, player);
 
-                strs = data[2].split(" ");
+                strs = (data[2] as string).split(" ");
                 pos.x = parseInt(strs[0]);
                 pos.y = parseInt(strs[1]);
                 pos.z = parseInt(strs[2]);
@@ -1058,13 +1058,13 @@ class SphereManager extends ShapeManager {
             }
             let json: any = {};
             let pos: any = {};
-            let strs: string;
+            let strs: string[];
 
-            json.r = parseInt(data[1]);
-            json.isHollow = data[2];
+            json.r = parseInt((data[1] as string));
+            json.isHollow = (data[2] as string);
             json.snbt = this.getBlockSNBT(plData.itemA, player);
 
-            strs = data[3].split(" ");
+            strs = (data[3] as string).split(" ");
             pos.x = parseInt(strs[0]);
             pos.y = parseInt(strs[1]);
             pos.z = parseInt(strs[2]);
@@ -1200,24 +1200,24 @@ class EllipsiodManager extends ShapeManager {
             if (data != null) {
                 let json: any = {};
                 let pos: any = {};
-                let strs: string;
+                let strs: string[];
 
-                strs = data[1].split(" ");
+                strs = (data[1] as string).split(" ");
                 json.a = parseInt(strs[0]);
                 json.b = parseInt(strs[1]);
                 json.c = parseInt(strs[2]);
                 json.isHollow = data[2];
                 json.snbt = this.getBlockSNBT(plData.itemA, player);
 
-                strs = data[3].split(" ");
+                strs = (data[3] as string).split(" ");
                 pos.x = parseInt(strs[0]);
                 pos.y = parseInt(strs[1]);
                 pos.z = parseInt(strs[2]);
 
-                json.order = orderArr[data[5]];
-                json.xrote = parseFloat(data[6]);
-                json.yrote = parseFloat(data[7]);
-                json.zrote = parseFloat(data[8]);
+                json.order = orderArr[(data[5] as number)];
+                json.xrote = parseFloat((data[6] as string));
+                json.yrote = parseFloat((data[7] as string));
+                json.zrote = parseFloat((data[8] as string));
 
                 this.runcmd(pl, index, json, pos);
             } else {
@@ -1360,24 +1360,24 @@ class CylinderManager extends ShapeManager {
             if (data != null) {
                 let json: any = {};
                 let pos: any = {};
-                let strs: string;
+                let strs: string[];
 
-                strs = data[1].split(" ");
+                strs = (data[1] as string).split(" ");
                 json.a = parseInt(strs[0]);
                 json.b = parseInt(strs[1]);
-                json.h = parseInt(data[2]);
+                json.h = parseInt((data[2] as string));
                 json.isHollow = data[3];
                 json.snbt = this.getBlockSNBT(plData.itemA, player);
 
-                strs = data[4].split(" ");
+                strs = (data[4] as string).split(" ");
                 pos.x = parseInt(strs[0]);
                 pos.y = parseInt(strs[1]);
                 pos.z = parseInt(strs[2]);
 
-                json.order = orderArr[data[6]];
-                json.xrote = parseFloat(data[7]);
-                json.yrote = parseFloat(data[8]);
-                json.zrote = parseFloat(data[9]);
+                json.order = orderArr[(data[6] as number)];
+                json.xrote = parseFloat((data[7] as string));
+                json.yrote = parseFloat((data[8] as string));
+                json.zrote = parseFloat((data[9] as string));
 
                 this.runcmd(pl, index, json, pos);
             } else {
@@ -1524,25 +1524,25 @@ class ConeManager extends ShapeManager {
             if (data != null) {
                 let json: any = {};
                 let pos: any = {};
-                let strs: string;
+                let strs: string[];
 
-                strs = data[1].split(" ");
+                strs = (data[1] as string).split(" ");
                 json.a = parseInt(strs[0]);
                 json.b = parseInt(strs[1]);
-                json.h = parseInt(data[2]);
+                json.h = parseInt((data[2] as string));
                 json.isHollow = data[3];
                 json.snbt = this.getBlockSNBT(plData.itemA, player);
 
-                strs = data[4].split(" ");
+                strs = (data[4] as string).split(" ");
                 pos.x = parseInt(strs[0]);
                 pos.y = parseInt(strs[1]);
                 pos.z = parseInt(strs[2]);
 
-                json.order = orderArr[data[6]];
+                json.order = orderArr[(data[6] as number)];
 
-                json.xrote = parseFloat(data[7]);
-                json.yrote = parseFloat(data[8]);
-                json.zrote = parseFloat(data[9]);
+                json.xrote = parseFloat((data[7] as string));
+                json.yrote = parseFloat((data[8] as string));
+                json.zrote = parseFloat((data[9] as string));
 
                 this.runcmd(pl, index, json, pos);
             } else {

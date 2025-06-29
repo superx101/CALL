@@ -1,27 +1,23 @@
 {
-  "compilerOptions": {
-    "rootDir": "./",
-    "outDir": "./dist",
-    "target": "ES6",
-    "lib": [
-      "ES2021"
-    ],
-    "resolveJsonModule": true,
-    "noImplicitAny": true,
-    "module": "CommonJS",
-    "removeComments": true,
-    "esModuleInterop": true
-  },
-  "ts-node": {
     "compilerOptions": {
-      "esModuleInterop": true,
-      "module": "CommonJS"
-    }
-  },
-  "include": [
-    "core/src/**/*.ts",
-    "core/test/**/*.ts",
-    "data/plugins/*.ts",
-    "core/index.ts"
-  ]
+        "rootDir": "./",
+        "outDir": "./dist",
+        "target": "ES6",
+        "lib": ["ES2021"],
+        "resolveJsonModule": true,
+        "noImplicitAny": true,
+        "module": "CommonJS",
+        "removeComments": true,
+        "esModuleInterop": true
+    },
+    "ts-node": {
+        "compilerOptions": {
+            "esModuleInterop": true,
+            "module": "CommonJS"
+        }
+    },
+    "include": [
+        "./core/**/*.ts",
+        "./data/plugins/*.ts"
+, "core/index.ts"    ]
 }

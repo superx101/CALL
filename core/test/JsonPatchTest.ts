@@ -1,4 +1,4 @@
-import JsonPatch from "../core/src/util/JsonPatch";
+import JsonPatch from "../src/util/JsonPatch";
 import TestUtil from "./TestUtil";
 import * as fs from "fs";
 

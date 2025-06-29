@@ -451,7 +451,6 @@ export default class StructureOperation {
         const structure = new Structure(area);
         
         //copy
-        console.warn(area)
         StructureService.copy(
             caPlayer,
             [structure],

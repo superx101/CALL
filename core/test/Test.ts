@@ -1,4 +1,4 @@
-import Config from "../core/src/common/Config";
+import Config from "../src/common/Config";
 import BlockTypeTest from "./BlockTypeTest";
 import JsonPatchTest from "./JsonPatchTest";
 import TranslatorTest from "./TranslatorTest";

@@ -1,4 +1,4 @@
-/// <reference path="../dist/types/src/index.d.ts"/> 
+/// <reference types="../dist/types/platforms/javascript/src" />
 /**
  * app should be main file, but there is an dir error in LiteLoaderBDS-nodejs
  */

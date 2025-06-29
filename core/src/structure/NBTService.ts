@@ -12,12 +12,10 @@ export default class NBTService {
     // static SAVEPOOL = [];
 
     public static save(saveid: string, area: Area3, ignoreBlocks = false, ignoreEntities = false) {
-        console.warn("nbt", area)
         const start = mc.newIntPos(area.start.x, area.start.y, area.start.z, area.start.dimid);
         const end = mc.newIntPos(area.end.x, area.end.y, area.end.z, area.end.dimid);
-        console.warn("start end", start.toString(), end.toString())
         const comp = mc.getStructure(start, end, ignoreBlocks, ignoreEntities);
-        console.warn((comp.getData("structure_world_origin") as NbtList).toString())
+
         const file = new File(NBTService.PATH + `/${saveid}.mcstructure`, FileMode.WriteMode, true);
         file.write(comp.toBinaryNBT(), () => {
             file.close();

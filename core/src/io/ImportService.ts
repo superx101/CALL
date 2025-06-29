@@ -1,4 +1,4 @@
-import path = require("path");
+import * as path from "path";
 import Config from "../common/Config";
 import { Structure, Data, NBT, Type } from "../common/Structure";
 import StructureNBT from "./StructureNBT";
@@ -30,6 +30,7 @@ export default class ImportService {
         let type;
         let data;
 
+        //@ts-ignore
         if (!File.exists(`${Config.IMPORT_PATH}/${fileName.base}`))
             throw new Error(
                 Tr._c(
@@ -43,11 +44,14 @@ export default class ImportService {
                 type = Type.MCSTRUCTURE;
                 //@ts-ignore
                 let f = new File(
+                    //@ts-ignore
                     `${Config.IMPORT_PATH}/${fileName.base}`,
                     FileMode.ReadMode,
                     true
                 );
+                //@ts-ignore
                 data = f.readAllSync();
+                //@ts-ignore
                 f.close();
                 break;
             case "":

@@ -131,7 +131,7 @@ export default class StructureForm extends Form {
             }
             let x, y, z;
             try {
-                let arr = data[1].split(" ");
+                let arr = (data[1] as string).split(" ");
                 x = parseInt(arr[0]);
                 y = parseInt(arr[1]);
                 z = parseInt(arr[2]);
@@ -139,8 +139,8 @@ export default class StructureForm extends Form {
             Players.silenceCmd(
                 this.caPlayer,
                 `call load ${stData.id} ${x} ${y} ${z} ${
-                    degreeArr[data[2]]
-                }_degrees ${mirrorArr_select[data[3]]}`
+                    degreeArr[data[2] as number]
+                }_degrees ${mirrorArr_select[data[3] as number]}`
             );
         });
     }
@@ -238,9 +238,15 @@ export default class StructureForm extends Form {
                     break;
                 case 3:
                     if (data.isPublic) {
-                        Players.silenceCmd(this.caPlayer, `ca private ${data.id}`);
+                        Players.silenceCmd(
+                            this.caPlayer,
+                            `ca private ${data.id}`
+                        );
                     } else {
-                        Players.silenceCmd(this.caPlayer, `ca public ${data.id}`);
+                        Players.silenceCmd(
+                            this.caPlayer,
+                            `ca public ${data.id}`
+                        );
                     }
                     break;
                 default:

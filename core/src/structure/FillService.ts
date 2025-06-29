@@ -64,8 +64,7 @@ export default class FillService {
     }
 
     public static soildFill(caPlayer: CAPlayer, targetArea: Area3, blockTypeA: BlockType, blockTypeB: BlockType, mod: string, overCallback: () => void) {
-        let st = new Structure(Area3.fromArea3D(targetArea));
-        console.warn("st", st)
+        const st = new Structure(Area3.fromArea3D(targetArea));
         StructureService.undoSave(caPlayer, [st], () => {
             FillService.ergod(caPlayer, st.getAreas(), 0, 1,
                 (yBottom: number, yTop: number, area: Area3) => {

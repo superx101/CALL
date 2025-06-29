@@ -15,7 +15,7 @@ jobs:
             - name: Copy HelperLib
               run: |
                   mkdir -p dist/types
-                  git clone https://github.com/LiteLDev/HelperLib.git dist/types
+                  git clone https://github.com/LiteLDev/legacy-script-engine-api.git dist/types
 
             - name: Install dependencies and build
               run: |

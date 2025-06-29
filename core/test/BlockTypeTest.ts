@@ -1,5 +1,5 @@
 import TestUtil from "./TestUtil";
-import BlockType from "../core/src/common/BlockType";
+import BlockType from "../src/common/BlockType";
 
 export default class BlockTypeTest {
     public static preTest() {
