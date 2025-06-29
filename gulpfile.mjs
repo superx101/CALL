@@ -162,6 +162,7 @@ const buildInitTask = gulp.series([
     makeManifest,
     makeDataFile,
     makeConfig,
+    makeBin
 ]);
 
 const compileTask = gulp.series([compileMain, makePlugin]);
