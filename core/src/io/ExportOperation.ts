@@ -118,7 +118,7 @@ export default class ExportOperation {
             "export",
             `${NBTService.PATH}`,
             options.id,
-            `${path.join(Config.EXPORT_PATH, outputName, ".mcstructure")}`,
+            `${path.join(Config.EXPORT_PATH, outputName + ".mcstructure")}`,
             "--size",
             `${size[0]},${size[1]}`,
             "--entities",
