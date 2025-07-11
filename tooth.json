@@ -3,7 +3,7 @@
   "format_version": 3,
   "format_uuid": "289f771f-2c9a-4d73-9f3f-8492495a924d",
   "tooth": "github.com/superx101/CALL",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "info": {
     "name": "CALL",
     "description": "A simple building tool",
@@ -24,7 +24,7 @@
       "assets": [
         {
           "urls": [
-            "https://github.com/superx101/CALL/releases/download/v1.6.0/CALL-1.6.0.zip"
+            "https://github.com/superx101/CALL/releases/download/v1.6.1/CALL-1.6.1.zip"
           ],
           "placements": [
             {
