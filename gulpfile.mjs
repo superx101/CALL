@@ -159,6 +159,7 @@ const initTask = gulp.series([
 
 const buildInitTask = gulp.series([
     makeEmptyFile,
+    makeIndexJs,
     makeManifest,
     makeDataFile,
     makeConfig,
